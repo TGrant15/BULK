@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Meals</title>
+        <meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/app.css" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+    </head>
+    <body id="workoutBody">
+	    <div id="workoutPage">
+	    		<div class="workoutHead">
+	    		<div class="settingMenu">
+	    			<ul>
+	    				<li>settings</li>
+	    			</ul>
+	    		</div>
+	    			<div class="toggle" id="toggle">
+				      <div class="arrowIcon">
+				        <img src="http://i.imgur.com/Ysz9bH0.png" id="arrowIcon">
+				        </div>
+				      </div>
+				      <div class="menu">
+				        <img src="http://i.imgur.com/OTJhUyq.png" id="menuIcon">
+				      </div>
+				      <div class="settingMenuDots" style="left:325px !important">
+				      	<img src="settingsIcon.png" class = "settingsIcon">
+				      </div>
+	    			<h2 id="workoutOverviewTitle">Todays Meals</h2>
+	    			<ul id="mealTabs">
+		    		 <li id="breakfastTab" class="workoutNav"><a class="tab">Breakfast</a></li>
+		      		 <li id="lunchTab" class="workoutNav"><a class="tab">Lunch</a></li>
+		      		 <li id="dinnerTab" class="workoutNav"><a class="tab">Dinner</a></li>
+		      		 <li id="snackTab" class="workoutNav"><a  class="tab">Snack</a></li>
+		    		</ul>
+		    		<div id="mealsUbar"></div>
+	    		</div>
+	    		
+	    		<div id="breakfast">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="breakfastList">
+				    </ul>
+				    </div>
+	    		</div>  
+	    			
+	    		<div class="workoutList" id="lunch">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="lunchList">
+				    </ul>
+				    </div>
+	    		</div>  		
+	    		
+	    		<div class="workoutList" id="dinner">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="dinnerList">
+				    </ul>
+				    </div>
+	    		</div>  
+	    		
+	    		<div class="workoutList" id="snack">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="snackList">
+				    </ul>
+				    </div>
+	    		</div>  
+	    		
+	    		<div id="buttonGroup">
+	    		 	<div id="eatMenu" class="paper-button btn-next" style="margin:25em 19.56em" ></div>
+	    		</div>
+	    		 <div class="exitDetail">
+	    		 	<label>exit</label>
+	    		 </div>
+	    		 	
+	    		<div id="menuScreen">
+	    		<div id="iconContainer">
+	    		<div class="proMenu" id="myMeals"> My Meals</div>
+	    		<div class="proMenu" id="myWorkouts"> My Workouts</div>
+	    		<div class="proMenu" id="myProfile">My Profile</div>
+	    		<!-- <div class="proMenu" id="logout"> Logout</div>	 -->
+	    		</div>	
+	    		</div>
+	    		
+	    		
+		</div>		
+    		
+    <script src="meals.js"></script>
+    </body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Workout Overview</title>
+        <meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/app.css" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+    </head>
+    <body id="workoutBody">
+    <div id="weightAdjForm">
+	    		<label>How did the weight feel?</label>
+					<form action="">
+					<input type="radio" name="weightAdj" value="light" id="tooLight">Too Light<br>
+					<input type="radio" name="weightAdj" value="heavy" id="tooHeavy">Too Heavy<br>
+					<input type="radio" name="weightAdj" value="perfect" id="Perfect">Perfect!<br>
+					</form>
+					<div id="weightAdjSbmt" class="button raised blue">
+	     				<div class="center" fit>Submit</div>
+	      				<paper-ripple fit></paper-ripple>
+	    			</div>
+	    		</div>
+    <div class="overlay"></div>
+	    <div id="workoutPage">
+	    		<div class="workoutHead">
+	    			<div class="toggle" id="toggle">
+				      <div class="arrowIcon">
+				        <img src="http://i.imgur.com/Ysz9bH0.png" id="arrowIcon">
+				        </div>
+				      </div>
+				      <div class="menu">
+				        <img src="http://i.imgur.com/OTJhUyq.png" id="menuIcon">
+				      </div>
+	    			<h2 id="workoutOverviewTitle">Today's Workout</h2>
+	    			<ul id="workoutTabs">
+		    		 <li id="firstTab" class="workoutNav"><a href="#first" class="tab">Upper</a></li>
+		      		 <li id="secondTab" class="workoutNav"><a href="#second" class="tab">Lower</a></li>
+		      		 <li id="thirdTab" class="workoutNav"><a href="#third" class="tab">Abs</a></li>
+		    		</ul>
+		    		<div id="ubar"></div>
+	    		</div>
+	    		
+	    		<div id="upper">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="upperList">
+				    </ul>
+				    </div>
+	    		</div>  
+	    			
+	    		<div class="workoutList" id="lower">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="lowerList">
+				    </ul>
+				    </div>
+	    		</div>  
+	    		
+	    		<div class="workoutList" id="core">
+	    		   <div class="list-view">		
+				    <ul class="workoutList" id="coreList">
+				    </ul>
+				    </div>
+	    		</div>  	
+	    		
+	    		<div id="buttonGroup">
+	    		 	<div id="blue" class="paper-button btn-next" style="margin:25em 19.56em" ></div>
+	    		 </div>
+	    		 <div class="exitDetail">
+	    		 	<label>exit</label>
+	    		 </div>
+	    		 		
+	    		<div id="menuScreen">
+	    		<div id="iconContainer">
+	    		<div class="proMenu" id="myMeals"> My Meals</div>
+	    		<div class="proMenu" id="myWorkouts"> My Workouts</div>
+	    		<div class="proMenu" id="myProfile">My Profile</div>
+	    	<!--  	<div class="proMenu" id="logout"> Logout</div>	-->
+	    		</div>	
+	    		</div>
+	    		
+	    		<div id="start">
+	    		
+	    		<h1 id="completeMessage">Congratulations! You have complete your workout for today!</h1>
+	    		<div class="startWorkoutImg" style="width:100%; height:200px; background-color:grey; color:black;">IMG</div>
+	    		<label id="set">Set 1 of </label><label id="setNum">3</label></br>
+	    		<label id="rcmendWeight"></label>
+	    		<div id="timerContainer">
+	    		<label class="timer" id="timeAnimation">90</label><label id="timeLabel" class="timer">Seconds</label><br>
+	    		</div>
+	    		<div id="submitWorkoutForm">
+	    		<input class="textField" type="text" placeholder="Weight Performed" id="weightPerformed"/>	
+	    		<div id="startButton" class="button raised blue">
+	     				<div class="center" fit>Start</div>
+	      				<paper-ripple fit></paper-ripple>
+	    		</div>
+	    		</div>
+	    		</div>
+	    		<div id="workOutQuit" class="confirmationBox">
+	    		
+	    		</div>
+		</div>		
+    		
+    <script src="workouts.js"></script>
+    </body>
+</html>
