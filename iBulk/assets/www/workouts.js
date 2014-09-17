@@ -22,7 +22,6 @@ var tip1 = [];
 var tip2 = [];
 var tip3 = [];
 
-localStorage["workoutObj"];
 var workoutObj = [];
 var nameCount = 0;
 //var timer = 90;
@@ -32,7 +31,8 @@ var weightId;
 var weight = new Weight();
 var startCounter;
 var currentDetailID;
-
+var cacheObjLength;
+var dotMenuToggle = 0;
 
 
 /*******global variables involving weight********/
@@ -46,25 +46,76 @@ var recommendedSets;
 
 /************************/
 $(document).ready(function() {
-getLevel(current.get("username"));
 
+
+//****Create Array to check if the data is cached	
+var cachedWorkoutCheck = [];	
+if(localStorage["workoutCache"]==undefined)
+{
+		getLevel(current.get("username"));
+}
+else
+{
+	//****Store Local Storage Data with cached workouts.
+	cachedWorkoutCheck = jQuery.parseJSON(localStorage["workoutCache"]);
+	//*Store the length of the obj in this variable.
+	cacheObjLength = cachedWorkoutCheck.length;
+	
+
+	//**if the length of the cached object is greater than 1, then this confirms that data has been cached.
+	if(cachedWorkoutCheck.length > 1)
+	{
+		//* Generate the workouts using the cached objects.
+		generateWorkout(cachedWorkoutCheck);
+	}
+	else//**If it is not cached get the level and phase of the user and generate the workout.
+	{
+		getLevel(current.get("username"));
+	}
+}
+
+
+
+//*****This is the 3 dot menu***//
+$("#dotMenuWorkout").click(function(){
+	if(dotMenuToggle == 1)
+	{	
+		$(".settingsMenu").css("width","0px");
+		$(".settingsMenu").css("height","0px");
+		$(".settingMenuList").css("display","none");
+		dotMenuToggle=0;	
+	}
+	else
+	{
+		$(".settingMenuList").css("display","block");
+		$(".settingsMenu").animate({"width":"100px"},100);
+		$(".settingsMenu").animate({"height":"40px"},100);
+		dotMenuToggle++;	
+	}			
+});
+
+//**This is the 3 line menu**//
 $(".menu").click(function()
 {
 	$("#menuScreen").animate({"top":"85%"},200);
 	$("#menuIcon").animate({"height":"0px"},200);
 	$("#arrowIcon").animate({"height":"25px"},200);
 });
+
+//**This is the arrow icon used to take you back//**/
 $(".arrowIcon").click(function()
 {
+	//***If the user has hit the action button and started a workout.**//
 	if(started == "yes")
 	{
+		
 		if(confirm("are you sure you want to quit this workout?")==true)
 		{
-			window.location = "workout.html";
+			window.location = "workout.html"; //Send them back to the workout overview page.
 
 		}
 	}
-	else
+	else //**Hide the menu screen**//
 	{
 		$("#workoutOverviewTitle").text("Today's Workout");
 		$("#menuScreen").animate({"top":"100%"},200);
@@ -74,29 +125,211 @@ $(".arrowIcon").click(function()
 
 			
 });
+
+//**Hide the lower Menu tab**//
 $("#lower").css("opacity","0");
+
+//**Hide the core menu tab**//
 $("#core").css("opacity","0");
+
+$("#firstTab").click(function(){
+	$("#ubar").animate({"margin-left":"0px"},50);
+});
+
+$("#secondTab").click(function(){
+	$("#ubar").animate({"margin-left":"85px"},50);
+});
+
+$("#thirdTab").click(function(){
+	$("#ubar").animate({"margin-left":"180px"},50);
+});
+	
+$("#back").click(function(){
+	$(".workoutHead").animate({"opacity":"1"},300);
+	  $("#workoutContent").animate({
+		  "margin-top":"40px"
+	  },300);
+	  $("li").animate({"height":"121px"});
+	  $("#buttonGroup").animate({"opacity":"1"},300);
+	  $("#workoutContent").css("position","fixed");
+	  $(".exName").animate({"opacity":"1"},300);
+	  $(".workoutNav").css("display","inline");
+	  $(".icon-arrow-left").animate({"opacity":"0"},300);
+	  $("#workoutContent").animate({"height":"118% !important"}, 300);
+	
+});
+
+$("#firstTab").click(function(){
+	$("#upper").css("opacity","1");
+	$("#lower").css("opacity","0");
+	$("#core").css("opacity","0");
+});
+$("#secondTab").click(function(){
+	$("#upper").css("opacity","0");
+	$("#lower").css("opacity","1");
+	$("#core").css("opacity","0");
+});
+$("#thirdTab").click(function(){
+	$("#upper").css("opacity","0");
+	$("#lower").css("opacity","0");
+	$("#core").css("opacity","1");
+});
+
+
+$("#logout").click(function(){
+Parse.User.logOut();
+var emptyObj = [];
+emptyObj.push({name:"empty"});
+var empty = JSON.stringify(emptyObj);
+localStorage["workoutCache"] = empty;
+window.location = "index.html"; 
+});
+
+$("#settingsPageButton").click(function(){
+	window.location = "settings.html"; 
+});
+
+$("#myMeals").click(function(){
+window.location = "meals.html"; 
+});
+
+$("#myWorkouts").click(function(){
+window.location = "workout.html"; 
+});
+
+$("#myProfile").click(function(){
+window.location = "profile.html"; 
+});
+
+//********This is where users can delete or archive exercises that they like***************//
+$(".workoutCards").swipe( {
+    //Generic swipe handler for all directions
+	swipeStatus:function(event, phase, direction, distance, duration, fingers)
+    {
+		
+		if(direction == "left")
+		{
+			var str = 0;
+			var deleteStr = 0;
+		    var removeID = $(this).attr('id');
+					
+			 if (phase!="cancel" && phase!="end") {
+		         str-=distance;
+		         deleteStr+=distance;
+		         $("#" + removeID).append("<div class='deleteIcon'><img class='trashIcon' src='img/trash.png'/><lable class='deleteLabel'>Delete</label></div>");
+		         $(".deleteIcon").css("width",deleteStr + "px");
+		         $("#" + removeID).css("margin-left",str + "px");
+		         
+		         if(distance > 175)
+		         {
+		        	 if(confirm("Are you sure you want to remove this exercise")==true)
+		     		{
+		        		 $("#" + removeID).remove();
+		             	 $("#workoutBody").prepend("<div id='workoutToast'><label>Exercise Removed!</label></div>")
+		             	 $("#workoutToast").animate({"width":"300px"},300);
+		             	 
+		             	setTimeout(function(){
+			             	 $("#workoutToast").animate({"opacity":"0"},1000);
+
+		             	}, 1000);
+		             	
+		             	$("#workoutBody").click(function(){
+		             		$("#workoutToast").remove();
+		             	});
+		             	             	
+		
+		     		}
+		        	else 
+		            {
+		             		$("#" + removeID).css("margin-left","-14px");
+		             		$(".deleteIcon").remove();
+
+		            }
+		     	}
+     
+         
+			 }
+			 else
+			 {
+				 $(".favIcon").remove();
+				 $(".deleteIcon").remove();
+				 $("#" + removeID).css("margin-left","-14px");			
+			 }
+		}
+		else
+		{
+			var str = 0;
+			var deleteStr = 0;
+		    var removeID = $(this).attr('id');
+					
+			 if (phase!="cancel" && phase!="end") {
+		         str+=distance;
+		         deleteStr+=distance;
+		         $("#" + removeID).append("<div class='favIcon'></div>");
+		         $(".favIcon").css("width",deleteStr + "px");
+		         $("#" + removeID).css("margin-left",str + "px");
+		         
+		         if(distance > 175)
+		         {
+		        	 if(confirm("Are you sure you want to save this exercise")==true)
+		     		{
+		        		alert("saved!");
+		        		$("#" + removeID).css("margin-left","-14px");
+	             		$(".favIcon").remove();
+		
+		     		}
+		        	else
+		        	{
+		        		$("#" + removeID).css("margin-left","-14px");
+	             		$(".favIcon").remove(); 
+		        	}
+
+		     	}
+         
+			 }
+			 else
+			 {
+				 $(".favIcon").remove();
+				 $(".deleteIcon").remove();
+				 $("#" + removeID).css("margin-left","-14px");			
+			 }
+			 
+		}
+      
+    },
+    //Default is 75px, set to 0 for demo so any distance triggers swipe
+     threshold:75
+});
+
+/*$(".workoutCards").on( "swipeleft", function(){
+	var removeID = $(this).attr('id');
+	alert(removeID);
+	//removeExercise(removeID);
+});*/
 
 //----------------------------------------------------------//
 //----------------------- workout page  ----------------//
 //----------------------------------------------------------//	
-	$("#workoutContent").scroll(function(){
-		$('.workoutTabs').css( "box-shadow", "0 0 6px 0" );
+//*****This is the on scroll method****//
+$("#workoutContent").scroll(function(){
+	/*	$('.workoutTabs').css( "box-shadow", "0 0 6px 0" );
 		
 		var pos = $("#workoutContent").scrollTop();
 		if(pos==0)
 			{
 				$('.workoutTabs').css("box-shadow","0 0 0px 0");
-			}
-		
-		
-	});
-	$("#blue").click(function(){
-		timerSwitch = "on";
-		$("#timeLabel").text("Seconds");
-		$("#timeAnimation").text("90");
-		timer=90;	
+			}	*/
+});
+	
+//*******This is the blue action button*****//	
+$("#blue").click(function(){
+		timerSwitch = "on"; //This indicates wether the timer has been started
+		$("#timeLabel").text("Seconds"); //Set the time label to seconds
+		$("#timeAnimation").text("90"); //set the time animation to 90
+		timer=90;	//this is setting the actual timer to 90 seconds..
 
+		//***This parse query will find the the workout that is equal the exercise, and the user
+		//** and make udates to the workout log accordingly*****//
 		var query = new Parse.Query(Weight);
 		query.equalTo("wght_exercise", nameList[nameCount]); 
 		query.equalTo("wght_user", username); 		
@@ -168,512 +401,6 @@ $("#core").css("opacity","0");
 		
 	});
 	
-
-	$("#firstTab").click(function(){
-		$("#ubar").animate({"margin-left":"0px"},50);
-	});
-	
-	$("#secondTab").click(function(){
-		$("#ubar").animate({"margin-left":"85px"},50);
-	});
-	
-	$("#thirdTab").click(function(){
-		$("#ubar").animate({"margin-left":"180px"},50);
-	});
-		
-	$("#back").click(function(){
-		$(".workoutHead").animate({"opacity":"1"},300);
-		  $("#workoutContent").animate({
-			  "margin-top":"40px"
-		  },300);
-		  $("li").animate({"height":"121px"});
-		  $("#buttonGroup").animate({"opacity":"1"},300);
-		  $("#workoutContent").css("position","fixed");
-		  $(".exName").animate({"opacity":"1"},300);
-		  $(".workoutNav").css("display","inline");
-		  $(".icon-arrow-left").animate({"opacity":"0"},300);
-		  $("#workoutContent").animate({"height":"118% !important"}, 300);
-		
-	});
-	
-	$("#firstTab").click(function(){
-		$("#upper").css("opacity","1");
-		$("#lower").css("opacity","0");
-		$("#core").css("opacity","0");
-	});
-	$("#secondTab").click(function(){
-		$("#upper").css("opacity","0");
-		$("#lower").css("opacity","1");
-		$("#core").css("opacity","0");
-	});
-	$("#thirdTab").click(function(){
-		$("#upper").css("opacity","0");
-		$("#lower").css("opacity","0");
-		$("#core").css("opacity","1");
-	});
-
-	
-});
-function navigate(currentPage, pageDest)
-{
-	
-	$("#" +  currentPage).hide();
-	$("#" + pageDest).show(200);
-	
-}
-
-function getExercise() {
-	var Exercise = Parse.Object.extend("Exercise");
-	
-	// Find all workouts that are available for the user that is currently in this level and phase.
-	var query = new Parse.Query(Exercise);
-	query.equalTo("ex_level", level);
-	query.equalTo("ex_phase", phase);
-	query.find({
-	  success: function(results) { 
-		  var compoundCount = 0;
-		  var workoutCount = 0;
-		  var coreCount = 0;
-		  var coreWeight=[];
-		  
-		// go through each workout that was pulled and get the name, bodyZone, and type of workout.  
-	    for (var i = 0; i < results.length; i++) {  
-	      var object = results[i];
-	      var name = object.get('ex_name');
-	      var bodyZone = object.get('ex_bodyZone');
-	      var type = object.get('ex_type');
-	      var difficultyTemp = object.get('ex_difficulty');
-	      var primaryTemp = object.get('ex_primary');
-	      var description1Temp = object.get('ex_description1');
-	      var description2Temp = object.get('ex_description2');
-	      var description3Temp= object.get('ex_description3');
-	      var description4Temp = object.get('ex_description4');
-	      var description5Temp = object.get('ex_description5');
-	      var tip1Temp = object.get('ex_tip1');
-	      var tip2Temp = object.get('ex_tip2');
-	      var tip3Temp = object.get('ex_tip3');
-	      
-	    	  
-	      if(bodyZone == "upper")
-	  		{
-	    	  nameList[workoutCount] = name;
-	    	  bodyZoneArray[workoutCount] = bodyZone;
-	    	  typeArray[workoutCount] = type;
-	    	  difficulty[workoutCount] = difficultyTemp;
-	    	  primary[workoutCount] = primaryTemp;
-		      description1[workoutCount] = description1Temp;
-		      description2[workoutCount] = description2Temp;
-		      description3[workoutCount] = description3Temp;
-		      description4[workoutCount] = description4Temp;
-		      description5[workoutCount] = description5Temp;
-		      tip1[workoutCount] = tip1Temp;
-		      tip2[workoutCount] = tip2Temp;
-		      tip3[workoutCount] = tip3Temp;
-	    	  
-	    	  if(type=="Compound")
-	    		{
-  		    	  nameList[workoutCount] = nameList[compoundCount];
-  		    	  nameList[compoundCount] = name;  		
-  		    	  
-  		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
-  		    	  bodyZoneArray[compoundCount] = bodyZone;
-  		    	  
-  		    	  typeArray[workoutCount] = typeArray[compoundCount];
-  		    	  typeArray[compoundCount] = type;
-  		    	  
-  		    	  difficulty[workoutCount] =  difficulty[compoundCount];
-  		    	  difficulty[compoundCount] = difficultyTemp;
-
-  		    	  
-  		    	  primary[workoutCount] = primary[compoundCount];
-  		    	  primary[compoundCount] = primaryTemp;
-
-  		    	  
-  			      description1[workoutCount] = description1[compoundCount];
-  			      description1[compoundCount] = description1Temp;
-
-  			      
-  			      description2[workoutCount] = description2[compoundCount];
-  			      description2[compoundCount] = description2Temp;
-
-  			      
-  			      description3[workoutCount] = description3[compoundCount];
-  			      description3[compoundCount] = description3Temp;
-
-  			      
-  			      description4[workoutCount] = description4[compoundCount];
-  			      description4[compoundCount] = description4Temp;
-
-  			      
-  			      description5[workoutCount] = description5[compoundCount];
-  			      description5[compoundCount] = description5Temp;
-
-  			      
-  			      tip1[workoutCount] = tip1[compoundCount];
-  			      tip1[compoundCount] = tip1Temp;
-
-  			      
-  			      tip2[workoutCount] = tip2[compoundCount];
-  			      tip2[compoundCount] = tip2Temp;
-
-  			      
-  			      tip3[workoutCount] = tip3[compoundCount];
-  			      tip3[compoundCount] = tip3Temp;
-
-  		    	  
-  		    	
-  		    	  
-  		    	  if(level == 1)
-  		    	  {
-  		    		  if(phase == "1")
-  		    		  {
-  		    			rcmndedWeight[workoutCount] = "Just the Bar";
-  		    		  }
-  		    	  }
-  		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
-  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-  	
-  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+Difficulty[compoundCount]+'</label><div></li>');
-  		    	  compoundCount++;
-	    		}
-	    	  else if(type =="Dumbbell")
-	    		{
-	    		  if(level == 1)
-  		    	  {
-  		    		  if(phase == "1")
-  		    		  {
-  		    			rcmndedWeight[workoutCount] = 25;
-  		    		  }
-  		    	  }
-  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[i]+'</label></div></li>');
-  		    	  
-	    		}
-	    	  else if(type == "Body")
-		  		{
-	    		  if(level == 1)
-  		    	  {
-  		    		  if(phase == "1")
-  		    		  {
-  		    			rcmndedWeight[workoutCount] = "Body Weight";
-  		    		  }
-  		    	  }
-  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[i]+'</label></div></li>');
-  		    	  
-		  		}
-	    	  else if(type == "Machine")
-		  		{
-	    		  if(level == 1)
-		    	  {
-		    		  if(phase == "1")
-		    		  {
-		    			  rcmndedWeight[workoutCount] = 50;
-		    		  }
-		    	  }
-  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[i]+'</label></div></li>');
-		  		}    
-		  		workoutCount++;
-
-	  		}
-	  		else if(bodyZone == "lower")
-	  		{
-		    	  nameList[workoutCount] = name;
-		    	  bodyZoneArray[workoutCount] = bodyZone;
-		    	  typeArray[workoutCount] = type;
-		    	  difficulty[workoutCount] = difficultyTemp;
-		    	  primary[workoutCount] = primaryTemp;
-			      description1[workoutCount] = description1Temp;
-			      description2[workoutCount] = description2Temp;
-			      description3[workoutCount] = description3Temp;
-			      description4[workoutCount] = description4Temp;
-			      description5[workoutCount] = description5Temp;
-			      tip1[workoutCount] = tip1Temp;
-			      tip2[workoutCount] = tip2Temp;
-			      tip3[workoutCount] = tip3Temp;
-		    	  if(type=="Compound")
-		    		{
-	  		    	  nameList[workoutCount] = nameList[compoundCount];
-	  		    	  nameList[compoundCount] = name;		    	 		
-	  		    	  
-	  		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
-	  		    	  bodyZoneArray[compoundCount] = bodyZone;
-	  		    	  
-	  		    	  typeArray[workoutCount] = typeArray[compoundCount];
-	  		    	  typeArray[compoundCount] = type;
-	  		    	  
-	  		    	  difficulty[workoutCount] =  difficulty[compoundCount];
-	  		    	  difficulty[compoundCount] = difficultyTemp;
-
-	  		    	  
-	  		    	  primary[workoutCount] = primary[compoundCount];
-	  		    	  primary[compoundCount] = primaryTemp;
-
-	  		    	  
-	  			      description1[workoutCount] = description1[compoundCount];
-	  			      description1[compoundCount] = description1Temp;
-
-	  			      
-	  			      description2[workoutCount] = description2[compoundCount];
-	  			      description2[compoundCount] = description2Temp;
-
-	  			      
-	  			      description3[workoutCount] = description3[compoundCount];
-	  			      description3[compoundCount] = description3Temp;
-
-	  			      
-	  			      description4[workoutCount] = description4[compoundCount];
-	  			      description4[compoundCount] = description4Temp;
-
-	  			      
-	  			      description5[workoutCount] = description5[compoundCount];
-	  			      description5[compoundCount] = description5Temp;
-
-	  			      
-	  			      tip1[workoutCount] = tip1[compoundCount];
-	  			      tip1[compoundCount] = tip1Temp;
-
-	  			      
-	  			      tip2[workoutCount] = tip2[compoundCount];
-	  			      tip2[compoundCount] = tip2Temp;
-
-	  			      
-	  			      tip3[workoutCount] = tip3[compoundCount];
-	  			      tip3[compoundCount] = tip3Temp;
-	  		    	  
-	  		    	  if(level == 1)
-	  		    	  {
-	  		    		  if(phase == "1")
-	  		    		  {
-	  		    			rcmndedWeight[workoutCount] = "Just the Bar";
-	  		    		  }
-	  		    	  }
-		  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
-	  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-	  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[compoundCount]+'</label></div></li>');
-	  		    	  compoundCount++;
-		    		}
-		    	  else if(type =="Dumbbell")
-		    		{
-		    		  if(level == 1)
-	  		    	  {
-	  		    		  if(phase == "1")
-	  		    		  {
-	  		    			rcmndedWeight[workoutCount] = 25;
-	  		    		  }
-	  		    	  }
-	  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[i]+'</label></div></li>');
-
-		    		}
-		    	  else if(type == "Body")
-			  		{
-		    		  if(level == 1)
-	  		    	  {
-	  		    		  if(phase == "1")
-	  		    		  {
-	  		    			rcmndedWeight[workoutCount] = "Body Weight";
-	  		    		  }
-	  		    	  }
-	  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[i]+'</label></div></li>');
-
-			  		}
-		    	  else if(type == "Machine")
-			  		{
-		    		  if(level == 1)
-			    	  {
-			    		  if(phase == "1")
-			    		  {
-			    			  rcmndedWeight[workoutCount] = 50;
-			    		  }
-			    	  }
-					  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[i]+'</label></div></li>');
-
-			  		}    
-			  		workoutCount++;
-	  		}
-	  		else
-	  		{
-		  	   coreList.push({name: name, rmdWeight:"filer", bodyZone: bodyZone, difficulty:difficultyTemp, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp,tip1:tip1Temp,tip2:tip2Temp,tip3:tip3Temp});
-		  	    	  
-				  if(type == "Body")
-				  {
-					  coreList[coreCount].rmdWeight = "Body Weight";
-					  //rcmndedWeight[workoutCount] = "Body Weight";
-				  }
-
-				$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div></li>');
-				coreCount++;
-
-	  		}
-	    }
-	    
-	    for(var i=0; i<=(workoutCount-coreCount); i++)
-	    {
-	    	//alert(nameList[i]);
-	    	//alert(difficulty[i]);
-		      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
-	    
-	    }
-	   /* for(var index=0; index<coreCount; index++)
-	    {
-		    workoutObj.push({name: coreList[coreCount].name, rmdWeight:coreList[coreCount].rmdWeight, bodyZone: coreList[coreCount].bodyZone, difficulty:coreList[coreCount].difficulty, primary:coreList[coreCount].primary, description1:coreList[coreCount].description1, description2:coreList[coreCount].description2, description3:coreList[coreCount].description3, description4:coreList[coreCount].description4, description5:coreList[coreCount].description5,tip1:coreList[coreCount].tip1,tip2:coreList[coreCount].tip2,tip3:coreList[coreCount].tip3});
-
-	    }*/
-	   
-	    $(".workoutCards").click(function(){
-	    	currentDetailID = $(this).attr('id'); 
-
-	    	$("#" + currentDetailID).animate({height:"1500px"});
-	    	$(".exName").animate({"opacity":"0"});
-	    	$(".recommendedLabel").animate({"opacity":"0"});
-	    	$(".recNum").animate({"opacity":"0"});
-	    	$(".workoutList").animate({"margin-top":"62px"});
-	    	$(".workoutCards").animate({"border-bottom-width": "0px"});
-			$("#buttonGroup").animate({"opacity":"0"},200);
-	    	//$(".workoutHead").hide();
-	    	$(".exitDetail").animate({"opacity":"1"});
-	    });
-	    $(".exitDetail").click(function(){
-	    	$("#" + currentDetailID).animate({height:"120px"});
-	    	$(".workoutCards").animate({"border-bottom-width": "1px"},0);
-	    	$(".exName").animate({"opacity":"1"});
-	    	$(".recommendedLabel").animate({"opacity":"1"});
-	    	$(".recNum").animate({"opacity":"1"});
-	    	$(".workoutList").animate({"margin-top":"205px"});
-			$("#buttonGroup").animate({"opacity":"1"},200);
-	    	//$(".workoutHead").show();
-	    	$(".exitDetail").animate({"opacity":"0"});
-
-	    });
-	    
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
-	});
-	/*
-	
-	$.ajax({
-	    type: "Post",
-	    datatype: "json",
-	    url: "http://www.tremainegrant.com/iBulk/bulk.php",
-	    data: {action: 'getExercise', $ex_level: level, $ex_phase:phase },
-	    crossDomain: true,
-	    success: function (response,status) {
-	    	
-	    	var stringVersion = JSON.stringify(response);  
-	    	var dataString = '{"exercise":' + response + '}';
-	    	var data = JSON.parse(dataString);
-	    	for( var i = 0; i< data.exercise.length; i++)
-	    	{
-	    		if(data.exercise[i].ex_bodyZone == "upper")
-	    		{
-	    			$("#upperList").append('<li class="workoutCards"><label id="exLbl'+i+'" class="exName">'+data.exercise[i].ex_name.toUpperCase()+'</label></li>');
-	    		}
-	    		else if(data.exercise[i].ex_bodyZone == "lower")
-	    		{
-	    			$("#lowerList").append('<li class="workoutCards"><label id="exLbl'+i+'" class="exName">'+data.exercise[i].ex_name.toUpperCase()+'</label></li>');
-	    		}
-	    		else
-	    		{
-	    			$("#coreList").append('<li class="workoutCards"><label id="exLbl'+i+'" class="exName">'+data.exercise[i].ex_name.toUpperCase()+'</label></li>');
-	    		}
-	    	}
-		      
-	    },
-	    error: function (response) {
-	         alert("Error establishing a connection.");
-	    }
-    });*/
-}
-
-function getLevel(email) {
-	var User = Parse.Object.extend("User");
-	var query = new Parse.Query(User);
-	query.equalTo("username", current.get("username"));
-	query.find({
-	  success: function(results) {
-	    // Do something with the returned Parse.Object values
-	    for (var i = 0; i < results.length; i++) { 
-	      var object = results[i];
-	      var pulledLevel = object.get('level');
-	      level = parseInt(pulledLevel);
-	      }
-	    getPhase(current.get("username"));
-
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
-		  
-	});
-	
-	
-	/*$.ajax({
-	    type: "Post",
-	    datatype: "json",
-	    url: "http://www.tremainegrant.com/iBulk/bulk.php",
-	    data: {action: 'getUserLevel', $email: email },
-	    crossDomain: true,
-	    success: function (response,status) {
-	    	
-	    	var obj = JSON.parse(response);
-	    	getExercise(obj.level,obj.phase);
-	    	
-	    },
-	    error: function (response) {
-	         alert("Error establishing a connection.");
-	    }
-    });*/
-}
-
-function getPhase(email) {
-
-	
-	var User = Parse.Object.extend("User");
-	var query = new Parse.Query(User);
-	query.equalTo("username", current.get("username"));
-	query.find({
-	  success: function(results) {
-	    // Do something with the returned Parse.Object values
-	    for (var i = 0; i < results.length; i++) { 
-	    	var object = results[i];
-		    pulledPhase = object.get('phase');
-		    phase = pulledPhase.toString();
-	     /* var object = results[i];
-	      phase = object.get('phase');
-	      alert(phase);*/
-	    }
-	    getExercise();
-	    
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
-	});
-}
-
-//------------------------------------------------------------//
-//----------- Menu------------------------------------------//
-//------------------------------------------------------------//
-$("#logout").click(function(){
-	Parse.User.logOut();
-	window.location = "index.html"; 
-});
-
-$("#myMeals").click(function(){
-	window.location = "meals.html"; 
-});
-
-$("#myWorkouts").click(function(){
-	window.location = "workout.html"; 
-});
-
-$("#myProfile").click(function(){
-	window.location = "profile.html"; 
-});
-
-
-
-
 //------------------------------------------------------------//
 //----------- Workout start------------------------------------//
 //------------------------------------------------------------//
@@ -689,8 +416,8 @@ $("#startButton").click(function(){
 		$("#weightPerformed").css("display","block");
 		$("#set").text("Set ");
 		$("#setNum").text(setCount + " of 3");
-    	//$("#timeLabel").text(" Seconds");
-    	
+  	//$("#timeLabel").text(" Seconds");
+  	
 		
 		
 		// check the database to see if the workout already exists for the specific user.
@@ -893,4 +620,776 @@ $("#startButton").click(function(){
 	
 });
 
+});
+
+function navigate(currentPage, pageDest)
+{
+	
+	$("#" +  currentPage).hide();
+	$("#" + pageDest).show(200);
+	
+}
+
+function getExercise() {
+		var Exercise = Parse.Object.extend("Exercise");
+		
+		// Find all workouts that are available for the user that is currently in this level and phase.
+		var query = new Parse.Query(Exercise);
+		query.equalTo("ex_level", level);
+		query.equalTo("ex_phase", phase);
+		query.find({
+		  success: function(results) { 
+			  var compoundCount = 0;
+			  var workoutCount = 0;
+			  var coreCount = 0;
+			  var coreWeight=[];
+			  
+			// go through each workout that was pulled and get the name, bodyZone, and type of workout.  
+		    for (var i = 0; i < results.length; i++) {  
+		      var object = results[i];
+		      var name = object.get('ex_name');
+		      var bodyZone = object.get('ex_bodyZone');
+		      var type = object.get('ex_type');
+		      var difficultyTemp = object.get('ex_difficulty');
+		      var primaryTemp = object.get('ex_primary');
+		      var description1Temp = object.get('ex_description1');
+		      var description2Temp = object.get('ex_description2');
+		      var description3Temp= object.get('ex_description3');
+		      var description4Temp = object.get('ex_description4');
+		      var description5Temp = object.get('ex_description5');
+		      var tip1Temp = object.get('ex_tip1');
+		      var tip2Temp = object.get('ex_tip2');
+		      var tip3Temp = object.get('ex_tip3');
+		      
+		    	  
+		      if(bodyZone == "upper")
+		  		{
+		    	  nameList[workoutCount] = name;
+		    	  bodyZoneArray[workoutCount] = bodyZone;
+		    	  typeArray[workoutCount] = type;
+		    	  difficulty[workoutCount] = difficultyTemp;
+		    	  primary[workoutCount] = primaryTemp;
+			      description1[workoutCount] = description1Temp;
+			      description2[workoutCount] = description2Temp;
+			      description3[workoutCount] = description3Temp;
+			      description4[workoutCount] = description4Temp;
+			      description5[workoutCount] = description5Temp;
+			      tip1[workoutCount] = tip1Temp;
+			      tip2[workoutCount] = tip2Temp;
+			      tip3[workoutCount] = tip3Temp;
+		    	  
+		    	  if(type=="Compound")
+		    		{
+	  		    	  nameList[workoutCount] = nameList[compoundCount];
+	  		    	  nameList[compoundCount] = name;  		
+	  		    	  
+	  		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+	  		    	  bodyZoneArray[compoundCount] = bodyZone;
+	  		    	  
+	  		    	  typeArray[workoutCount] = typeArray[compoundCount];
+	  		    	  typeArray[compoundCount] = type;
+	  		    	  
+	  		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+	  		    	  difficulty[compoundCount] = difficultyTemp;
+	
+	  		    	  
+	  		    	  primary[workoutCount] = primary[compoundCount];
+	  		    	  primary[compoundCount] = primaryTemp;
+	
+	  		    	  
+	  			      description1[workoutCount] = description1[compoundCount];
+	  			      description1[compoundCount] = description1Temp;
+	
+	  			      
+	  			      description2[workoutCount] = description2[compoundCount];
+	  			      description2[compoundCount] = description2Temp;
+	
+	  			      
+	  			      description3[workoutCount] = description3[compoundCount];
+	  			      description3[compoundCount] = description3Temp;
+	
+	  			      
+	  			      description4[workoutCount] = description4[compoundCount];
+	  			      description4[compoundCount] = description4Temp;
+	
+	  			      
+	  			      description5[workoutCount] = description5[compoundCount];
+	  			      description5[compoundCount] = description5Temp;
+	
+	  			      
+	  			      tip1[workoutCount] = tip1[compoundCount];
+	  			      tip1[compoundCount] = tip1Temp;
+	
+	  			      
+	  			      tip2[workoutCount] = tip2[compoundCount];
+	  			      tip2[compoundCount] = tip2Temp;
+	
+	  			      
+	  			      tip3[workoutCount] = tip3[compoundCount];
+	  			      tip3[compoundCount] = tip3Temp;
+	
+	  		    	  
+	  		    	
+	  		    	  
+	  		    	  if(level == 1)
+	  		    	  {
+	  		    		  if(phase == "1")
+	  		    		  {
+	  		    			rcmndedWeight[workoutCount] = "Just the Bar";
+	  		    		  }
+	  		    	  }
+	  		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
+	  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label><div></li>');
+	  		    	  compoundCount++;
+		    		}
+		    	  else if(type =="Dumbbell")
+		    		{
+		    		  if(level == 1)
+	  		    	  {
+	  		    		  if(phase == "1")
+	  		    		  {
+	  		    			rcmndedWeight[workoutCount] = 25;
+	  		    		  }
+	  		    	  }
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	  		    	  
+		    		}
+		    	  else if(type == "Body")
+			  		{
+		    		  if(level == 1)
+	  		    	  {
+	  		    		  if(phase == "1")
+	  		    		  {
+	  		    			rcmndedWeight[workoutCount] = "Body Weight";
+	  		    		  }
+	  		    	  }
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	  		    	  
+			  		}
+		    	  else if(type == "Machine")
+			  		{
+		    		  if(level == 1)
+			    	  {
+			    		  if(phase == "1")
+			    		  {
+			    			  rcmndedWeight[workoutCount] = 50;
+			    		  }
+			    	  }
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+			  		}    
+			  		workoutCount++;
+	
+		  		}
+		  		else if(bodyZone == "lower")
+		  		{
+			    	  nameList[workoutCount] = name;
+			    	  bodyZoneArray[workoutCount] = bodyZone;
+			    	  typeArray[workoutCount] = type;
+			    	  difficulty[workoutCount] = difficultyTemp;
+			    	  primary[workoutCount] = primaryTemp;
+				      description1[workoutCount] = description1Temp;
+				      description2[workoutCount] = description2Temp;
+				      description3[workoutCount] = description3Temp;
+				      description4[workoutCount] = description4Temp;
+				      description5[workoutCount] = description5Temp;
+				      tip1[workoutCount] = tip1Temp;
+				      tip2[workoutCount] = tip2Temp;
+				      tip3[workoutCount] = tip3Temp;
+			    	  if(type=="Compound")
+			    		{
+		  		    	  nameList[workoutCount] = nameList[compoundCount];
+		  		    	  nameList[compoundCount] = name;		    	 		
+		  		    	  
+		  		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+		  		    	  bodyZoneArray[compoundCount] = bodyZone;
+		  		    	  
+		  		    	  typeArray[workoutCount] = typeArray[compoundCount];
+		  		    	  typeArray[compoundCount] = type;
+		  		    	  
+		  		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+		  		    	  difficulty[compoundCount] = difficultyTemp;
+	
+		  		    	  
+		  		    	  primary[workoutCount] = primary[compoundCount];
+		  		    	  primary[compoundCount] = primaryTemp;
+	
+		  		    	  
+		  			      description1[workoutCount] = description1[compoundCount];
+		  			      description1[compoundCount] = description1Temp;
+	
+		  			      
+		  			      description2[workoutCount] = description2[compoundCount];
+		  			      description2[compoundCount] = description2Temp;
+	
+		  			      
+		  			      description3[workoutCount] = description3[compoundCount];
+		  			      description3[compoundCount] = description3Temp;
+	
+		  			      
+		  			      description4[workoutCount] = description4[compoundCount];
+		  			      description4[compoundCount] = description4Temp;
+	
+		  			      
+		  			      description5[workoutCount] = description5[compoundCount];
+		  			      description5[compoundCount] = description5Temp;
+	
+		  			      
+		  			      tip1[workoutCount] = tip1[compoundCount];
+		  			      tip1[compoundCount] = tip1Temp;
+	
+		  			      
+		  			      tip2[workoutCount] = tip2[compoundCount];
+		  			      tip2[compoundCount] = tip2Temp;
+	
+		  			      
+		  			      tip3[workoutCount] = tip3[compoundCount];
+		  			      tip3[compoundCount] = tip3Temp;
+		  		    	  
+		  		    	  if(level == 1)
+		  		    	  {
+		  		    		  if(phase == "1")
+		  		    		  {
+		  		    			rcmndedWeight[workoutCount] = "Just the Bar";
+		  		    		  }
+		  		    	  }
+			  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
+		  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+		  		    	  compoundCount++;
+			    		}
+			    	  else if(type =="Dumbbell")
+			    		{
+			    		  if(level == 1)
+		  		    	  {
+		  		    		  if(phase == "1")
+		  		    		  {
+		  		    			rcmndedWeight[workoutCount] = 25;
+		  		    		  }
+		  		    	  }
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	
+			    		}
+			    	  else if(type == "Body")
+				  		{
+			    		  if(level == 1)
+		  		    	  {
+		  		    		  if(phase == "1")
+		  		    		  {
+		  		    			rcmndedWeight[workoutCount] = "Body Weight";
+		  		    		  }
+		  		    	  }
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+	
+				  		}
+			    	  else if(type == "Machine")
+				  		{
+			    		  if(level == 1)
+				    	  {
+				    		  if(phase == "1")
+				    		  {
+				    			  rcmndedWeight[workoutCount] = 50;
+				    		  }
+				    	  }
+						  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+	
+				  		}    
+				  		workoutCount++;
+		  		}
+		  		else
+		  		{
+			  	   coreList.push({name: name, rmdWeight:"filer", bodyZone: bodyZone, difficulty:difficultyTemp, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp,tip1:tip1Temp,tip2:tip2Temp,tip3:tip3Temp});
+			  	    	  
+					  if(type == "Body")
+					  {
+						  coreList[coreCount].rmdWeight = "Body Weight";
+						  //rcmndedWeight[workoutCount] = "Body Weight";
+					  }
+	
+					$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div></li>');
+					coreCount++;
+	
+		  		}
+		    }
+		    
+		    for(var i=0; i<=(workoutCount-coreCount); i++)
+		    {
+		    	//alert(nameList[i]);
+		    	//alert(difficulty[i]);
+			      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
+		    
+		    }
+		    var jsonString = JSON.stringify(workoutObj);
+		    localStorage["workoutCache"] = jsonString;
+	
+		    cachedWorkouts = [];
+		    cachedWorkouts = jQuery.parseJSON(jsonString);
+	
+		   /* for(var index=0; index<coreCount; index++)
+		    {
+			    workoutObj.push({name: coreList[coreCount].name, rmdWeight:coreList[coreCount].rmdWeight, bodyZone: coreList[coreCount].bodyZone, difficulty:coreList[coreCount].difficulty, primary:coreList[coreCount].primary, description1:coreList[coreCount].description1, description2:coreList[coreCount].description2, description3:coreList[coreCount].description3, description4:coreList[coreCount].description4, description5:coreList[coreCount].description5,tip1:coreList[coreCount].tip1,tip2:coreList[coreCount].tip2,tip3:coreList[coreCount].tip3});
+	
+		    }*/
+		   
+		    $(".workoutCards").click(function(){
+		    	currentDetailID = $(this).attr('id'); 
+	
+		    	$("#" + currentDetailID).animate({height:"1500px"});
+		    	$(".exName").animate({"opacity":"0"});
+		    	$(".recommendedLabel").animate({"opacity":"0"});
+		    	$(".recNum").animate({"opacity":"0"});
+		    	$(".workoutList").animate({"margin-top":"62px"});
+		    	$(".workoutCards").animate({"border-bottom-width": "0px"});
+				$("#buttonGroup").animate({"opacity":"0"},200);
+		    	//$(".workoutHead").hide();
+		    	$(".exitDetail").animate({"opacity":"1"});
+		    });
+		    $(".exitDetail").click(function(){
+		    	$("#" + currentDetailID).animate({height:"120px"});
+		    	$(".workoutCards").animate({"border-bottom-width": "1px"},0);
+		    	$(".exName").animate({"opacity":"1"});
+		    	$(".recommendedLabel").animate({"opacity":"1"});
+		    	$(".recNum").animate({"opacity":"1"});
+		    	$(".workoutList").animate({"margin-top":"205px"});
+				$("#buttonGroup").animate({"opacity":"1"},200);
+		    	//$(".workoutHead").show();
+		    	$(".exitDetail").animate({"opacity":"0"});
+	
+		    });
+		    
+		  },
+		  error: function(error) {
+		    alert("Error: " + error.code + " " + error.message);
+		  }
+		});
+}	
+	/*
+	
+	$.ajax({
+	    type: "Post",
+	    datatype: "json",
+	    url: "http://www.tremainegrant.com/iBulk/bulk.php",
+	    data: {action: 'getExercise', $ex_level: level, $ex_phase:phase },
+	    crossDomain: true,
+	    success: function (response,status) {
+	    	
+	    	var stringVersion = JSON.stringify(response);  
+	    	var dataString = '{"exercise":' + response + '}';
+	    	var data = JSON.parse(dataString);
+	    	for( var i = 0; i< data.exercise.length; i++)
+	    	{
+	    		if(data.exercise[i].ex_bodyZone == "upper")
+	    		{
+	    			$("#upperList").append('<li class="workoutCards"><label id="exLbl'+i+'" class="exName">'+data.exercise[i].ex_name.toUpperCase()+'</label></li>');
+	    		}
+	    		else if(data.exercise[i].ex_bodyZone == "lower")
+	    		{
+	    			$("#lowerList").append('<li class="workoutCards"><label id="exLbl'+i+'" class="exName">'+data.exercise[i].ex_name.toUpperCase()+'</label></li>');
+	    		}
+	    		else
+	    		{
+	    			$("#coreList").append('<li class="workoutCards"><label id="exLbl'+i+'" class="exName">'+data.exercise[i].ex_name.toUpperCase()+'</label></li>');
+	    		}
+	    	}
+		      
+	    },
+	    error: function (response) {
+	         alert("Error establishing a connection.");
+	    }
+    });*/
+function getLevel(email) {
+	var User = Parse.Object.extend("User");
+	var query = new Parse.Query(User);
+	query.equalTo("username", current.get("username"));
+	query.find({
+	  success: function(results) {
+	    // Do something with the returned Parse.Object values
+	    for (var i = 0; i < results.length; i++) { 
+	      var object = results[i];
+	      var pulledLevel = object.get('level');
+	      level = parseInt(pulledLevel);
+	      }
+	    getPhase(current.get("username"));
+
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+		  
+	});
+	
+	
+	/*$.ajax({
+	    type: "Post",
+	    datatype: "json",
+	    url: "http://www.tremainegrant.com/iBulk/bulk.php",
+	    data: {action: 'getUserLevel', $email: email },
+	    crossDomain: true,
+	    success: function (response,status) {
+	    	
+	    	var obj = JSON.parse(response);
+	    	getExercise(obj.level,obj.phase);
+	    	
+	    },
+	    error: function (response) {
+	         alert("Error establishing a connection.");
+	    }
+    });*/
+}
+
+
+
+
+
+function getPhase(email) {
+
+	
+	var User = Parse.Object.extend("User");
+	var query = new Parse.Query(User);
+	query.equalTo("username", current.get("username"));
+	query.find({
+	  success: function(results) {
+	    // Do something with the returned Parse.Object values
+	    for (var i = 0; i < results.length; i++) { 
+	    	var object = results[i];
+		    pulledPhase = object.get('phase');
+		    phase = pulledPhase.toString();
+	     /* var object = results[i];
+	      phase = object.get('phase');
+	      alert(phase);*/
+	    }
+	    getExercise();
+	    
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+	});
+}
+
+function generateWorkout(cacheVar)
+{
+
+	var cachedWorkouts = [];
+	var cachedWorkouts = cacheVar;
+	var compoundCount = 0;
+	var workoutCount = 0;
+	var coreCount = 0;
+	var coreWeight=[];
+	
+    
+	
+	// go through each workout that was pulled and get the name, bodyZone, and type of workout.  
+    for (var i = 0; i < cachedWorkouts.length; i++) {     
+    	var name = cachedWorkouts[i].name;
+        var bodyZone = cachedWorkouts[i].bodyZone;
+        var type = cachedWorkouts[i].type;
+        var difficultyTemp = cachedWorkouts[i].difficulty;
+        var primaryTemp = cachedWorkouts[i].primary;
+        var description1Temp = cachedWorkouts[i].description1;
+        var description2Temp = cachedWorkouts[i].description2;
+        var description3Temp= cachedWorkouts[i].description3;
+        var description4Temp = cachedWorkouts[i].description4;
+        var description5Temp = cachedWorkouts[i].description5;
+        var tip1Temp = cachedWorkouts[i].tip1;
+        var tip2Temp = cachedWorkouts[i].tip2;
+        var tip3Temp = cachedWorkouts[i].tip3;
+    	  
+      if(bodyZone == "upper")
+  		{
+    	  nameList[workoutCount] = name;
+    	  bodyZoneArray[workoutCount] = bodyZone;
+    	  typeArray[workoutCount] = type;
+    	  difficulty[workoutCount] = difficultyTemp;
+    	  primary[workoutCount] = primaryTemp;
+	      description1[workoutCount] = description1Temp;
+	      description2[workoutCount] = description2Temp;
+	      description3[workoutCount] = description3Temp;
+	      description4[workoutCount] = description4Temp;
+	      description5[workoutCount] = description5Temp;
+	      tip1[workoutCount] = tip1Temp;
+	      tip2[workoutCount] = tip2Temp;
+	      tip3[workoutCount] = tip3Temp;
+    	  
+    	  if(type=="Compound")
+    		{
+		    	  nameList[workoutCount] = nameList[compoundCount];
+		    	  nameList[compoundCount] = name;  		
+		    	  
+		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+		    	  bodyZoneArray[compoundCount] = bodyZone;
+		    	  
+		    	  typeArray[workoutCount] = typeArray[compoundCount];
+		    	  typeArray[compoundCount] = type;
+		    	  
+		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+		    	  difficulty[compoundCount] = difficultyTemp;
+
+		    	  
+		    	  primary[workoutCount] = primary[compoundCount];
+		    	  primary[compoundCount] = primaryTemp;
+
+		    	  
+			      description1[workoutCount] = description1[compoundCount];
+			      description1[compoundCount] = description1Temp;
+
+			      
+			      description2[workoutCount] = description2[compoundCount];
+			      description2[compoundCount] = description2Temp;
+
+			      
+			      description3[workoutCount] = description3[compoundCount];
+			      description3[compoundCount] = description3Temp;
+
+			      
+			      description4[workoutCount] = description4[compoundCount];
+			      description4[compoundCount] = description4Temp;
+
+			      
+			      description5[workoutCount] = description5[compoundCount];
+			      description5[compoundCount] = description5Temp;
+
+			      
+			      tip1[workoutCount] = tip1[compoundCount];
+			      tip1[compoundCount] = tip1Temp;
+
+			      
+			      tip2[workoutCount] = tip2[compoundCount];
+			      tip2[compoundCount] = tip2Temp;
+
+			      
+			      tip3[workoutCount] = tip3[compoundCount];
+			      tip3[compoundCount] = tip3Temp;
+
+		    	  
+		    	
+		    	  
+		    	  if(level == 1)
+		    	  {
+		    		  if(phase == "1")
+		    		  {
+		    			rcmndedWeight[workoutCount] = "Just the Bar";
+		    		  }
+		    	  }
+		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
+		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label><div></li>');
+		    	  compoundCount++;
+    		}
+    	  else if(type =="Dumbbell")
+    		{
+    		  if(level == 1)
+		    	  {
+		    		  if(phase == "1")
+		    		  {
+		    			rcmndedWeight[workoutCount] = 25;
+		    		  }
+		    	  }
+		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		    	  
+    		}
+    	  else if(type == "Body")
+	  		{
+    		  if(level == 1)
+		    	  {
+		    		  if(phase == "1")
+		    		  {
+		    			rcmndedWeight[workoutCount] = "Body Weight";
+		    		  }
+		    	  }
+		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		    	  
+	  		}
+    	  else if(type == "Machine")
+	  		{
+    		  if(level == 1)
+	    	  {
+	    		  if(phase == "1")
+	    		  {
+	    			  rcmndedWeight[workoutCount] = 50;
+	    		  }
+	    	  }
+		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	  		}    
+	  		workoutCount++;
+
+  		}
+  		else if(bodyZone == "lower")
+  		{
+	    	  nameList[workoutCount] = name;
+	    	  bodyZoneArray[workoutCount] = bodyZone;
+	    	  typeArray[workoutCount] = type;
+	    	  difficulty[workoutCount] = difficultyTemp;
+	    	  primary[workoutCount] = primaryTemp;
+		      description1[workoutCount] = description1Temp;
+		      description2[workoutCount] = description2Temp;
+		      description3[workoutCount] = description3Temp;
+		      description4[workoutCount] = description4Temp;
+		      description5[workoutCount] = description5Temp;
+		      tip1[workoutCount] = tip1Temp;
+		      tip2[workoutCount] = tip2Temp;
+		      tip3[workoutCount] = tip3Temp;
+	    	  if(type=="Compound")
+	    		{
+  		    	  nameList[workoutCount] = nameList[compoundCount];
+  		    	  nameList[compoundCount] = name;		    	 		
+  		    	  
+  		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+  		    	  bodyZoneArray[compoundCount] = bodyZone;
+  		    	  
+  		    	  typeArray[workoutCount] = typeArray[compoundCount];
+  		    	  typeArray[compoundCount] = type;
+  		    	  
+  		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+  		    	  difficulty[compoundCount] = difficultyTemp;
+
+  		    	  
+  		    	  primary[workoutCount] = primary[compoundCount];
+  		    	  primary[compoundCount] = primaryTemp;
+
+  		    	  
+  			      description1[workoutCount] = description1[compoundCount];
+  			      description1[compoundCount] = description1Temp;
+
+  			      
+  			      description2[workoutCount] = description2[compoundCount];
+  			      description2[compoundCount] = description2Temp;
+
+  			      
+  			      description3[workoutCount] = description3[compoundCount];
+  			      description3[compoundCount] = description3Temp;
+
+  			      
+  			      description4[workoutCount] = description4[compoundCount];
+  			      description4[compoundCount] = description4Temp;
+
+  			      
+  			      description5[workoutCount] = description5[compoundCount];
+  			      description5[compoundCount] = description5Temp;
+
+  			      
+  			      tip1[workoutCount] = tip1[compoundCount];
+  			      tip1[compoundCount] = tip1Temp;
+
+  			      
+  			      tip2[workoutCount] = tip2[compoundCount];
+  			      tip2[compoundCount] = tip2Temp;
+
+  			      
+  			      tip3[workoutCount] = tip3[compoundCount];
+  			      tip3[compoundCount] = tip3Temp;
+  		    	  
+  		    	  if(level == 1)
+  		    	  {
+  		    		  if(phase == "1")
+  		    		  {
+  		    			rcmndedWeight[workoutCount] = "Just the Bar";
+  		    		  }
+  		    	  }
+	  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
+  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+  		    	  compoundCount++;
+	    		}
+	    	  else if(type =="Dumbbell")
+	    		{
+	    		  if(level == 1)
+  		    	  {
+  		    		  if(phase == "1")
+  		    		  {
+  		    			rcmndedWeight[workoutCount] = 25;
+  		    		  }
+  		    	  }
+  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+
+	    		}
+	    	  else if(type == "Body")
+		  		{
+	    		  if(level == 1)
+  		    	  {
+  		    		  if(phase == "1")
+  		    		  {
+  		    			rcmndedWeight[workoutCount] = "Body Weight";
+  		    		  }
+  		    	  }
+  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+
+		  		}
+	    	  else if(type == "Machine")
+		  		{
+	    		  if(level == 1)
+		    	  {
+		    		  if(phase == "1")
+		    		  {
+		    			  rcmndedWeight[workoutCount] = 50;
+		    		  }
+		    	  }
+				  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+
+		  		}    
+		  		workoutCount++;
+  		}
+  		else
+  		{
+	  	   coreList.push({name: name, rmdWeight:"filer", bodyZone: bodyZone, difficulty:difficultyTemp, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp,tip1:tip1Temp,tip2:tip2Temp,tip3:tip3Temp});
+	  	    	  
+			  if(type == "Body")
+			  {
+				  coreList[coreCount].rmdWeight = "Body Weight";
+				  //rcmndedWeight[workoutCount] = "Body Weight";
+			  }
+
+			//$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div></li>');
+			coreCount++;
+
+  		}
+    }
+    
+    for(var i=0; i<=(workoutCount-coreCount); i++)
+    {
+    	//alert(nameList[i]);
+    	//alert(difficulty[i]);
+	      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
+    
+    }
+    
+
+
+   /* for(var index=0; index<coreCount; index++)
+    {
+	    workoutObj.push({name: coreList[coreCount].name, rmdWeight:coreList[coreCount].rmdWeight, bodyZone: coreList[coreCount].bodyZone, difficulty:coreList[coreCount].difficulty, primary:coreList[coreCount].primary, description1:coreList[coreCount].description1, description2:coreList[coreCount].description2, description3:coreList[coreCount].description3, description4:coreList[coreCount].description4, description5:coreList[coreCount].description5,tip1:coreList[coreCount].tip1,tip2:coreList[coreCount].tip2,tip3:coreList[coreCount].tip3});
+
+    }*/
+   
+    $(".workoutCards").click(function(){
+    	currentDetailID = $(this).attr('id'); 
+
+    	$("#" + currentDetailID).animate({height:"1500px"});
+    	$(".exName").animate({"opacity":"0"});
+    	$(".recommendedLabel").animate({"opacity":"0"});
+    	$(".recNum").animate({"opacity":"0"});
+    	$(".workoutList").animate({"margin-top":"62px"});
+    	$(".workoutCards").animate({"border-bottom-width": "0px"});
+		$("#buttonGroup").animate({"opacity":"0"},200);
+    	//$(".workoutHead").hide();
+    	$(".exitDetail").animate({"opacity":"1"});
+    });
+    $(".exitDetail").click(function(){
+    	$("#" + currentDetailID).animate({height:"120px"});
+    	$(".workoutCards").animate({"border-bottom-width": "1px"},0);
+    	$(".exName").animate({"opacity":"1"});
+    	$(".recommendedLabel").animate({"opacity":"1"});
+    	$(".recNum").animate({"opacity":"1"});
+    	$(".workoutList").animate({"margin-top":"205px"});
+		$("#buttonGroup").animate({"opacity":"1"},200);
+    	//$(".workoutHead").show();
+    	$(".exitDetail").animate({"opacity":"0"});
+
+    });	
+}
+function removeExercise(itemId)
+{
+	var exerciseItemID = itemId; 
+	alert(exerciseItemID);
+}
 

@@ -5,22 +5,95 @@ html {
     background-color:#0091ea;   
     color: #000;
 }
-.settingMenu
+.settingsMenu
 {
-	background-color: white;
 	width: 0px;
-	height: 0px;
-	position: absolute;
-	left: 227px;
-	top: 33px;
-	z-index: 1050;
+    height: 0px;
+    background-color: white;
+    position: absolute;
+    left: -99px;
+    top: 9px;
+    z-index: 10;
+    box-shadow: 0px 2px 2px 0px;
 	
+}
+.settingMenuList
+{
+ 	list-style: none;
+    margin-top: 2px;
+    margin-left: -40px;
+    display:none;	
+}
+.settingMenuListItem
+{
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: grey;
+	text-align: center;	
+	opacity:0.8;
 }
 .settingMenuDots
 {
 	left: 325px !important;
 	position: absolute;
 	top: 21px;
+	position: absolute;
+	z-index: 1030;
+}
+.settingDotIcon
+{
+	height:25px;
+}
+.deleteIcon
+{
+	background-color:#e5e5e5;
+	width: 0px;
+	height: 121px;
+	position: absolute;
+	right: 0px;
+	margin-top: -121px;
+   -moz-box-shadow:    inset 3px 1px 11px #888;
+   -webkit-box-shadow: inset 3px 1px 11px #888;
+   box-shadow:         inset 3px 1px 11px #888;
+}
+.favIcon
+{
+	background-color:#e5e5e5;
+	width: 0px;
+	height: 121px;
+	position: absolute;
+	left: 0px;
+	margin-top: -121px;
+   -moz-box-shadow:    inset 3px 1px 11px #888;
+   -webkit-box-shadow: inset 3px 1px 11px #888;
+   box-shadow:         inset 3px 1px 11px #888;
+}
+.trashIcon
+{
+	margin-top: 20px;
+	margin-left: 10px;
+}
+.deleteLabel
+{
+	top: 47px;
+	left: 60px;
+	position: absolute;
+	font-size: 26px;
+	color: grey !important;
+	font-weight: 200;
+	font-family: sans-serif;
+}
+#workoutToast
+{
+	width: 0px;
+	height: 100px;
+	position: absolute;
+	z-index: 1050;
+	background-color: red;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -150px;
 }
 #workoutBody
 {
@@ -162,7 +235,7 @@ ui-loader
 	
 }
 #menuIcon{
-	height: 25px;
+	height: 20px;
 	
 	
 }
@@ -385,8 +458,9 @@ ui-loader
 }
 .workoutCardContainer
 {
-	width:100%;
+	width:360px;
 	height:100%;
+	
 }
 .exitDetail
 {

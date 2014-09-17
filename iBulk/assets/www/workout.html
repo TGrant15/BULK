@@ -11,6 +11,9 @@
 		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="css/app.css" />
         <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+        <script src="js/touchSwipe.js"></script>
+        <script src="js/touchSwipe.min.js"></script>
+        
     </head>
     <body id="workoutBody">
     <div id="weightAdjForm">
@@ -30,11 +33,20 @@
 	    		<div class="workoutHead">
 	    			<div class="toggle" id="toggle">
 				      <div class="arrowIcon">
-				        <img src="http://i.imgur.com/Ysz9bH0.png" id="arrowIcon">
+				        <img src="img/whiteArrow.png" id="arrowIcon">
 				        </div>
 				      </div>
 				      <div class="menu">
-				        <img src="http://i.imgur.com/OTJhUyq.png" id="menuIcon">
+				        <img src="img/whiteMenu.png" id="menuIcon">
+				      </div>
+				      <div class="settingMenuDots" id="dotMenuWorkout" style="left:325px !important">
+				      	<img src="img/whiteMenuDots.png" id="dotMenu" class="settingDotIcon">
+  						<div class="settingsMenu">
+  							<ul class="settingMenuList">
+							  <li class="settingMenuListItem" id="settingsPageButton">settings</li>
+  							  <li class="settingMenuListItem" id="logout">logout</li>
+  							</ul>
+  						</div>
 				      </div>
 	    			<h2 id="workoutOverviewTitle">Today's Workout</h2>
 	    			<ul id="workoutTabs">
