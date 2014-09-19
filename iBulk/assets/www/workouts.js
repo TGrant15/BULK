@@ -47,7 +47,6 @@ var recommendedSets;
 /************************/
 $(document).ready(function() {
 
-
 //****Create Array to check if the data is cached	
 var cachedWorkoutCheck = [];	
 if(localStorage["workoutCache"]==undefined)
@@ -211,94 +210,151 @@ $(".workoutCards").swipe( {
 		{
 			var str = 0;
 			var deleteStr = 0;
+			
 		    var removeID = $(this).attr('id');
-					
-			 if (phase!="cancel" && phase!="end") {
-		         str-=distance;
-		         deleteStr+=distance;
-		         $("#" + removeID).append("<div class='deleteIcon'><img class='trashIcon' src='img/trash.png'/><lable class='deleteLabel'>Delete</label></div>");
-		         $(".deleteIcon").css("width",deleteStr + "px");
-		         $("#" + removeID).css("margin-left",str + "px");
-		         
-		         if(distance > 175)
-		         {
-		        	 if(confirm("Are you sure you want to remove this exercise")==true)
-		     		{
-		        		 $("#" + removeID).remove();
-		             	 $("#workoutBody").prepend("<div id='workoutToast'><label>Exercise Removed!</label></div>")
-		             	 $("#workoutToast").animate({"width":"300px"},300);
-		             	 
-		             	setTimeout(function(){
-			             	 $("#workoutToast").animate({"opacity":"0"},1000);
-
-		             	}, 1000);
-		             	
-		             	$("#workoutBody").click(function(){
-		             		$("#workoutToast").remove();
-		             	});
-		             	             	
+			if(removeID.length == 5){
+				var deleteIndex = removeID.substring(4, 5);		
+			}
+			else
+			{
+				var deleteIndex = removeID.substring(4, 6);	
+			}
+		    
 		
-		     		}
-		        	else 
-		            {
-		             		$("#" + removeID).css("margin-left","-14px");
-		             		$(".deleteIcon").remove();
+			 if (phase!="cancel" && phase!="end") {
+				 if(distance>0)
+				 {
+					 if($("#deleteIcon" + deleteIndex).text().length == 0)
+					{
+						$(".favIcon").remove();
 
-		            }
-		     	}
+						$("#"+removeID).append('<div class="deleteIcon" id="deleteIcon'+deleteIndex+'"><img class="trashIcon" src="img/trash.png"/><label class="deleteLabel">Delete</label></div>');						 
+					}
+
+			         str-=distance;
+			         deleteStr+=distance;
+			         $("#deleteIcon" + deleteIndex).css("width",deleteStr + "px");
+			         $("#workoutCardContainerItem" + deleteIndex).css("margin-left",str + "px");
+			         
+		         
+			         if(distance > 175)
+			         {
+			        	 if(confirm("Are you sure you want to remove this exercise")==true)
+			     		{
+			        		 $("#" + removeID).remove();
+			             	 $("#workoutBody").prepend("<div id='workoutToast'><label>Exercise Removed!</label></div>")
+			             	 $("#workoutToast").animate({"width":"300px"},300);
+			             	 
+			             	setTimeout(function(){
+				             	 $("#workoutToast").animate({"opacity":"0"},1000);
+				             	 $(".deleteIcon").remove();
+	
+			             	}, 1000);
+			             	
+			             	$("#workoutBody").click(function(){
+			             		$("#workoutToast").remove();
+			             	});
+			             	             	
+			
+			     		}
+			        	else 
+			            {
+			             		$("#workoutCardContainerItem" + deleteIndex).css({"margin-left":"0px"});
+			             		$(".deleteIcon").animate({"width":"0px"});
+			             		$(".deleteIcon").empty();
+					            $(".deleteIcon").remove();
+
+
+	
+			            }
+			         }
+				 }
      
          
 			 }
 			 else
 			 {
-				 $(".favIcon").remove();
+				 $("#favIcon"+deleteIndex).animate({"width":"0px"});
+				 $("#deleteIcon" + deleteIndex).animate({"width":"0px"});
+				 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});	
+				 $(".deleteIcon").empty();
 				 $(".deleteIcon").remove();
-				 $("#" + removeID).css("margin-left","-14px");			
+				 $(".favIcon").empty();
+				 $(".favIcon").remove();
+
+				 
 			 }
 		}
-		else
+		else if(direction == "right")
 		{
 			var str = 0;
 			var deleteStr = 0;
 		    var removeID = $(this).attr('id');
-					
-			 if (phase!="cancel" && phase!="end") {
-		         str+=distance;
-		         deleteStr+=distance;
-		         $("#" + removeID).append("<div class='favIcon'></div>");
-		         $(".favIcon").css("width",deleteStr + "px");
-		         $("#" + removeID).css("margin-left",str + "px");
-		         
-		         if(distance > 175)
-		         {
-		        	 if(confirm("Are you sure you want to save this exercise")==true)
-		     		{
-		        		alert("saved!");
-		        		$("#" + removeID).css("margin-left","-14px");
-	             		$(".favIcon").remove();
+		    if(removeID.length == 5){
+				var deleteIndex = removeID.substring(4, 5);		
+			}
+			else
+			{
+				var deleteIndex = removeID.substring(4, 6);	
+			}
 		
-		     		}
-		        	else
-		        	{
-		        		$("#" + removeID).css("margin-left","-14px");
-	             		$(".favIcon").remove(); 
-		        	}
+			 if (phase!="cancel" && phase!="end") {
+				if(distance>0)
+				{
+					
+					if($("#favIcon" + deleteIndex).text().length == 0)
+					{
+						$(".deleteIcon").remove();
+						$("#" + removeID).prepend('<div class="favIcon" id="favIcon'+deleteIndex+'"><label class="deleteLabel">Delete</label></div>');
+					}
+			         str+=distance;
+			         deleteStr+=distance;
+			         $(".favIcon").css("width",deleteStr + "px");
+			         $("#workoutCardContainerItem" + deleteIndex).css("margin-left",str + "px");
+				    
+			         if(distance > 175)
+			         {
+			        	 if(confirm("Are you sure you want to save this exercise")==true)
+			     		{
+			        		alert("saved!");
+			        		$("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});
+		             		$(".favIcon").animate({"width":"0px"});
+							 $(".favIcon").empty();
+							 $(".favIcon").remove();
+			
+			     		}
+			        	else
+			        	{
+			        		//$("#" + removeID).animation({"margin-left":"0px"});
+		             		$("#workoutCardContainerItem" + deleteIndex).animate({"width":"0px"}); 
+		             		$("#favIcon"+deleteIndex).animate({"width":"0px"});
+							 $(".favIcon").empty();
+							 $(".favIcon").remove();
+			        	}
 
-		     	}
+			         }
+				}
          
 			 }
 			 else
 			 {
-				 $(".favIcon").remove();
-				 $(".deleteIcon").remove();
-				 $("#" + removeID).css("margin-left","-14px");			
+				 $("#favIcon"+deleteIndex).animate({"width":"0px"});
+				 $("#deleteIcon" + deleteIndex).animate({"width":"0px"});
+				 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"},300);
+					 $(".deleteIcon").empty();
+					 $(".deleteIcon").remove();
+					 $(".favIcon").empty();
+					 $(".favIcon").remove();
+				
+
 			 }
 			 
 		}
+		
       
     },
     //Default is 75px, set to 0 for demo so any distance triggers swipe
-     threshold:75
+     threshold:75, allowPageScroll:"vertical"
 });
 
 /*$(".workoutCards").on( "swipeleft", function(){
@@ -740,7 +796,14 @@ function getExercise() {
 	  		    	  }
 	  		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
 	  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label><div></li>');
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+	  		    	  								</div>\
+	  		    	  								<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'" id="workoutCardContainterItem'+i+'">\
+	  		    	  									<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+	  		    	  									<label class="exDifficultyLbl">Difficulty:</label>\
+	  		    	  									<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+	  		    	  								</div>\
+	  		    	  								</li>');
 	  		    	  compoundCount++;
 		    		}
 		    	  else if(type =="Dumbbell")
@@ -752,7 +815,19 @@ function getExercise() {
 	  		    			rcmndedWeight[workoutCount] = 25;
 	  		    		  }
 	  		    	  }
-	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+	  		    			  						<div class="favIcon" id="favIcon'+i+'">\
+	  		    	  								</div>\
+	  		    	  								<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'" id="workoutCardContainterItem'+i+'">\
+	  		    	  									<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+	  		    	  									<label class="exDifficultyLbl">Difficulty:</label>\
+	  		    	  									<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+	  		    	  								</div>\
+	  		    	  								<div class="deleteIcon" id="deleteIcon'+i+'">\
+	  		    	  									<img class="trashIcon" src="img/trash.png"/>\
+	  		    	  									<label class="deleteLabel">Delete</label>\
+	  		    	  								</div>\
+	  		    	  								</li>');
 	  		    	  
 		    		}
 		    	  else if(type == "Body")
@@ -764,7 +839,14 @@ function getExercise() {
 	  		    			rcmndedWeight[workoutCount] = "Body Weight";
 	  		    		  }
 	  		    	  }
-	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+	  		    	  								</div>\
+	  		    	  								<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'" id="workoutCardContainterItem'+i+'">\
+	  		    	  									<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+	  		    	  									<label class="exDifficultyLbl">Difficulty:</label>\
+	  		    	  									<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+	  		    	  								</div>\
+	  		    	  								</li>');
 	  		    	  
 			  		}
 		    	  else if(type == "Machine")
@@ -776,7 +858,14 @@ function getExercise() {
 			    			  rcmndedWeight[workoutCount] = 50;
 			    		  }
 			    	  }
-	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+	  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+	  		    	  								</div>\
+	  		    	  								<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'" id="workoutCardContainterItem'+i+'">\
+	  		    	  									<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+	  		    	  									<label class="exDifficultyLbl">Difficulty:</label>\
+	  		    	  									<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+	  		    	  								</div>\
+	  		    	  								</li>');
 			  		}    
 			  		workoutCount++;
 	
@@ -855,7 +944,14 @@ function getExercise() {
 		  		    	  }
 			  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
 		  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+	  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+	  		    	  								</div>\
+	  		    	  								<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'" id="workoutCardContainterItem'+i+'">\
+	  		    	  									<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+	  		    	  									<label class="exDifficultyLbl">Difficulty:</label>\
+	  		    	  									<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+	  		    	  								</div>\
+	  		    	  								</li>');
 		  		    	  compoundCount++;
 			    		}
 			    	  else if(type =="Dumbbell")
@@ -867,7 +963,13 @@ function getExercise() {
 		  		    			rcmndedWeight[workoutCount] = 25;
 		  		    		  }
 		  		    	  }
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
 	
 			    		}
 			    	  else if(type == "Body")
@@ -879,7 +981,14 @@ function getExercise() {
 		  		    			rcmndedWeight[workoutCount] = "Body Weight";
 		  		    		  }
 		  		    	  }
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 	
 				  		}
 			    	  else if(type == "Machine")
@@ -891,7 +1000,14 @@ function getExercise() {
 				    			  rcmndedWeight[workoutCount] = 50;
 				    		  }
 				    	  }
-						  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 	
 				  		}    
 				  		workoutCount++;
@@ -906,7 +1022,7 @@ function getExercise() {
 						  //rcmndedWeight[workoutCount] = "Body Weight";
 					  }
 	
-					$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div></li>');
+					$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="favIcon" id="favIcon'+i+'"></div><div class="workoutCardContainer" id="workoutCardContainerItem'+i+'"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div><div class="deleteIcon" id="deleteIcon'+i+'"><img class="trashIcon" src="img/trash.png"/><label class="deleteLabel">Delete</label></div></li>');
 					coreCount++;
 	
 		  		}
@@ -1173,7 +1289,14 @@ function generateWorkout(cacheVar)
 		    	  }
 		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
 		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label><div></li>');
+		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 		    	  compoundCount++;
     		}
     	  else if(type =="Dumbbell")
@@ -1185,7 +1308,14 @@ function generateWorkout(cacheVar)
 		    			rcmndedWeight[workoutCount] = 25;
 		    		  }
 		    	  }
-		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 		    	  
     		}
     	  else if(type == "Body")
@@ -1197,7 +1327,14 @@ function generateWorkout(cacheVar)
 		    			rcmndedWeight[workoutCount] = "Body Weight";
 		    		  }
 		    	  }
-		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 		    	  
 	  		}
     	  else if(type == "Machine")
@@ -1209,7 +1346,14 @@ function generateWorkout(cacheVar)
 	    			  rcmndedWeight[workoutCount] = 50;
 	    		  }
 	    	  }
-		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 	  		}    
 	  		workoutCount++;
 
@@ -1288,7 +1432,14 @@ function generateWorkout(cacheVar)
   		    	  }
 	  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
   		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
   		    	  compoundCount++;
 	    		}
 	    	  else if(type =="Dumbbell")
@@ -1300,7 +1451,14 @@ function generateWorkout(cacheVar)
   		    			rcmndedWeight[workoutCount] = 25;
   		    		  }
   		    	  }
-  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></div></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 
 	    		}
 	    	  else if(type == "Body")
@@ -1312,7 +1470,14 @@ function generateWorkout(cacheVar)
   		    			rcmndedWeight[workoutCount] = "Body Weight";
   		    		  }
   		    	  }
-  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 
 		  		}
 	    	  else if(type == "Machine")
@@ -1324,7 +1489,14 @@ function generateWorkout(cacheVar)
 		    			  rcmndedWeight[workoutCount] = 50;
 		    		  }
 		    	  }
-				  $("#lowerList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="exDifficultyLbl">Difficulty:</label><label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label></li>');
+		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'">\
+		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+		  		    			  <label class="exDifficultyLbl">Difficulty:</label>\
+		  		    			  <label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+		  		    			  </div>\
+		  		    			  </li>');
+	
 
 		  		}    
 		  		workoutCount++;
@@ -1339,7 +1511,7 @@ function generateWorkout(cacheVar)
 				  //rcmndedWeight[workoutCount] = "Body Weight";
 			  }
 
-			//$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="workoutCardContainer"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div></li>');
+			//$("#coreList").append('<li class="workoutCards" id="item'+i+'"><div class="favIcon" id="favIcon'+i+'"></div><div class="workoutCardContainer" id="workoutCardContainerItem'+i+'"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+coreWeight[coreCount]+'</label></div></li>');
 			coreCount++;
 
   		}

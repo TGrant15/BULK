@@ -48,25 +48,26 @@ html {
 {
 	background-color:#e5e5e5;
 	width: 0px;
-	height: 121px;
-	position: absolute;
-	right: 0px;
-	margin-top: -121px;
+	height: 120px;
+	position: relative;
+	float: right;
    -moz-box-shadow:    inset 3px 1px 11px #888;
    -webkit-box-shadow: inset 3px 1px 11px #888;
    box-shadow:         inset 3px 1px 11px #888;
+   margin-top: -120px;
+	margin-right: 142px;
 }
 .favIcon
 {
 	background-color:#e5e5e5;
 	width: 0px;
-	height: 121px;
-	position: absolute;
+	height: 120px;
+	position: relative;
 	left: 0px;
-	margin-top: -121px;
    -moz-box-shadow:    inset 3px 1px 11px #888;
    -webkit-box-shadow: inset 3px 1px 11px #888;
    box-shadow:         inset 3px 1px 11px #888;
+   float:left;
 }
 .trashIcon
 {
