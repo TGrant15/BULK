@@ -63,7 +63,7 @@ html {
 	width: 0px;
 	height: 120px;
 	position: relative;
-	left: 0px;
+	margin-left: -3px;
    -moz-box-shadow:    inset 3px 1px 11px #888;
    -webkit-box-shadow: inset 3px 1px 11px #888;
    box-shadow:         inset 3px 1px 11px #888;
