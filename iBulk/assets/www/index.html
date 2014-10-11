@@ -9,7 +9,8 @@
   		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <link rel="stylesheet" href="css/app.css" />
-        <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/main.css" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,400,500italic,300,700italic,700,500' rel='stylesheet' type='text/css'>
     </head>
     <body>
     <!-- <div class="circle" id="circle"></div>  -->
@@ -17,66 +18,67 @@
         	<!----------------------------------------  Login Page ---------------------------------------->
      	<div id="loginPage">
      		<div data-role="content">
-     		<div id="titleLogo">
-     		<h1 style="float:left; font-weight: 200; width: 0px; height: 0px; margin: 1px -8px;">i</h1>
-     		<h1 style="height: 0px; margin-top: 30px;">BULK</h1>
-     		</div>
-     		<article class="z1" style="overflow: visible;">
-    		<div class="paper-shadow paper-shadow-bottom-z-1"></div>
-    		<div class="formTitle">Sign-In</div>
-    		<div id="loginForm">
-    		<div id="loginTextGroup">
-    				<input class="textField" type="text" placeholder="Username" id="logUsername" />
-    				<input class="textField" type="password" placeholder="Password" id="logPassword" />
-    		</div>
-    		<div id="loginButtonGroup">
-    		 	<div id="loginButton" class="button raised green">
-     				 <div class="center" fit>Login</div>
-      				<paper-ripple fit></paper-ripple>
-    		    </div>
-    		    <div id="registerButton" class="button raised blue">
-     				 <div class="center" fit>Register</div>
-      				<paper-ripple fit></paper-ripple>
-    		    </div>
-    		</div>
-    		</div>
-    		<div class="paper-shadow paper-shadow-bottom-z-1"></div>
-  			</article>
-  			
-  			<div id="passwordForgot"><a href="#"><h3>Forgot your password?</h3></a></div>
-    		
-  			
+	     		<div class="container">
+		     		<div class="img-backdrop"></div>
+	     			<div class="main-card shadow-2">
+	     				<h1>Welcome</h1>
+     					<div class="input-group">
+     						<input id="logUsername" class="soft-transition" type="text" required />
+     						<span class="bar soft-transition"></span>
+     						<label class="input-label soft-transition">Username</label>
+     					</div>
+     					<div class="input-group">
+     						<input id="logPassword" class="soft-transition" type="password" required />	
+     						<span class="bar"></span>
+     						<label class="input-label">Password</label>			
+     					</div>
+     					<div class="container" style="text-align:right;">
+	     					<a href="#" id="loginButton" class="primary">LOGIN</a>
+	     					<a href="#" id="registerButton">REGISTER</a>
+     					</div>
+	     			</div>
+	     		</div>
+  				<div id="passwordForgot"><a href="#"><h3>Forgot your password?</h3></a></div>
      		</div>
      	</div>
      	
      	<!----------------------------------------  Register Page ---------------------------------------->
     	<div id="registerPage">
-    	
-    	
-    		<div data-role="content">    			
-			<article id="registerDiv" class="z1" style="overflow: visible;">
-	    		<div class="paper-shadow paper-shadow-bottom-z-1"></div>
-	    		<div class="formTitle">Register</div>
-	    		<div id="registerForm">
-	    		<div id="registerTextGroup">
-	    				<input class="textField" type="email" placeholder="Email" id="txtEmail" class="txtLogin" />
-						<input class="textField" type="email" placeholder="Confirm Email" id="txtEmailConfirm" class="txtLogin" />
-						<input class="textField"id="txtPassword" type="password" placeholder="Password" class="txtLogin"/>
-						<input class="textField" id="confirmPassword" type="password" placeholder="Confirm Password" class="txtLogin"/>
-	    		</div>
-	   			<div id="termAccept"><input class="checkbox" id="termCheck" type="checkbox"/><label style="width:350px;">Accept Terms and Conditions</label></div>
-	    		<div id="registerSubmit" class="button raised green">
-	     				<div class="center" fit>Register</div>
-	      				<paper-ripple fit></paper-ripple>
-	    		</div>
-	    		</div>
-	    		<div class="paper-shadow paper-shadow-bottom-z-1"></div>
-  			</article>
-  			<div id="taken"><h3>That email is already in use.</h3></div>
-  			
-					
+    		<div data-role="content">   
+	    		<div class="container">
+	   				<div class="img-backdrop"></div>
+	     			<div class="main-card shadow-2">
+	     				<h1>Register</h1>
+    					<div class="input-group">
+    						<input id="txtEmail" type="text" required />
+    						<span class="bar"></span>
+    						<label class="input-label soft-transition">Email</label>
+    					</div>
+    					<div class="input-group">
+    						<input id="txtEmailConfirm" type="text" required />
+    						<span class="bar"></span>
+    						<label class="input-label soft-transition">Confirm Email</label>
+    					</div>
+    					<div class="input-group">
+    						<input id="txtPassword" type="password" required />	
+    						<span class="bar"></span>
+    						<label class="input-label soft-transition">Password</label>		
+    					</div>
+    					<div class="input-group">
+    						<input id="confirmPassword" type="password" required />		
+    						<span class="bar"></span>
+    						<label class="input-label soft-transition">Confirm Password</label>	
+    					</div>
+    					<div id="termAccept"><input class="checkbox" id="termCheck" type="checkbox"/><label>Accept Terms and Conditions</label></div>
+						<div class="container" style="text-align:right;">
+							<a href="#" id="reigsterSubmit" class="primary">DONE</a>
+							<a href="#" id="registerCancel">CANCEL</a>
+						</div>
+	   						<!-- <div id="taken"><h3>That email is already in use.</h3></div> -->
+					</div>
+				</div> 			
 			</div>		
-    		</div>
+		</div>
     	
 <!----------------------------------------  Details Page ---------------------------------------->
     	<div id="detailsPage">   		

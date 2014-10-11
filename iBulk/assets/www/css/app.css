@@ -1,9 +1,10 @@
+@import url('http://roboto-webfont.googlecode.com/svn/trunk/roboto.all.css');
+
 html {
 	
     background-color:#0091ea;   
     color: #000;
 }
-
 .settingsMenu
 {
 	width: 0px;
@@ -35,9 +36,17 @@ html {
 {
 	left: 325px !important;
 	position: absolute;
-	top: 21px;
+	top: 16px;
 	position: absolute;
 	z-index: 1030;
+}
+.settingMenuDotsDetail
+{
+	left: 325px !important;
+	top: 16px;
+	position: fixed;
+	z-index: 1040;
+	display:none;
 }
 .settingDotIcon
 {
@@ -83,7 +92,7 @@ html {
 	font-weight: 200;
 	font-family: sans-serif;
 }
-#workoutToast
+.workoutToast
 {
 	width: 0px;
 	height: 100px;
@@ -197,7 +206,7 @@ ui-loader
 }
 #termAccept
 {
-	margin: 10px -15px;
+	margin: 10px -36px;
 	width: 266px;
 }
 #registerSubmit{
@@ -258,6 +267,20 @@ ui-loader
 	position: absolute;
 }
 
+.backToWorkout
+{
+	z-index: 1001;
+	top: 13px;
+	left: 4%;
+	position: fixed;
+	display:none;
+	
+}
+
+#detailBackArrow
+{
+	height:25px;
+}
 
 
 #menuScreen {
@@ -269,6 +292,91 @@ ui-loader
 	position: absolute;
 	box-shadow: 0px 5px 15px 0px;
 }
+.detailPage
+{
+	z-index: 100;
+	position: absolute;
+	width: 100%;
+	overflow-y: scroll;
+	height: 91%;
+	margin-top: -12px;
+	display:none;
+	opacity:0;
+	overflow-x:hidden;
+	background-color:grey;
+	background-image:url('pushUp.jpg');
+}
+.detailTitle
+{
+	color:black;
+}
+.detailContent
+{
+	margin-top:200px;
+	background-color:white;
+	height:100%;
+}
+.detailPageImg
+{
+	z-index: 1000;
+	position: relative;
+	width: 100%;
+	height: 200px;
+	background-color: grey;
+	color: black;
+	top: 0px;
+	left: 0px;
+}
+.detailTitleContainer
+{
+	position: absolute;
+	left: 50%;
+	margin-left: -119px;
+	z-index: 1000;
+	width: 245px;
+	margin-top: -5px;
+	text-align: center;
+}
+#detailDifficulty
+{
+	margin-top: -17px;
+	position: absolute;
+	text-align: center;
+	width: 25px;
+}
+#detailSets
+{
+	margin-top: -17px;
+	position: absolute;
+	text-align: center;
+	width: 25px;
+}
+.longDetailsList
+{
+	list-style: none;
+	position: relative;
+	z-index: 1000;
+}
+#detailReps
+{
+	margin-top: -17px;
+	position: absolute;
+	text-align: center;
+	width: 25px;
+}
+.exerciseAttributeList
+{
+	z-index: 1000;
+	list-style: none;
+	position: relative;
+	display: inline-flex;
+	width: 100%;
+}
+.exerciseAttribute
+{
+	margin-right: 50px;
+	width:325px;
+}
 
 #start{
 	z-index: 1041;
@@ -279,6 +387,10 @@ ui-loader
 	position: absolute;
 	top:109px; 
 
+}
+.startDetailList
+{
+	list-style:none;
 }
 #startButton
 {
@@ -316,6 +428,16 @@ ui-loader
 	text-align: center;
 	position: relative;
 	padding-top: 5px;
+	color:white;
+	font-weight: bold;
+}
+.headerTextContainer
+{
+	text-align: center;
+	width: 235px;
+	margin: 0 auto;
+	height: 50px;
+	line-height: 20px;
 }
 #currentDate
 {
