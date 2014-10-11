@@ -2,10 +2,12 @@ Parse.initialize("AXss0hVCmQ3tmDsGCV0KD3Xn9yUL39BPJcGQGV7P", "IddscOVmXbWcUGqZCJ
 /*********Global Variables*********/
 var current = Parse.User.current();
 var username = current.get("username");
-var level;
-var phase;
 var started = "no";
 var timerSwitch = "off";
+var bodyHeight = $("#workoutPage").height();
+$(".detailPage").css("height",bodyHeight);
+
+/********Property Arrays***************/
 var nameList = [];
 var coreList = [];
 var rcmndedWeight = [];
@@ -22,36 +24,38 @@ var tip1 = [];
 var tip2 = [];
 var tip3 = [];
 
+
+
 /**********Filter Objects**************/
 var BicepObj = [];
-var BicepFilterCounter;
+var Bicep= 0;
 
 var TricepObj = [];
-var TricepFilterCounter;
+var Tricep= 0;
 
 var UpperBackObj = [];
-var UpperBackFilterCounter;
+var UpperBack= 0;
 
 var LowerBackObj = [];
-var LowerBackFilterCounter;
+var LowerBack= 0;
 
 var ShoulderObj = [];
-var ShoulderFilterCounter;
+var Shoulders= 0;
 
 var HamstringsObj = [];
-var HamstringsFilterCounter;
+var Hamstrings= 0;
 
 var CalfObj = [];
-var CalfFilterCounter;
+var Calfs= 0;
 
 var QuadsObj = [];
-var QuadsFilterCounter;
+var Quads= 0;
 
 var GlutesObj = [];
-var GlutesFilterCounter;
+var Glute= 0;
 
 var AbsObj = [];
-var AbsFilterCounter;
+var Abs= 0;
 
 
 /*************************************/
@@ -84,7 +88,7 @@ $(document).ready(function() {
 var cachedWorkoutCheck = [];	
 if(localStorage["workoutCache"]==undefined)
 {
-		getLevel(current.get("username"));
+		getLevel(username);
 }
 else
 {
@@ -108,17 +112,36 @@ else
 	}
 }
 
+//**This is where each exercise is sorted by the body part, into seperate arrays.
 BicepObj = filterForProgram(cachedWorkoutCheck,"Bicep");
 TricepObj = filterForProgram(cachedWorkoutCheck,"Tricep");
-UpperBackObj = filterForProgram(cachedWorkoutCheck,"Upper Back");
+UpperBackObj = filterForProgram(cachedWorkoutCheck,"UpperBack");
 LowerBackObj = filterForProgram(cachedWorkoutCheck,"Lower Back");
 HamstringsObj = filterForProgram(cachedWorkoutCheck,"Hamstrings");
 QuadsObj = filterForProgram(cachedWorkoutCheck,"Quads");
 ChestObj = filterForProgram(cachedWorkoutCheck,"Chest");
 ShoulderObj = filterForProgram(cachedWorkoutCheck,"Shoulder");
+CalfsObj = filterForProgram(cachedWorkoutCheck,"Calfs");
 
 //*****This is the 3 dot menu***//
 $("#dotMenuWorkout").click(function(){
+	if(dotMenuToggle == 1)
+	{	
+		$(".settingsMenu").css("width","0px");
+		$(".settingsMenu").css("height","0px");
+		$(".settingMenuList").css("display","none");
+		dotMenuToggle=0;	
+	}
+	else
+	{
+		$(".settingMenuList").css("display","block");
+		$(".settingsMenu").animate({"width":"100px"},100);
+		$(".settingsMenu").animate({"height":"40px"},100);
+		dotMenuToggle++;	
+	}			
+});
+
+$("#dotMenuWorkoutDetail").click(function(){
 	if(dotMenuToggle == 1)
 	{	
 		$(".settingsMenu").css("width","0px");
@@ -218,15 +241,26 @@ $("#thirdTab").click(function(){
 
 
 $("#logout").click(function(){
+localStorage.removeItem("workoutCache");
+localStorage.removeItem("phase");
+localStorage.removeItem("level");
 Parse.User.logOut();
-var emptyObj = [];
-emptyObj.push({name:"empty"});
-var empty = JSON.stringify(emptyObj);
-localStorage["workoutCache"] = empty;
 window.location = "index.html"; 
 });
 
 $("#settingsPageButton").click(function(){
+	window.location = "settings.html"; 
+});
+
+$("#logoutDetailPage").click(function(){
+	localStorage.removeItem("workoutCache");
+	localStorage.removeItem("phase");
+	localStorage.removeItem("level");
+	Parse.User.logOut();
+	window.location = "index.html"; 
+	});
+
+$("#settingsPageButtonDetailPage").click(function(){
 	window.location = "settings.html"; 
 });
 
@@ -242,321 +276,533 @@ $("#myProfile").click(function(){
 window.location = "profile.html"; 
 });
 
-//********This is where users can delete or archive exercises that they like***************//
-$(".workoutCards").swipe( {
-    //Generic swipe handler for all directions
-	swipeStatus:function(event, phase, direction, distance, duration, fingers)
-    {
+$(".workoutCards").click(function(){
+	currentDetailID = $(this).attr('id'); 
+	if(currentDetailID.length == 5){
+		var detailIndex = currentDetailID.substring(4, 5);		//If the id number has just one digit at the end save it
+	}
+	else
+	{
+		var detailIndex = currentDetailID.substring(4, 6);	//If the id has a two digit character at the end save both
+	}
+	
+	$(".detailPage").css("display","block");
+	$(".workoutHead").animate({"opacity":"0"});
+	$("#workoutTabs").css("display","none");
+	$(".backToWorkout").css("display","block");
+	$(".settingMenuDotsDetail").css("display","block");
+	$("#ubar").css("display","none");
+	$("#" + currentDetailID).animate({height:"1500px"});
+	$(".exName").animate({"opacity":"0"});
+	$(".exDifficultyLbl").animate({"opacity":"0"});
+	$(".recNum").animate({"opacity":"0"});
+	$(".workoutList").animate({"margin-top":"62px"});
+	$(".workoutCards").animate({"border-bottom-width": "0px"});
+	$("#buttonGroup").animate({"opacity":"0"},200);
+	//$(".workoutHead").hide();
+	$(".detailPage").animate({"opacity":"1"},500);
+	$("#menuIcon").animate({"height":"0px"},200);
+	$("#settingMenuDots").animate({"height":"0px"},200);
+
+	$("#workoutOverviewTitle").css("color","black");
+	$("#workoutOverviewTitle").text(cachedWorkoutCheck[detailIndex].name);
+	$(".detailTitle").append(cachedWorkoutCheck[detailIndex].name)
+	$("#detailDifficulty").append(cachedWorkoutCheck[detailIndex].difficulty);
+	$("#detailSets").append("3");
+	$("#detailReps").append("12");
+	
+	$("#detailDescription1").append(cachedWorkoutCheck[detailIndex].description1);
+	$("#detailDescription2").append(cachedWorkoutCheck[detailIndex].description2);
+	$("#detailDescription3").append(cachedWorkoutCheck[detailIndex].description3);
+	$("#detailDescription4").append(cachedWorkoutCheck[detailIndex].description4);
+	$("#detailDescription5").append(cachedWorkoutCheck[detailIndex].description5);
+	$("#detailTip1").append(cachedWorkoutCheck[detailIndex].tip1);
+	$("#detailTip2").append(cachedWorkoutCheck[detailIndex].tip2);
+	$("#detailTip3").append(cachedWorkoutCheck[detailIndex].tip3);
+	
+	
+	var listLength = $(".longDetailsList").height();
+	var calc = listLength + 1400;
+	$(".detailContent").css("height", calc + "px");
+
+
+});
+
+$(".backToWorkout").click(function(){
+	$(".detailTitle").empty();
+	$("#detailDifficulty").empty();
+	$("#detailSets").empty();
+	$("#detailReps").empty();
+	$("#detailDescription1").empty();
+	$("#detailDescription2").empty();
+	$("#detailDescription3").empty();
+	$("#detailDescription4").empty();
+	$("#detailDescription5").empty();
+	$("#detailTip1").empty();
+	$("#detailTip2").empty();
+	$("#detailTip3").empty();
+	$(".detailPage").animate({"opacity":"0"},200);
+	$(".detailPage").scrollTop(0);
+	$(".detailPage").css("display","none");
+	
+	$("#workoutOverviewTitle").css("color","white");
+	$(".backToWorkout").css("display","none");
+	$(".settingMenuDotsDetail").css("display","none");
+	$("#" + currentDetailID).animate({height:"120px"});
+	
+	$("#workoutTabs").css("display","block");
+	$(".workoutHead").animate({"margin-top":"-156px"},200);
+	$(".workoutHead").animate({"opacity":"1"},200);
+	$(".workoutOverviewTitle").text("Today's Workout");
+	$("#menuIcon").animate({"height":"25px"},200);
+	$("#settingMenuDots").animate({"height":"25px"},200);
+	$("#ubar").css("display","block");
+	$(".workoutCards").animate({"border-bottom-width": "1px"},0);
+	$(".exName").animate({"opacity":"1"});
+	$(".exDifficultyLbl").animate({"opacity":"1"});
+	$(".recNum").animate({"opacity":"1"});
+	$(".workoutList").animate({"margin-top":"205px"});
+	$("#buttonGroup").animate({"opacity":"1"},200);
+	
+	
+
+});	
+
+
+$(".detailPage").scroll(function(){
+	$(".workoutHead").margin({top:-12});
+	
+
+	var scrollDistance = $(".detailPage").scrollTop();
+	var subtractString = 0.01 * scrollDistance;
+	var subtractMargin = 200 - scrollDistance
+	
+
+	//var headerReposition = -76 + scrollDistance;
+	
+	
+	$(".workoutHead").css("opacity",subtractString);
+	
+	if(scrollDistance >= 100)
+	{
+		$(".detailContent").margin({top:150});
+	}
+	else
+	{
+		$(".detailContent").margin({top:subtractMargin});
+
+	}
+	//$(".workoutHead").margin({top:headerReposition});
+	
+	if(scrollDistance >= 200)
+	{
+		$(".workoutHead").css("opacity","1");
 		
-		if(direction == "left")
+		//$(".workoutHead").css("margin-top", "-12px");
+
+	}
+});
+
+	
+
+//********This is where users can replace exercises that they like***************//
+$(".workoutCards").swipe( {
+//Generic swipe handler for all directions
+	swipeStatus:function(event, phase, direction, distance, duration, fingers)
+	{
+		
+		if(direction == "left") //If the user swipes left
 		{
 			var str = 0;
 			var deleteStr = 0;
-			
-		    var removeID = $(this).attr('id');
+	
+			var removeID = $(this).attr('id'); //set the id of the item being replaced
+			var bodypart = $("#" + removeID).attr("bodypart");//Save the body part of the item into variable.
+			var removeName = $("#" + removeID).attr("name"); // save the name of the item being removed.
 			if(removeID.length == 5){
-				var deleteIndex = removeID.substring(4, 5);		
+				var deleteIndex = removeID.substring(4, 5);		//If the id number has just one digit at the end save it
 			}
 			else
 			{
-				var deleteIndex = removeID.substring(4, 6);	
+				var deleteIndex = removeID.substring(4, 6);	//If the id has a two digit character at the end save both
 			}
-		    
-		
-			 if (phase!="cancel" && phase!="end") {
-				 if(distance>0)
-				 {
-					 if($("#deleteIcon" + deleteIndex).text().length == 0)
+			
+			//While the item is in the process of being swiped
+			if (phase!="cancel" && phase!="end") {
+				/*if(distance>0)//Check what the distance of the swipe is(This will decrease the sensativity if needed)
+				{*/
+					if($("#deleteIcon" + deleteIndex).text().length == 0)//If the delete icon Does not exist, add it .
 					{
-						$(".favIcon").remove();
+						$(".favIcon").remove();//Remove the fav icon if its still on the screen.
 
 						$("#"+removeID).append('<div class="deleteIcon" id="deleteIcon'+deleteIndex+'"><img class="trashIcon" src="img/trash.png"/><label class="deleteLabel">Delete</label></div>');						 
 					}
 
-			         str-=distance;
-			         deleteStr+=distance;
-			         $("#deleteIcon" + deleteIndex).css("width",deleteStr + "px");
-			         $("#workoutCardContainerItem" + deleteIndex).css("margin-left",str + "px");
-			         
-		         
-			         if(distance > 175)
-			         {
-			        	 if(confirm("Are you sure you want to remove this exercise")==true)
-			     		{
-			        		 $("#" + removeID).css("display","none");
-			        		 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});
-			             		$(".deleteIcon").animate({"width":"0px"},500,function(){
-				             		$(".deleteIcon").empty();
-						            $(".deleteIcon").remove();
-			             		});
-			        		 
-			        		 var bodypart = $("#" + removeID).attr("bodypart");
-			        		 
-			        		/* if(bodypart == "Bicep")
-			        		{
-			        			 var replaceVar = document.getElementsByName(BicepObj[BicepFilterCounter].name);
-			        			 $("#" + replaceVar[0].id).css("display","block"); 
-			        		}*/
-			        		 		        		 
-			        		 switch (bodypart) {
-			        		    case "Bicep":
-			        		        
-				        			 var replaceVar = document.getElementsByName(BicepObj[BicepFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 BicepFilterCounter++;
-
-				        			 break;
-			        		    case "Tricep":
-				        			 var replaceVar = document.getElementsByName(TricepObj[TricepFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 TricepFilterCounter++;
-				        			 
-			        		        break;
-			        		    case "Upper Back":
-				        			 var replaceVar = document.getElementsByName(UpperBackObj[UpperBackFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 UpperBackFilterCounter++;
-
-			        			 
-			        		        break;
-			        		    case "Shoulders":
-				        			 var replaceVar = document.getElementsByName(ShoulderObj[ShoulderFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 ShoulderFilterCounter++;
-
-			        		         break;
-			        		    case "Chest":
-				        			 var replaceVar = document.getElementsByName(ChestObj[ChestFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 ChestFilterCounter++;
-
-			        		        break;
-			        		        
-			        		    case "Hamstrings":
-				        			 var replaceVar = document.getElementsByName(HamstringObj[HamstringFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 HamstringsFilterCounter++;
-
-			        		        break;
-			        		        
-			        		    case "Quads":
-				        			 var replaceVar = document.getElementsByName(QuadObj[QuadFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block");
-				        			 
-				        			 QuadsFilterCounter++;
-				        			 
-			        		        break;	
-			        		    case "Abs":
-				        			 var replaceVar = document.getElementsByName(AbsObj[AbsFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 AbsFilterCounter++;
-
-				        			 
-			        		        break;
-			        		}
-			        		 
-			        		 
-			             	 $("#workoutBody").prepend("<div id='workoutToast'><label>Exercise Replaced With "+BicepObj[BicepFilterCounter].name+"</label></div>")
-			             	 $("#workoutToast").animate({"width":"300px"},300);
-			             	 
-			             	setTimeout(function(){
-				             	 $("#workoutToast").animate({"opacity":"0"},1000);
-				             	 $(".deleteIcon").remove();
-	
-			             	}, 1000);
-			             	
-			             	$("#workoutBody").click(function(){
-			             		$("#workoutToast").remove();
-			             	});
-			             	 
-						      
-
-			
-			     		}
-			        	else 
-			            {
-			             		$("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});
-			             		$(".deleteIcon").animate({"width":"0px"},500,function(){
-				             		$(".deleteIcon").empty();
-						            $(".deleteIcon").remove();
-			             		});
-
-
-
-	
-			            }
-			         }
-				 }
+					 str-=distance;
+					 deleteStr+=distance; //Adds the distance amount to the delete str.
+					 $("#deleteIcon" + deleteIndex).css("width",deleteStr + "px");//Change the width of the delete area based on the delete string
+					 $("#workoutCardContainerItem" + deleteIndex).css("margin-left",str + "px");//Move the item left to display left swiping effect.
      
-         
-			 }
-			 else
-			 {
-				 $("#favIcon"+deleteIndex).css("width","0px");
-				 $("#deleteIcon" + deleteIndex).animate({"width":"0px"}, 500, function(){
-	             		$(".deleteIcon").empty();
-			            $(".deleteIcon").remove();
-				 });
-				 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"},500);	
-				 $(".favIcon").empty();
-				 $(".favIcon").remove();
-
-				 
-			 }
-		}
-		else if(direction == "right")
-		{
-			var str = 0;
-			var deleteStr = 0;
-		    var removeID = $(this).attr('id');
-		    if(removeID.length == 5){
-				var deleteIndex = removeID.substring(4, 5);		
-			}
-			else
-			{
-				var deleteIndex = removeID.substring(4, 6);	
-			}
-		
-			 if (phase!="cancel" && phase!="end") {
-				if(distance>0)
-				{
-					
-					if($("#favIcon" + deleteIndex).text().length == 0)
+ 
+					 if(distance > 175)//If the user has swipped more than 175px distance
+					 {
+							 						 	        		 
+								 //check the body part and go to the respective array in order to find alternative exercises.
+								 switch (bodypart) {
+								    case "Bicep":
+								    	
+								    	if(Bicep!=(BicepObj.length-1))//Check if this is the first exercise for the specific body part in the array.
+								    	{
+								    		Bicep++;
+								    		replaceExercise("left",Bicep,BicepObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+											replaceAutomation(BicepObj,Bicep,nameList,removeName);
+								    		notification(BicepObj[Bicep].name);																			
+											
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+ 					
+										 break;
+								    case "Tricep":
+								    	if(Tricep!=(TricepObj.length-1))
+								    	{
+								    		Tricep++;
+								    		replaceExercise("left",Tricep,TricepObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(TricepObj[Tricep].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+								        break;
+								    case "UpperBack":
+								    	if(UpperBack!=(UpperBackObj.length-1))
+								    	{
+								    		UpperBack++;
+								    		replaceExercise("left",UpperBack,UpperBackObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(UpperBackObj[UpperBack].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+								        break;
+								    case "Shoulders":
+								    	if(Shoulders!=(ShouldersObj.length-1))
+								    	{
+								    		Shoulders++;
+								    		replaceExercise("left",Shoulders,ShouldersObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(ShouldersObj[Shoulders].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+								         break;
+								    case "Chest":
+								    	if(Chest!=(ChestObj.length-1))
+								    	{
+								    		Chest++;
+								    		replaceExercise("left",Chest,ChestObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(ChestObj[Chest].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+										 
+								        break;
+								        
+								    case "Hamstrings":
+								    	if(Hamstrings!=(HamstringsObj.length-1))
+								    	{
+								    		Hamstrings++;
+								    		replaceExercise("left",Hamstrings,HamstringsObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(HamstringsObj[Hamstrings].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+										 
+								        break;
+								        
+								    case "Quads":
+								    	if(Quads!=(QuadsObj.length-1))
+								    	{
+								    		Quads++;
+								    		replaceExercise("left",Quads,QuadsObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(QuadsObj[Quads].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+										 				        			 
+								        break;	
+								    case "Abs":
+								    	if(Abs!=(AbsObj.length-1))
+								    	{
+								    		Abs++;
+								    		replaceExercise("left",Abs,AbsObj)
+											removeDeleteArea(deleteIndex);	
+											removeExercise(removeID);
+								    		notification(AbsObj[Abs].name);																																
+								    	}
+								    	else
+								    	{
+											 notification("Swipe Left for alternatives");
+								    	}
+							    		break;							    
+					    			case "Calfs":
+					    				if(Calfs!=(CalfsObj.length-1))
+					    				{
+					    					Calfs--;
+					    					replaceExercise("left",Calfs,CalfsObj)
+					    					removeDeleteArea(deleteIndex);	
+					    					removeExercise(removeID);
+					    					notification(CalfsObj[Calfs].name);																																
+					    				}
+					    				else
+					    				{
+					    					notification("Swipe Left for alternatives");
+					    				}
+					    				break;
+				    				}
+					 		}
+					 else
 					{
-						$(".deleteIcon").remove();
-						$("#" + removeID).prepend('<div class="favIcon" id="favIcon'+deleteIndex+'"><label class="deleteLabel">Save</label></div>');
+						 //do nothing
 					}
-			         str+=distance;
-			         deleteStr+=distance;
-			         $(".favIcon").css("width",deleteStr + "px");
-			         $("#workoutCardContainerItem" + deleteIndex).css("margin-left",str + "px");
-				    
-			         if(distance > 175)
-			         {
-			        	 if(confirm("Are you sure you want to save this exercise")==true)
-			     		{
-			       /* 		 switch (bodypart) {
-			        		    case "Bicep":
-			        		        
-				        			 var replaceVar = document.getElementsByName(BicepObj[BicepFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 BicepFilterCounter--;
-
-				        			 break;
-			        		    case "Tricep":
-				        			 var replaceVar = document.getElementsByName(TricepObj[TricepFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 TricepFilterCounter--;
-				        			 
-			        		        break;
-			        		    case "Upper Back":
-				        			 var replaceVar = document.getElementsByName(UpperBackObj[UpperBackFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 UpperBackFilterCounter--;
-
-			        			 
-			        		        break;
-			        		    case "Shoulders":
-				        			 var replaceVar = document.getElementsByName(ShoulderObj[ShoulderFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 ShoulderFilterCounter--;
-
-			        		         break;
-			        		    case "Chest":
-				        			 var replaceVar = document.getElementsByName(ChestObj[ChestFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 ChestFilterCounter--;
-
-			        		        break;
-			        		        
-			        		    case "Hamstrings":
-				        			 var replaceVar = document.getElementsByName(HamstringObj[HamstringFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 HamstringsFilterCounter--;
-
-			        		        break;
-			        		        
-			        		    case "Quads":
-				        			 var replaceVar = document.getElementsByName(QuadObj[QuadFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block");
-				        			 
-				        			 QuadsFilterCounter--;
-				        			 
-			        		        break;	
-			        		    case "Abs":
-				        			 var replaceVar = document.getElementsByName(AbsObj[AbsFilterCounter].name);
-				        			 $("#" + replaceVar[0].id).css("display","block"); 
-				        			 
-				        			 AbsFilterCounter--;
-
-				        			 
-			        		        break;
-			        		}*/
-			        		alert("saved!");
-			        		$("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});
-		             		$(".favIcon").animate({"width":"0px"},500,function(){
-								 $(".favIcon").empty();
-								 $(".favIcon").remove();
-		             		});
-
-			
-			     		}
-			        	else
-			        	{
-			        		//$("#" + removeID).animation({"margin-left":"0px"});
-		             		$("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"}); 
-		             		$("#favIcon"+deleteIndex).animate({"width":"0px"},500,function(){
-								 $(".favIcon").empty();
-								 $(".favIcon").remove();
-		             		});
-
-			        	}
-
-			         }
+						
 				}
-         
-			 }
-			 else
-			 {
-				 $("#favIcon"+deleteIndex).animate({"width":"0px"},500,function(){
-					 $(".deleteIcon").empty();
-					 $(".deleteIcon").remove();
-					 $(".favIcon").empty();
-					 $(".favIcon").remove();
-				 });
-				 $("#deleteIcon" + deleteIndex).css("width","0px");
-				 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"},500);
+				else
+				{
+					removeDeleteArea(deleteIndex);
+				}
+			}
+			else if(direction == "right")
+			{
+				var str = 0;
+				var deleteStr = 0;
+				var removeID = $(this).attr('id');
+				var removeName = $("#" + removeID).attr("name");
+				var bodypart = $("#" + removeID).attr("bodypart");
+				if(removeID.length == 5){
+					var deleteIndex = removeID.substring(4, 5);		
+				}
+				else
+				{
+					var deleteIndex = removeID.substring(4, 6);	
+				}
 
-				
+				if (phase!="cancel" && phase!="end") {
+					if(distance>0)
+					{
+	
+						if($("#favIcon" + deleteIndex).text().length == 0)
+						{
+							$(".deleteIcon").remove();
+							$("#" + removeID).prepend('<div class="favIcon" id="favIcon'+deleteIndex+'"><label class="deleteLabel">Save</label></div>');
+						}
+						str+=distance;
+						deleteStr+=distance;
+						$(".favIcon").css("width",deleteStr + "px");
+						$("#workoutCardContainerItem" + deleteIndex).css("margin-left",str + "px");
 
-			 }
-			 
-		}
+						if(distance > 175)
+						{
+								 
+								switch (bodypart) {
+								case "Bicep":
+
+									if(Bicep != 0)//Check if this is the first exercise for the specific body part in the array.
+							    	{
+							    		Bicep--;
+							    		replaceExercise("right",Bicep,BicepObj)
+							    		notification(BicepObj[Bicep].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+										replaceAutomation(BicepObj,Bicep,nameList,removeName);
+
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}
+	 
+									break;
+								case "Tricep":
+									if(Tricep != 0)
+							    	{
+										Tricep--;
+							    		replaceExercise("right",Tricep,TricepObj)
+							    		notification(TricepObj[Tricep].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}
+	 
+	 
+	 
+									break;
+								case "UpperBack":
+									if(UpperBack != 0)
+							    	{
+										UpperBack--;
+							    		replaceExercise("right",UpperBack,UpperBackObj)
+							    		notification(UpperBackObj[UpperBack].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}
+									break;
+								case "Shoulders":
+
+									if(Shoulders != 0)
+							    	{
+										Shoulders--;
+							    		replaceExercise("right",Shoulders,ShouldersObj)
+							    		notification(ShouldersObj[Shoulders].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}	 
+
+									break;
+								case "Chest":
+
+									if(Chest != 0)
+							    	{
+										Chest--;
+							    		replaceExercise("right",Chest,ChestObj)
+							    		notification(ChestObj[Chest].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}	 
+	 
+
+									break;
+    
+								case "Hamstrings":
+
+									if(Hamstrings != 0)
+							    	{
+										Hamstrings--;
+							    		replaceExercise("right",Hamstrings,HamstringsObj)
+							    		notification(HamstringsObj[Hamstrings].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}	 
+									break;
+    
+								case "Quads":
+
+									if(Quads != 0)
+							    	{
+										Quads--;
+							    		replaceExercise("right",Quads,QuadsObj)
+							    		notification(QuadsObj[Quads].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}		 
+									break;	
+									
+								case "Abs":
+									if(Abs != 0)
+							    	{
+										Abs--;
+							    		replaceExercise("right",Abs,AbsObj)
+							    		notification(AbsObj[Abs].name);											
+										removeDeleteArea(deleteIndex);	
+										removeExercise(removeID);
+							    	}
+							    	else
+							    	{
+										 notification("Swipe Left for alternatives");
+							    	}		 		 
+									break;
+								case "Calfs":
+				    				if(Calfs!=(CalfsObj.length+1))
+				    				{
+				    					Calfs--;
+				    					replaceExercise("right",Calfs,CalfsObj)
+				    					removeDeleteArea(deleteIndex);	
+				    					removeExercise(removeID);
+				    					notification(CalfsObj[Calfs].name);																																
+				    				}
+				    				else
+				    				{
+				    					notification("Swipe Left for alternatives");
+				    				}
+				    				break;
+								}
+								removeDeleteArea(deleteIndex);	
+
+						}
+					}
+ 
+				}
+				else
+				{
+					$("#favIcon"+deleteIndex).animate({"width":"0px"},500,function(){
+						$(".deleteIcon").empty();
+						$(".deleteIcon").remove();
+						$(".favIcon").empty();
+						$(".favIcon").remove();
+					});
+ $("#deleteIcon" + deleteIndex).css("width","0px");
+ $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"},500);
+
 		
-      
-    },
-    //Default is 75px, set to 0 for demo so any distance triggers swipe
-     threshold:75, allowPageScroll:"vertical"
+
+	 }
+	 
+}
+	
+  
+},
+//Default is 75px, set to 0 for demo so any distance triggers swipe
+ threshold:75, allowPageScroll:"vertical"
 });
 
-/*$(".workoutCards").on( "swipeleft", function(){
-	var removeID = $(this).attr('id');
-	alert(removeID);
-	//removeExercise(removeID);
-});*/
 
 //----------------------------------------------------------//
 //----------------------- workout page  ----------------//
@@ -587,22 +833,23 @@ $("#blue").click(function(){
 		query.find({
 			  success: function(results) {
 				var weightText, weightNum; 
-				$("#rcmendWeight").text(rcmndedWeight[0]);
 				if(rcmndedWeight[nameCount] == "Just the Bar")
 				{
-					weightText = "Just the Bar";					
 					weightNum = 45;
+					weightText = "Just the Bar";					
 				}
 				else if(rcmndedWeight[nameCount] == "Body Weight")
 				{
-					weightText = "Body Weight";
 					weightNum = 0;
+					weightText = "Body Weight";
 				}
 				else
 				{
-					weightText = rcmndedWeight[nameCount] + "lbs";
 					weightNum = rcmndedWeight[nameCount];
+					weightText = weightNum + "lbs";
 				}
+				$("#recommendedWeight").text(weightText);
+
 				
 				if (results.length == 0)
 				{
@@ -640,10 +887,12 @@ $("#blue").click(function(){
 		    timer--;
 		    $('#timeAnimation').text(timer);
 		    if (timer === 0){
-		    	clearInterval(interval);
 		    	$("#timeAnimation").text("");
 		    	$("#timeLabel").css("margin-left", "-146px");
 		    	$("#timeLabel").text("READY!");
+		    	timer=90;
+		    	started = "no";
+		    	clearInterval(interval);
 		    }
 		    
 		}, 1000);
@@ -762,9 +1011,27 @@ $("#startButton").click(function(){
 			
 			$("#startButton").text("Start");
 			$("#weightPerformed").css("display","none");
-			
+			$("#timeLabel").text(" Seconds");
 			$("#timeAnimation").text("90");
 			timer=90;
+			
+			if(started == "no")
+			{
+				var interval = setInterval(function() {
+				    timer--;
+				    $('#timeAnimation').text(timer);
+				    
+				    if (timer === 0){
+				    	$("#timeAnimation").text("");
+				    	$("#timeLabel").css("margin-left", "-146px");
+				    	$("#timeLabel").text("READY!");
+				    	started = "no";
+				    	clearInterval(interval);
+				    }
+				    
+				}, 1000);
+			}
+			
 			$(".timer").css("display","block");
 				
 			if(setCount == 3)
@@ -784,6 +1051,7 @@ $("#startButton").click(function(){
 								$("#weightAdjForm").css("display","none");
 								$(".overlay").css("display", "none");
 								 weight.set("wght_recommended", increase);
+								 alert(increase);
 								 weight.save().then(function(){
 								 alert("New recommended Weight!");
 								 });
@@ -792,6 +1060,7 @@ $("#startButton").click(function(){
 							{
 								$("#weightAdjForm").css("display","none");
 								$(".overlay").css("display", "none");
+								alert(decrease);
 								 weight.set("wght_recommended", decrease);
 								 weight.save().then(function(){
 								 alert("New recommended Weight!");
@@ -802,7 +1071,7 @@ $("#startButton").click(function(){
 								$("#weightAdjForm").css("display","none");
 								$(".overlay").css("display", "none");
 								 weight.set("wght_recommended", weightPerformed);
-								 
+								 alert(weightPerformed);
 								 weight.save().then(function(){
 								 alert("New recommended Weight!");
 								 });
@@ -884,15 +1153,22 @@ function navigate(currentPage, pageDest)
 function getLevel(email) {
 	var User = Parse.Object.extend("User");
 	var query = new Parse.Query(User);
-	query.equalTo("username", current.get("username"));
+	query.equalTo("username", email);
 	query.find().then(function(results) {
+	
 			    for (var i = 0; i < results.length; i++) { 
 			      var object = results[i];
 			      var pulledLevel = object.get('level');
-			      level = parseInt(pulledLevel);
+			      
+			      if(localStorage["level"]==undefined)
+			      {
+				      localStorage["level"] = pulledLevel;
+				      getPhase(pulledLevel);
+
 			      }
-				 getPhase(pulledLevel);
-				});
+
+			      }
+		});
 }
 		
 function getPhase(email) {
@@ -907,7 +1183,11 @@ function getPhase(email) {
 	    for (var i = 0; i < results.length; i++) { 
 	    	var object = results[i];
 		    pulledPhase = object.get('phase');
-		    phase = pulledPhase.toString();
+		    
+		    if(localStorage["phase"] == undefined)
+		    {
+			    localStorage["phase"] = pulledPhase;
+		    }
 	     /* var object = results[i];
 	      phase = object.get('phase');
 	      alert(phase);*/
@@ -926,8 +1206,8 @@ function getExercise() {
 	
 	// Find all workouts that are available for the user that is currently in this level and phase.
 	var query = new Parse.Query(Exercise);
-	query.equalTo("ex_level", level);
-	query.equalTo("ex_phase", phase);
+	query.equalTo("ex_level", localStorage["level"] );
+	query.equalTo("ex_phase", localStorage["phase"]);
 	query.find({
 	  success: function(results) {
 		  var workoutObj = [];
@@ -936,6 +1216,7 @@ function getExercise() {
 			      var name = object.get('ex_name');
 			      var bodyZone = object.get('ex_bodyZone');
 			      var type = object.get('ex_type');
+			      var priority = object.get('ex_priority');
 			      var difficultyTemp = object.get('ex_difficulty');
 			      var primaryTemp = object.get('ex_primary');
 			      var description1Temp = object.get('ex_description1');
@@ -947,7 +1228,7 @@ function getExercise() {
 			      var tip2Temp = object.get('ex_tip2');
 			      var tip3Temp = object.get('ex_tip3');
 			      
-			      workoutObj.push({name: name, bodyZone: bodyZone, difficulty:difficultyTemp, type:type, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp, tip1:tip1Temp, tip2:tip2Temp, tip3:tip3Temp});
+			      workoutObj.push({name: name, bodyZone: bodyZone, difficulty:difficultyTemp, type:type, priority:priority, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp, tip1:tip1Temp, tip2:tip2Temp, tip3:tip3Temp});
 			      
 			      
 		    }
@@ -971,20 +1252,21 @@ function getExercise() {
 function generateWorkout(cacheVar)
 {
 
-	var cachedWorkouts = [];
-	var cachedWorkouts = cacheVar;
-	var compoundCount = 0;
-	var workoutCount = 0;
-	var coreCount = 0;
-	var coreWeight=[];
+	var cachedWorkouts = []; //Variable that the workouts will be chached in
+	var cachedWorkouts = cacheVar; 
+	var compoundCount = 0; //This counts how many of the exercises are compound lifts.
+	var workoutCount = 0; //This counts the total amount of workouts
+	var coreCount = 0; // this counts the amount of core workouts.
+	var coreWeight=[]; // This is the weight that the core workouts should be performed with.
 	
     
 	
-	// go through each workout that was pulled and get the name, bodyZone, and type of workout.  
+	// go through each workout that was pulled and all the properties and save them into individual variables.  
     for (var i = 0; i < cachedWorkouts.length; i++) {     
     	var name = cachedWorkouts[i].name;
         var bodyZone = cachedWorkouts[i].bodyZone;
         var type = cachedWorkouts[i].type;
+        var priority = cachedWorkouts[i].priority;
         var difficultyTemp = cachedWorkouts[i].difficulty;
         var primaryTemp = cachedWorkouts[i].primary;
         var description1Temp = cachedWorkouts[i].description1;
@@ -998,6 +1280,7 @@ function generateWorkout(cacheVar)
     	  
       if(bodyZone == "upper")
   		{
+    	  //Based on the number of workout populate the property arrays with the respective properties
     	  nameList[workoutCount] = name;
     	  bodyZoneArray[workoutCount] = bodyZone;
     	  typeArray[workoutCount] = type;
@@ -1012,9 +1295,9 @@ function generateWorkout(cacheVar)
 	      tip2[workoutCount] = tip2Temp;
 	      tip3[workoutCount] = tip3Temp;
     	  
-    	  if(type=="Compound")
+    	  if(type=="Compound") // If the type of workout is a compund workout go through replacement algorithm so compound workouts will be completed first.
     		{
-		    	  nameList[workoutCount] = nameList[compoundCount];
+		    	  nameList[workoutCount] = nameList[compoundCount];// Which ever place
 		    	  nameList[compoundCount] = name;  		
 		    	  
 		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
@@ -1065,9 +1348,9 @@ function generateWorkout(cacheVar)
 		    	  
 		    	
 		    	  
-		    	  if(level == 1)
+		    	  if(localStorage["level"] == 1)
 		    	  {
-		    		  if(phase == "1")
+		    		  if(localStorage["phase"] == "1")
 		    		  {
 		    			rcmndedWeight[workoutCount] = "Just the Bar";
 		    		  }
@@ -1086,9 +1369,9 @@ function generateWorkout(cacheVar)
     		}
     	  else if(type =="Dumbbell")
     		{
-    		  if(level == 1)
+    		  if(localStorage["level"] == 1)
 		    	  {
-		    		  if(phase == "1")
+		    		  if(localStorage["phase"] == "1")
 		    		  {
 		    			rcmndedWeight[workoutCount] = 25;
 		    		  }
@@ -1105,9 +1388,9 @@ function generateWorkout(cacheVar)
     		}
     	  else if(type == "Body")
 	  		{
-    		  if(level == 1)
+    		  if(localStorage["level"] == 1)
 		    	  {
-		    		  if(phase == "1")
+		    		  if(localStorage["phase"] == "1")
 		    		  {
 		    			rcmndedWeight[workoutCount] = "Body Weight";
 		    		  }
@@ -1124,9 +1407,9 @@ function generateWorkout(cacheVar)
 	  		}
     	  else if(type == "Machine")
 	  		{
-    		  if(level == 1)
+    		  if(localStorage["level"] == 1)
 	    	  {
-	    		  if(phase == "1")
+	    		  if(localStorage["phase"] == "1")
 	    		  {
 	    			  rcmndedWeight[workoutCount] = 50;
 	    		  }
@@ -1208,9 +1491,9 @@ function generateWorkout(cacheVar)
   			      tip3[workoutCount] = tip3[compoundCount];
   			      tip3[compoundCount] = tip3Temp;
   		    	  
-  		    	  if(level == 1)
+  		    	  if(localStorage["level"] == 1)
   		    	  {
-  		    		  if(phase == "1")
+  		    		  if(localStorage["phase"] == "1")
   		    		  {
   		    			rcmndedWeight[workoutCount] = "Just the Bar";
   		    		  }
@@ -1229,9 +1512,9 @@ function generateWorkout(cacheVar)
 	    		}
 	    	  else if(type =="Dumbbell")
 	    		{
-	    		  if(level == 1)
+	    		  if(localStorage["level"] == 1)
   		    	  {
-  		    		  if(phase == "1")
+  		    		  if(localStorage["phase"] == "1")
   		    		  {
   		    			rcmndedWeight[workoutCount] = 25;
   		    		  }
@@ -1248,9 +1531,9 @@ function generateWorkout(cacheVar)
 	    		}
 	    	  else if(type == "Body")
 		  		{
-	    		  if(level == 1)
+	    		  if(localStorage["level"] == 1)
   		    	  {
-  		    		  if(phase == "1")
+  		    		  if(localStorage["phase"] == "1")
   		    		  {
   		    			rcmndedWeight[workoutCount] = "Body Weight";
   		    		  }
@@ -1267,9 +1550,9 @@ function generateWorkout(cacheVar)
 		  		}
 	    	  else if(type == "Machine")
 		  		{
-	    		  if(level == 1)
+	    		  if(localStorage["level"] == 1)
 		    	  {
-		    		  if(phase == "1")
+		    		  if(localStorage["phase"] == "1")
 		    		  {
 		    			  rcmndedWeight[workoutCount] = 50;
 		    		  }
@@ -1296,7 +1579,13 @@ function generateWorkout(cacheVar)
 				  rcmndedWeight[workoutCount] = "Body Weight";
 			  }
 
-			$("#coreList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'"><div class="workoutCardContainer" id="workoutCardContainerItem'+i+'"><label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br><label class="recommendedLabel">Recommended Weight:</label><label class="recNum" id="upperWeight'+i+'">'+rcmndedWeight[workoutCount]+'</label></div></li>');
+			$("#coreList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+										<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+										<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+										<label class="exDifficultyLbl">Difficulty:</label>\
+				  		    			<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
+										</div>\
+									</li>');
 			coreCount++;
 
   		}
@@ -1304,8 +1593,7 @@ function generateWorkout(cacheVar)
     
     for(var i=0; i<=(workoutCount-coreCount); i++)
     {
-    	//alert(nameList[i]);
-    	//alert(difficulty[i]);
+
 	      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
     
     }
@@ -1317,31 +1605,7 @@ function generateWorkout(cacheVar)
 
     }
    
-    $(".workoutCards").click(function(){
-    	currentDetailID = $(this).attr('id'); 
-
-    	$("#" + currentDetailID).animate({height:"1500px"});
-    	$(".exName").animate({"opacity":"0"});
-    	$(".recommendedLabel").animate({"opacity":"0"});
-    	$(".recNum").animate({"opacity":"0"});
-    	$(".workoutList").animate({"margin-top":"62px"});
-    	$(".workoutCards").animate({"border-bottom-width": "0px"});
-		$("#buttonGroup").animate({"opacity":"0"},200);
-    	//$(".workoutHead").hide();
-    	$(".exitDetail").animate({"opacity":"1"});
-    });
-    $(".exitDetail").click(function(){
-    	$("#" + currentDetailID).animate({height:"120px"});
-    	$(".workoutCards").animate({"border-bottom-width": "1px"},0);
-    	$(".exName").animate({"opacity":"1"});
-    	$(".recommendedLabel").animate({"opacity":"1"});
-    	$(".recNum").animate({"opacity":"1"});
-    	$(".workoutList").animate({"margin-top":"205px"});
-		$("#buttonGroup").animate({"opacity":"1"},200);
-    	//$(".workoutHead").show();
-    	$(".exitDetail").animate({"opacity":"0"});
-
-    });	
+  
 }
 
 
@@ -1353,7 +1617,9 @@ function removeExercise(itemId)
 
 function filterForProgram(cacheVar,bodyPartChoice)
 {
-	bodyPartArray = [];
+	var removedFromArray = 0;
+	var bodyPartArray = [];
+	var bodyPartIndex = 0;
 //***********For Level 1 Phase 1 people ************//
 	for(var i = 0; i<cacheVar.length; i++)
 	{
@@ -1361,19 +1627,110 @@ function filterForProgram(cacheVar,bodyPartChoice)
 		{
 		      if(bodyPartArray.length > 0)
 		      {
+		    	  bodyPartArray.push({name: cacheVar[i].name, bodyZone: cacheVar[i].bodyZone, difficulty:cacheVar[i].difficulty, type:cacheVar[i].type, priority:cacheVar[i].priority, primary:cacheVar[i].primary, description1:cacheVar[i].description1, description2:cacheVar[i].description2, description3:cacheVar[i].description3, description4:cacheVar[i].description4, description5:cacheVar[i].description5, tip1:cacheVar[i].tip1, tip2:cacheVar[i].tip2, tip3:cacheVar[i].tip3});	      	
+		    	  bodyPartIndex++;
+		    	  
 			      $("#item" + i).css("display","none");
-		      }
+			      for(var counter = 0; counter < nameList.length; counter++)
+			      {
+			    	  if($("#item" + i).attr("name") ==  nameList[counter])
+			    	  {
+			    		  removeFromArray = (counter + 1);
+			    		  nameList[counter] == nameList[removedFromArray];
+			    		  for(var index = removedFromArray; index< (cacheVar.length - removeFromArray); index++)
+			    		  {
+			    			  nameList[index] = nameList[index + 1];
+			    		  }
+			    		  nameList.pop();
+			    		  
+			    	  }
+			    	  else
+			    	  {
+			    		  nameList[counter] = nameList[removedFromArray];
+			    		  removedFromArray++;
+			    	  }
+			    	  
+			      }
+		      }	 
 		      else
-		      {
-		    	  BicepFilterCounter = 1;
+		      {		    	  		    	  
+		    	  bodyPartArray.push({name: cacheVar[i].name, bodyZone: cacheVar[i].bodyZone, difficulty:cacheVar[i].difficulty, type:cacheVar[i].type, priority:cacheVar[i].priority, primary:cacheVar[i].primary, description1:cacheVar[i].description1, description2:cacheVar[i].description2, description3:cacheVar[i].description3, description4:cacheVar[i].description4, description5:cacheVar[i].description5, tip1:cacheVar[i].tip1, tip2:cacheVar[i].tip2, tip3:cacheVar[i].tip3});	      	
 		      }
-		      
-		      bodyPartArray.push({name: cacheVar[i].name, bodyZone: cacheVar[i].bodyZone, difficulty:cacheVar[i].difficulty, type:cacheVar[i].type, primary:cacheVar[i].primary, description1:cacheVar[i].description1, description2:cacheVar[i].description2, description3:cacheVar[i].description3, description4:cacheVar[i].description4, description5:cacheVar[i].description5, tip1:cacheVar[i].tip1, tip2:cacheVar[i].tip2, tip3:cacheVar[i].tip3});
-		      
-
-		}
+		}	
 		
-
 	}
 	return bodyPartArray;
+}
+
+function replaceAutomation(bodyPartObj,bodyPartCounter,listName, removeVar)
+{
+	var replaceVar = document.getElementsByName(bodyPartObj[bodyPartCounter].name);
+
+	for(var i = 0; i<listName.length; i++)
+	{
+		if(listName[i] == removeVar)
+			{
+				listName[i] = $("#" + replaceVar[0].id).attr("name");
+			}
+
+	}
+
+}
+
+function notification(message)
+{
+	if($(".workoutToast").text().length == 0)
+	{
+		if($(".toastMessage").text() != message)
+		{
+			$("#workoutBody").prepend("<div class='workoutToast'><label class='toastMessage'>Exercise Replaced With "+message+"</label></div>")
+			$(".workoutToast").animate({"width":"300px"},300);
+	 	 
+			$(".workoutToast").animate({"opacity":"0"},1500).promise().then(function(){
+				$(".workoutToast").remove();
+			});
+	
+	 	
+	 	
+			$("#workoutBody").click(function(){
+				$(".workoutToast").remove();
+			});
+			
+		}
+	}
+	
+}
+
+function removeDeleteArea(deleteIndex)
+{
+	 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});//Animate the delete area so that it returns to a 0 width
+	 $(".deleteIcon").animate({"width":"0px"},500,function(){
+		 $(".deleteIcon").empty();
+		 $(".deleteIcon").remove();//remove it from the html.	
+	 });
+		 $("#workoutCardContainerItem" + deleteIndex).animate({"margin-left":"0px"});
+		 $(".favIcon").animate({"width":"0px"},500,function(){
+			 $(".favIcon").empty();
+			 $(".favIcon").remove();
+		 });
+}
+function removeExercise(removeID)
+{
+	$("#" + removeID).css("display","none"); //Hide the item
+}
+function replaceExercise(direction,bodyPartCounter,BodyPartObj)
+{
+	if(direction == "left")
+	{
+		 
+		 var replaceVar = document.getElementsByName(BodyPartObj[bodyPartCounter].name);
+		 $("#" + replaceVar[0].id).css("display","block"); 
+	}
+	else if(direction == "right")
+	{
+		var replaceVar = document.getElementsByName(BodyPartObj[bodyPartCounter].name);
+		$("#" + replaceVar[0].id).css("display","block"); 
+	}
+		
+		
 }
