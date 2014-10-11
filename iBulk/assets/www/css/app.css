@@ -1,10 +1,9 @@
-@import url('http://roboto-webfont.googlecode.com/svn/trunk/roboto.all.css');
-
 html {
 	
     background-color:#0091ea;   
     color: #000;
 }
+
 .settingsMenu
 {
 	width: 0px;
@@ -198,7 +197,7 @@ ui-loader
 }
 #termAccept
 {
-	margin: 10px -36px;
+	margin: 10px -15px;
 	width: 266px;
 }
 #registerSubmit{
