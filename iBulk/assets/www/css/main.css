@@ -1,0 +1,138 @@
+/*******************      General      *******************/
+/* Colors 
+	primary red : #e51c23;
+	accent yellow : #ffeb3b;
+	background : #fafafa;
+*/
+
+/*overrides*/
+html, body {
+    background-color:#fafafa;   
+    color: #000;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+/*backgrounds*/
+.img-backdrop {
+	position: fixed;
+	background: url("../san_fran.png") no-repeat;
+	height: 300px;
+	width: 100%;
+}
+
+/*transitions*/
+.soft-transition {
+	transition: 0.1s ease all;
+	-moz-transition: 0.1s ease all;
+	-webkit-transition: 0.1s ease all;
+}
+
+/*shadows*/
+.shadow-2 {
+	-webkit-box-shadow: 0px 3px 3px 0px rgba(0,0,0,0.23), 0px -3px 3px 0px rgba(0,0,0,0.16);
+	-moz-box-shadow: 0px 3px 3px 0px rgba(0,0,0,0.23), 0px -3px 3px 0px rgba(0,0,0,0.16);
+	box-shadow: 0px 3px 3px 0px rgba(0,0,0,0.23), 0px -3px 3px 0px rgba(0,0,0,0.16);
+}
+
+/*inputs*/
+.input-group {
+	width: 100%;
+	padding: 35px 0px 8px 0px;
+	font-size: 1.000em;
+}
+
+	.input-group input {
+		width: 100%;
+		border: none;
+		border-bottom: 1px solid #cecece;
+		background: none;
+		padding-bottom: 8px;
+	}
+	
+		.input-group input:focus ~ label, .input-group input:focus:valid ~ label {
+			font-size: 0.750em;
+			color: #e51c23;
+			margin-top: -48px;
+		}
+		
+		.input-group input:valid ~ label {
+			font-size: 0.750em;
+			color: #000;
+			margin-top: -48px;
+		}
+		
+		.input-group input:focus ~ .bar:before, .input-group input:focus ~ .bar:after {
+			width: 50%;
+		}
+	
+	.input-group label {
+		position: absolute;
+		margin-top: -29px;
+		font-size: 1.000em;
+		color: #cecece;
+		pointer-events: none;
+	}
+	
+	.input-group .bar {
+		position: relative;
+		display: block;
+		width: 100%;
+	}
+	
+		.input-group .bar:before, .input-group .bar:after {
+			content:'';
+			height:1px; 
+			width:0;
+			bottom:2px; 
+			position:absolute;
+			background:#e51c23;
+			transition: 0.1s ease all;
+			-moz-transition: 0.1s ease all;
+			-webkit-transition: 0.1s ease all;
+		}
+		
+		.input-group .bar:before {
+			left:50%;
+		}
+		.input-group .bar:after {
+			right:50%; 
+		}
+	
+ 
+/*card layouts*/
+.main-card {
+	position: relative;
+	font-size: 0.875em;
+	margin: auto 8px;
+	padding: 16px;
+	border-radius: 2px;
+	background-color: #fff;
+	top: 160px;
+}
+
+	.main-card h1 {
+		font-size: 1.500em;
+		color: #e51c23;
+		margin: 0;
+	}
+
+	.main-card a {
+		font-weight: 500;
+		font-size: 0.875em;
+		text-decoration: none;
+		color: #000;
+	}
+	
+	.main-card a.primary {
+		color: #ffeb3b;
+		margin-right: 15px;
+	}
