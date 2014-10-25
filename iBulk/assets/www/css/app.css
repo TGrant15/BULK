@@ -304,7 +304,7 @@ ui-loader
 	opacity:0;
 	overflow-x:hidden;
 	background-color:grey;
-	background-image:url('pushUp.jpg');
+	background-image:url(../img/pushUp.jpg);
 }
 .detailTitle
 {
@@ -391,6 +391,11 @@ ui-loader
 .startDetailList
 {
 	list-style:none;
+}
+.routineSetImg
+{
+	height: 200px;
+	width: 361px;	
 }
 #startButton
 {

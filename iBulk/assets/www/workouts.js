@@ -63,8 +63,8 @@ var workoutObj = [];
 var nameCount = 0;
 //var timer = 90;
 var setCount = 1;
-var Weight = Parse.Object.extend("Weight");	
 var weightId;
+var Weight = Parse.Object.extend("Weight");	
 var weight = new Weight();
 var startCounter;
 var currentDetailID;
@@ -83,12 +83,13 @@ var recommendedSets;
 
 /************************/
 $(document).ready(function() {
-
 //****Create Array to check if the data is cached	
 var cachedWorkoutCheck = [];	
 if(localStorage["workoutCache"]==undefined)
 {
-		getLevel(username);
+	
+fetchWorkout(username);
+		
 }
 else
 {
@@ -96,32 +97,25 @@ else
 	cachedWorkoutCheck = jQuery.parseJSON(localStorage["workoutCache"]);
 	//*Store the length of the obj in this variable.
 	cacheObjLength = cachedWorkoutCheck.length;
+	generateWorkout(cachedWorkoutCheck);
 	
 
 	//**if the length of the cached object is greater than 1, then this confirms that data has been cached.
-	if(cachedWorkoutCheck.length > 1)
+/*	if(cachedWorkoutCheck.length > 1)
 	{
 		//* Generate the workouts using the cached objects.
 		generateWorkout(cachedWorkoutCheck);
-	}
+	/*}
 	else//**If it is not cached get the level and phase of the user and generate the workout.
 	{
 		
 		getLevel(username);
 
-	}
+	}*/
 }
 
 //**This is where each exercise is sorted by the body part, into seperate arrays.
-BicepObj = filterForProgram(cachedWorkoutCheck,"Bicep");
-TricepObj = filterForProgram(cachedWorkoutCheck,"Tricep");
-UpperBackObj = filterForProgram(cachedWorkoutCheck,"UpperBack");
-LowerBackObj = filterForProgram(cachedWorkoutCheck,"Lower Back");
-HamstringsObj = filterForProgram(cachedWorkoutCheck,"Hamstrings");
-QuadsObj = filterForProgram(cachedWorkoutCheck,"Quads");
-ChestObj = filterForProgram(cachedWorkoutCheck,"Chest");
-ShoulderObj = filterForProgram(cachedWorkoutCheck,"Shoulder");
-CalfsObj = filterForProgram(cachedWorkoutCheck,"Calfs");
+
 
 //*****This is the 3 dot menu***//
 $("#dotMenuWorkout").click(function(){
@@ -298,11 +292,11 @@ $(".workoutCards").click(function(){
 	$(".recNum").animate({"opacity":"0"});
 	$(".workoutList").animate({"margin-top":"62px"});
 	$(".workoutCards").animate({"border-bottom-width": "0px"});
-	$("#buttonGroup").animate({"opacity":"0"},200);
+	$("#buttonGroup").animate({"opacity":"0"},700);
 	//$(".workoutHead").hide();
-	$(".detailPage").animate({"opacity":"1"},500);
-	$("#menuIcon").animate({"height":"0px"},200);
-	$("#settingMenuDots").animate({"height":"0px"},200);
+	$(".detailPage").animate({"opacity":"1"},700);
+	$("#menuIcon").animate({"height":"0px"},700);
+	$("#settingMenuDots").animate({"height":"0px"},700);
 
 	$("#workoutOverviewTitle").css("color","black");
 	$("#workoutOverviewTitle").text(cachedWorkoutCheck[detailIndex].name);
@@ -346,6 +340,7 @@ $(".backToWorkout").click(function(){
 	$(".detailPage").css("display","none");
 	
 	$("#workoutOverviewTitle").css("color","white");
+	$("#workoutOverviewTitle").text("Today's Workout");
 	$(".backToWorkout").css("display","none");
 	$(".settingMenuDotsDetail").css("display","none");
 	$("#" + currentDetailID).animate({height:"120px"});
@@ -807,16 +802,6 @@ $(".workoutCards").swipe( {
 //----------------------------------------------------------//
 //----------------------- workout page  ----------------//
 //----------------------------------------------------------//	
-//*****This is the on scroll method****//
-$("#workoutContent").scroll(function(){
-	/*	$('.workoutTabs').css( "box-shadow", "0 0 6px 0" );
-		
-		var pos = $("#workoutContent").scrollTop();
-		if(pos==0)
-			{
-				$('.workoutTabs').css("box-shadow","0 0 0px 0");
-			}	*/
-});
 	
 //*******This is the blue action button*****//	
 $("#blue").click(function(){
@@ -825,14 +810,15 @@ $("#blue").click(function(){
 		$("#timeAnimation").text("90"); //set the time animation to 90
 		timer=90;	//this is setting the actual timer to 90 seconds..
 
+		var Weight = Parse.Object.extend("Weight");	//initialize the weight object
 		//***This parse query will find the the workout that is equal the exercise, and the user
 		//** and make udates to the workout log accordingly*****//
 		var query = new Parse.Query(Weight);
 		query.equalTo("wght_exercise", nameList[nameCount]); 
 		query.equalTo("wght_user", username); 		
 		query.find({
-			  success: function(results) {
-				var weightText, weightNum; 
+			  success: function(results) {			  
+				var weightText, weightNum, routin
 				if(rcmndedWeight[nameCount] == "Just the Bar")
 				{
 					weightNum = 45;
@@ -849,15 +835,15 @@ $("#blue").click(function(){
 					weightText = weightNum + "lbs";
 				}
 				$("#recommendedWeight").text(weightText);
-
-				
+			
 				if (results.length == 0)
 				{
+					var weight = new Weight(); // create a new weight object
 					weight.set("wght_user", username);
 					weight.set("wght_exercise", nameList[nameCount]);
 					weight.set("wght_recommended", weightNum);
 					weight.save().then(function(weight){
-						weightId=weight.id;
+						localStorage["routineSetId"]=weight.id;
 					});
 
 						
@@ -865,7 +851,7 @@ $("#blue").click(function(){
 				}
 				else
 				{			
-					weightId=results[0].id;
+					localStorage["routineSetId"]=results[0].id;
 					//weight.save();
 				}	
 
@@ -902,244 +888,199 @@ $("#blue").click(function(){
 	});
 	
 //------------------------------------------------------------//
-//----------- Workout start------------------------------------//
+//----------- Workout start-----------------------------------//
 //------------------------------------------------------------//
 
 $("#startButton").click(function(){
-	if(timerSwitch == "on") 
+	var weightText, weightNum; 	
+	var ExerciseQuery = $("#workoutOverviewTitle").text(); // grab the exercise name, which is in the header of the page
+
+	if(timerSwitch== "on") // If the timer is currently running
+	{
+		if(setCount == 1) // check if we are in the first set
 		{
-		startCounter++;
 
+			var Weight = Parse.Object.extend("Weight");	//initialize the weight object
+			var query = new Parse.Query(Weight);	//query the objects in the parse database
 
-		$(".timer").css("display","none");
-		$("#startButton").text("Submit");
-		$("#weightPerformed").css("display","block");
-		$("#set").text("Set ");
-		$("#setNum").text(setCount + " of 3");
-  	//$("#timeLabel").text(" Seconds");
-  	
-		
-		
-		// check the database to see if the workout already exists for the specific user.
-		var ExerciseQuery = $("#workoutOverviewTitle").text();
-		
-		var query = new Parse.Query(Weight);
-		
-		query.equalTo("wght_exercise", ExerciseQuery); 
-		query.equalTo("wght_user", username); 
-		
-		query.find({
-			  success: function(results) {
-				var weightText, weightNum; 
-				  if(rcmndedWeight[nameCount] == "Just the Bar")
-					{
-						weightText = "Just the Bar";					
-						weightNum = 45;
-					}
-					else if(rcmndedWeight[nameCount] == "Body Weight")
-					{
-						weightText = "Body Weight";
-						weightNum = 0;
-					}
-					else
-					{
-						weightText = rcmndedWeight[nameCount] + "lbs";
-						weightNum = rcmndedWeight[nameCount];
-					}
-				 // if it does not exist create it 
-				if (results.length == 0)
+			query.equalTo("wght_exercise", ExerciseQuery);  // find a record in the parse database that matches the exercise name..
+			query.equalTo("wght_user", username); 			// ..and the username(this will always only be 1 record).
+			query.find(function(results){
+				if(results.length == 0)				// if the record does not exist, then results will return 0.
 				{
-					alert("0 exist in database");
-					var Weight = Parse.Object.extend("Weight");	
-					var weight = new Weight();
 					
-					weight.set("wght_user", username);
-					weight.set("wght_exercise", ExerciseQuery);
-					weight.set("wght_recommended", weightNum);
+					var weight = new Weight(); // create a new weight object
+
+					weight.set("wght_user", username);	// set the user name in the database
+					weight.set("wght_exercise", ExerciseQuery); // set the exercise name in the database
+					weight.set("wght_recommended", weightNum);	// set the recommended weight in the database.
 
 
-					
-					
-					weight.save().then(function(weight) {
-						weightId=weight.id;
-						}, function(error) {
-						  // the save failed.
-						});
-	
-
-				}
-				else //if it exists store the ID.
-				{
-					alert(weightNum);
-					weight.set("wght_recommended", parseInt(weightNum));
-					
-					weight.save().then(function(weight) {
-					weightId=weight[0].id;
+					weight.save().then(function(result) {		// save the new object to the database
+						localStorage["routineSetId"]=result.id;	// once saved get the Id, and store it in the local Storage.
+					}, function(error) {
+						// the save failed.
 					});
 
+					//startCounter++;
+
 				}
-			  },
-			  error: function(error) {
-			    alert("Error: " + error.code + " " + error.message);
-			  }
-			});
-
-			timerSwitch ="off";
-			
-			
-
-		}
-	else if(timerSwitch == "off")
-		{
-			timerSwitch = "on";
-			var setDatabaseCount = "wght_set" + setCount;
-			var weightPerformed = parseInt($("#weightPerformed").val());
-			var query = new Parse.Query(Weight);
-			query.get(weightId, {
-			  success: function(weight) {
-				 weight.set(setDatabaseCount, weightPerformed);
-				 weight.save();
-			  },
-			  error: function(weight, error) {
-			    // The object was not retrieved successfully.
-			    // error is a Parse.Error with an error code and description.
-			  }
-			});
-			
-		
-			$("#weightPerformed").val('');
-			
-			$("#startButton").text("Start");
-			$("#weightPerformed").css("display","none");
-			$("#timeLabel").text(" Seconds");
-			$("#timeAnimation").text("90");
-			timer=90;
-			
-			if(started == "no")
-			{
-				var interval = setInterval(function() {
-				    timer--;
-				    $('#timeAnimation').text(timer);
-				    
-				    if (timer === 0){
-				    	$("#timeAnimation").text("");
-				    	$("#timeLabel").css("margin-left", "-146px");
-				    	$("#timeLabel").text("READY!");
-				    	started = "no";
-				    	clearInterval(interval);
-				    }
-				    
-				}, 1000);
-			}
-			
-			$(".timer").css("display","block");
-				
-			if(setCount == 3)
-			{
-				$("#weightAdjForm").css("display","block");
-				$(".overlay").css("display", "block");
-				$("#weightAdjSbmt").click(function(){
-					
-					var query = new Parse.Query(Weight);
-					query.get(weightId, {
-					  success: function(weight) {
-						  var increase = weightPerformed+5;
-						  var decrease = weightPerformed-5;
-						  
-						  if($("#tooLight").is(':checked'))
-							{
-								$("#weightAdjForm").css("display","none");
-								$(".overlay").css("display", "none");
-								 weight.set("wght_recommended", increase);
-								 alert(increase);
-								 weight.save().then(function(){
-								 alert("New recommended Weight!");
-								 });
-							}
-							else if($("#tooHeavy").is(':checked'))
-							{
-								$("#weightAdjForm").css("display","none");
-								$(".overlay").css("display", "none");
-								alert(decrease);
-								 weight.set("wght_recommended", decrease);
-								 weight.save().then(function(){
-								 alert("New recommended Weight!");
-								 });
-							}
-							else if($("#Perfect").is(':checked'))
-							{
-								$("#weightAdjForm").css("display","none");
-								$(".overlay").css("display", "none");
-								 weight.set("wght_recommended", weightPerformed);
-								 alert(weightPerformed);
-								 weight.save().then(function(){
-								 alert("New recommended Weight!");
-								 });
-							}
-							else
-							{
-								alert("you must choose something");
-							}
-						  	weight.save();
-					  },
-					  error: function(weight, error) {
-					    // The object was not retrieved successfully.
-					    // error is a Parse.Error with an error code and description.
-					  }
-					});
-						
-					
-				});
-				
-				nameCount++;
-				setCount=1;
-				$("#workoutOverviewTitle").text(nameList[nameCount]);
-				$("#rcmendWeight").text(rcmndedWeight[nameCount]);
-			
-
-				if(nameList[nameCount] == undefined)
+				else
 				{
-					$(".startWorkoutImg").animate({"width":"0%"},300);
-					$(".startWorkoutImg").empty();
-					$("#set").animate({"margin-left":"-160px"},300);
-					$("#setNum").animate({"margin-right":"0px"},300);
-					$("#rcmendWeight").animate({"margin-left":"376px"},300);
-					$("#timerContainer").animate({"margin-left":"-360px"},300);
-					$(".workoutHead").animate({"margin-top": "-280px"},300);
-					$("#startButton").text("Finished");
-					$("#startButton").animate({"top": "-120px"});
-					timerSwitch = "complete";
-					
-					setTimeout(function() {
-						$("#completeMessage").css("display","block");
-					}, 500);
-					
-					
+					var weight = new Weight(); // create a new weight object
+					localStorage["routineSetId"] = results[0].id; //store weight object into local storage
 				}
-				
-			}
-			else
-			{
-				setCount++;
-			}
-			
-			
-			$("#setNum").text(setCount + " of 3");
-			if(nameCount == (nameList.length*3))
-			{
-				alert("complete");
-			}			
-					
+				//startCounter++;
+				$(".timer").css("display","none"); // Hide the timer
+				$("#startButton").text("Submit"); // change the text from start to submit
+				$("#weightPerformed").css("display","block"); // show the weight performed textbox
+				$("#set").text("Set ");  // display set...
+				$("#setNum").text(setCount + " of 3"); // ..number of the current set
+				//$("#timeLabel").text(" Seconds");	
+  
+				timerSwitch ="off";	// set the timer to off.
+			});
 		}
-		else if(timerSwitch == "complete")
+		else // if its any other set other then set 1
 		{
-			window.location = "workout.html";
+
+			var Weight = Parse.Object.extend("Weight");	//initialize the weight object
+			var query = new Parse.Query(Weight);	//query the objects in the parse database
+
+			query.equalTo("wght_exercise", ExerciseQuery);  // find a record in the parse database that matches the exercise name..
+			query.equalTo("wght_user", username); 			// ..and the username(this will always only be 1 record).
+			query.find(function(results){
+				var weight = new Weight(); // create a new weight object
+				localStorage["routineSetId"] = results[0].id; //store weight object into local storage
+			});
+			//startCounter++;
+			$(".timer").css("display","none"); // Hide the timer
+			$("#startButton").text("Submit"); // change the text from start to submit
+			$("#weightPerformed").css("display","block"); // show the weight performed textbox
+			$("#set").text("Set ");  // display set...
+			$("#setNum").text(setCount + " of 3"); // ..number of the current set
+			//$("#timeLabel").text(" Seconds");	
+
+			timerSwitch ="off";	// set the timer to off.
 		}
-	
-	
-	
+	}// close of if statment for timer switch set to on.	
+	else if(timerSwitch== "off") // if the timer is not running.
+	{
+		timerSwitch = "on"; // switch timer on
+		var Weight = Parse.Object.extend("Weight");	//initialize the weight object
+		var query = new Parse.Query(Weight);	//query the objects in the parse database
+
+		query.equalTo("wght_exercise", ExerciseQuery);  // find a record in the parse database that matches the exercise name..
+		query.equalTo("wght_user", username); 			// ..and the username(this will always only be 1 record).
+		query.find(function(results){			
+			var setColumn = "wght_set" + setCount; // storing the column name into variable
+			var weightPerformed = parseInt($("#weightPerformed").val()); // store the value the user performed and convert to Int
+			results[0].set(setColumn, weightPerformed);		// set the user performance to object we pulled/found
+			results[0].save().then(function(){			
+				$("#weightPerformed").val('');	//clear the performance box
+				$("#startButton").text("Start"); // change the submit button back to start
+				$("#weightPerformed").css("display","none"); //hide the weight performed
+				$("#timeLabel").text(" Seconds"); // change the label back to Seconds
+				$("#timeAnimation").text("90 "); // show 90 seconds 
+				timer=90;			 // set the timer to 90		
+				$(".timer").css("display","block"); // display the timer.
+											
+				if(setCount == 3)//will be changed to variable that will represent the set amount that is pulled from the database.
+				{
+
+					$("#weightAdjForm").css("display","block"); // display the weight adjustment form
+					$(".overlay").css("display", "block"); //show a black overlay over the app so put focus on the form
+					$("#weightAdjSbmt").click(function(){ // on clicking the submit button on the form														
+						var increase = weightPerformed+5; // increase on the weight performed by 5 pounds(to be changed.)
+						var decrease = weightPerformed-5; // decrease on the weight performed by 5 pounds(to be changed.)
+				  
+						if($("#tooLight").is(':checked')) //if the user selected that the weight was too light.
+						{
+							$("#weightAdjForm").css("display","none"); // hide the form
+							$(".overlay").css("display", "none"); // hide the overlay
+							results[0].set("wght_recommended", increase); // set the new recommended weight in the database.
+							results[0].save().then(function(){ // save the record to the database
+								// I feel like something should be done in here just dont know what.
+							});
+						}
+						else if($("#tooHeavy").is(':checked')) //if the user selected that the weight was too heavy.
+						{
+							$("#weightAdjForm").css("display","none"); // hide the form
+							$(".overlay").css("display", "none"); // hide the overlay
+							results[0].set("wght_recommended", decrease); // set the new recommended weight in the database.
+							results[0].save().then(function(){ // save the record to the database
+								// I feel like something should be done in here just dont know what.
+							});
+						}
+						else if($("#Perfect").is(':checked'))//if the user selected that the weight was perfect.
+						{
+							$("#weightAdjForm").css("display","none"); // hide the form
+							$(".overlay").css("display", "none"); // hide the overlay
+							results[0].set("wght_recommended", weightPerformed); // set the new recommended weight in the database.
+							results[0].save().then(function(){ // save the record to the database
+								// I feel like something should be done in here just dont know what.
+							});
+						}
+						else
+						{
+							alert("you must choose something"); // this forces the user to choose something before closing.
+						}		
+						setCount=1; // the set will reset to 1
+
+					}); // closes the onclick of the submit from button 
+					nameCount++;  // since we are in the final set, we will increase the nameCount, moving onto the next workout
+					$("#workoutOverviewTitle").text(nameList[nameCount]); // change the name in the header
+					$("#rcmendWeight").text(rcmndedWeight[nameCount]); // change the recommended weight
+					$("#set").text("Set ");  // display set...
+					$("#setNum").text(setCount + " of 3"); // ..number of the current set
+					
+				}// closes if statement for if this is set 3
+				else // if it is not the last set
+				{
+					setCount++; // increment setCount
+					$("#set").text("Set ");  // display set...
+					$("#setNum").text(setCount + " of 3"); // ..number of the current set
+				}
+
+			});//closes the save for the user performance box
+		});// close the find for the record.(this find is used when the switch is off).
+		
+
+	}
+
 });
-
+		
+/*		var interval = setInterval(function() {
+		    timer--;x
+		    $('#timeAnimation').text(timer);
+		    
+		    if (timer <= 0){
+		    	$("#timeAnimation").text("");
+		    	$("#timeLabel").css("margin-left", "-146px");
+		    	$("#timeLabel").text("READY!");
+		    	started = "no";
+		    	clearInterval(interval);
+		    }
+		    
+		}, 1000);*/
+				 
+		/*if(rcmndedWeight[nameCount] == "Just the Bar")
+		{
+			weightText = "Just the Bar";					
+			weightNum = 45;
+		}
+		else if(rcmndedWeight[nameCount] == "Body Weight")
+		{
+			weightText = "Body Weight";
+			weightNum = 0;
+		}
+		else
+		{
+			weightText = rcmndedWeight[nameCount] + "lbs";
+			weightNum = rcmndedWeight[nameCount];
+		}*/
+	
+//----End of Document Ready---//
 });
 
 function navigate(currentPage, pageDest)
@@ -1149,67 +1090,51 @@ function navigate(currentPage, pageDest)
 	$("#" + pageDest).show(200);
 	
 }
-
-function getLevel(email) {
+function fetchWorkout(email)
+{
+	var pulledLevel;
+	var pulledPhase;
+	
+	//get the level of the user
 	var User = Parse.Object.extend("User");
 	var query = new Parse.Query(User);
 	query.equalTo("username", email);
-	query.find().then(function(results) {
-	
-			    for (var i = 0; i < results.length; i++) { 
-			      var object = results[i];
-			      var pulledLevel = object.get('level');
-			      
-			      if(localStorage["level"]==undefined)
-			      {
-				      localStorage["level"] = pulledLevel;
-				      getPhase(pulledLevel);
-
-			      }
-
-			      }
+	query.find().then(function(results){
+			
+				for(var i = 0; i < results.length; i++)
+				{
+					var pulledLevel = results[i].get('level');			 						
+				}
+				localStorage["level"] = pulledLevel;
+	}).then(function(){
+		//Get the phase of the user
+		var User = Parse.Object.extend("User");
+		var query = new Parse.Query(User);
+		query.equalTo("username", email);
+		query.find().then(function(results) {
+			for(var i = 0; i < results.length; i++)
+			{
+				 pulledPhase = results[i].get('phase');	
+				 
+			}
+			localStorage["phase"] = pulledPhase;
+			getExercise(localStorage["level"],localStorage["phase"]);
 		});
-}
 		
-function getPhase(email) {
-
-	
-	var User = Parse.Object.extend("User");
-	var query = new Parse.Query(User);
-	query.equalTo("username", current.get("username"));
-	query.find({
-	  success: function(results) {
-	    // Do something with the returned Parse.Object values
-	    for (var i = 0; i < results.length; i++) { 
-	    	var object = results[i];
-		    pulledPhase = object.get('phase');
-		    
-		    if(localStorage["phase"] == undefined)
-		    {
-			    localStorage["phase"] = pulledPhase;
-		    }
-	     /* var object = results[i];
-	      phase = object.get('phase');
-	      alert(phase);*/
-	    }
-	    getExercise();
-	    
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
 	});
 }
 
-function getExercise() {
+		
+
+function getExercise(level,phase) {
 	var Exercise = Parse.Object.extend("Exercise");
 	
 	// Find all workouts that are available for the user that is currently in this level and phase.
 	var query = new Parse.Query(Exercise);
-	query.equalTo("ex_level", localStorage["level"] );
-	query.equalTo("ex_phase", localStorage["phase"]);
-	query.find({
-	  success: function(results) {
+	query.equalTo("ex_level", level );
+	query.equalTo("ex_phase", phase );
+	query.find().then(function(results){
+		
 		  var workoutObj = [];
 		    for (var i = 0; i < results.length; i++) {  
 			      var object = results[i];
@@ -1239,14 +1164,11 @@ function getExercise() {
 		    cachedWorkouts = [];
 		    cachedWorkouts = jQuery.parseJSON(jsonString);
 		    
+		    
 		    generateWorkout(cachedWorkouts);
-
 		 
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
-	});
+		});
+	 
 }
 
 function generateWorkout(cacheVar)
@@ -1261,31 +1183,31 @@ function generateWorkout(cacheVar)
 	
     
 	
-	// go through each workout that was pulled and all the properties and save them into individual variables.  
-    for (var i = 0; i < cachedWorkouts.length; i++) {     
-    	var name = cachedWorkouts[i].name;
-        var bodyZone = cachedWorkouts[i].bodyZone;
-        var type = cachedWorkouts[i].type;
-        var priority = cachedWorkouts[i].priority;
-        var difficultyTemp = cachedWorkouts[i].difficulty;
-        var primaryTemp = cachedWorkouts[i].primary;
-        var description1Temp = cachedWorkouts[i].description1;
-        var description2Temp = cachedWorkouts[i].description2;
-        var description3Temp= cachedWorkouts[i].description3;
-        var description4Temp = cachedWorkouts[i].description4;
-        var description5Temp = cachedWorkouts[i].description5;
-        var tip1Temp = cachedWorkouts[i].tip1;
-        var tip2Temp = cachedWorkouts[i].tip2;
-        var tip3Temp = cachedWorkouts[i].tip3;
-    	  
-      if(bodyZone == "upper")
-  		{
-    	  //Based on the number of workout populate the property arrays with the respective properties
-    	  nameList[workoutCount] = name;
-    	  bodyZoneArray[workoutCount] = bodyZone;
-    	  typeArray[workoutCount] = type;
-    	  difficulty[workoutCount] = difficultyTemp;
-    	  primary[workoutCount] = primaryTemp;
+	// go through each workout that was pulled and all the properties and save them into individual variables. 
+	for (var i = 0; i < cachedWorkouts.length; i++) {     
+		var name = cachedWorkouts[i].name;
+	    var bodyZone = cachedWorkouts[i].bodyZone;
+	    var type = cachedWorkouts[i].type;
+	    var priority = cachedWorkouts[i].priority;
+	    var difficultyTemp = cachedWorkouts[i].difficulty;
+	    var primaryTemp = cachedWorkouts[i].primary;
+	    var description1Temp = cachedWorkouts[i].description1;
+	    var description2Temp = cachedWorkouts[i].description2;
+	    var description3Temp = cachedWorkouts[i].description3;
+	    var description4Temp = cachedWorkouts[i].description4;
+	    var description5Temp = cachedWorkouts[i].description5;
+	    var tip1Temp = cachedWorkouts[i].tip1;
+	    var tip2Temp = cachedWorkouts[i].tip2;
+	    var tip3Temp = cachedWorkouts[i].tip3;
+		  
+	  if(bodyZone == "upper")
+		{
+		  //Based on the number of workout populate the property arrays with the respective properties
+		  nameList[workoutCount] = name;
+		  bodyZoneArray[workoutCount] = bodyZone;
+		  typeArray[workoutCount] = type;
+		  difficulty[workoutCount] = difficultyTemp;
+		  primary[workoutCount] = primaryTemp;
 	      description1[workoutCount] = description1Temp;
 	      description2[workoutCount] = description2Temp;
 	      description3[workoutCount] = description3Temp;
@@ -1294,9 +1216,9 @@ function generateWorkout(cacheVar)
 	      tip1[workoutCount] = tip1Temp;
 	      tip2[workoutCount] = tip2Temp;
 	      tip3[workoutCount] = tip3Temp;
-    	  
-    	  if(type=="Compound") // If the type of workout is a compund workout go through replacement algorithm so compound workouts will be completed first.
-    		{
+		  
+		  if(type=="Compound") // If the type of workout is a compund workout go through replacement algorithm so compound workouts will be completed first.
+			{
 		    	  nameList[workoutCount] = nameList[compoundCount];// Which ever place
 		    	  nameList[compoundCount] = name;  		
 		    	  
@@ -1308,43 +1230,43 @@ function generateWorkout(cacheVar)
 		    	  
 		    	  difficulty[workoutCount] =  difficulty[compoundCount];
 		    	  difficulty[compoundCount] = difficultyTemp;
-
+	
 		    	  
 		    	  primary[workoutCount] = primary[compoundCount];
 		    	  primary[compoundCount] = primaryTemp;
-
+	
 		    	  
 			      description1[workoutCount] = description1[compoundCount];
 			      description1[compoundCount] = description1Temp;
-
+	
 			      
 			      description2[workoutCount] = description2[compoundCount];
 			      description2[compoundCount] = description2Temp;
-
+	
 			      
 			      description3[workoutCount] = description3[compoundCount];
 			      description3[compoundCount] = description3Temp;
-
+	
 			      
 			      description4[workoutCount] = description4[compoundCount];
 			      description4[compoundCount] = description4Temp;
-
+	
 			      
 			      description5[workoutCount] = description5[compoundCount];
 			      description5[compoundCount] = description5Temp;
-
+	
 			      
 			      tip1[workoutCount] = tip1[compoundCount];
 			      tip1[compoundCount] = tip1Temp;
-
+	
 			      
 			      tip2[workoutCount] = tip2[compoundCount];
 			      tip2[compoundCount] = tip2Temp;
-
+	
 			      
 			      tip3[workoutCount] = tip3[compoundCount];
 			      tip3[compoundCount] = tip3Temp;
-
+	
 		    	  
 		    	
 		    	  
@@ -1366,10 +1288,10 @@ function generateWorkout(cacheVar)
 		  		    			  </li>');
 	
 		    	  compoundCount++;
-    		}
-    	  else if(type =="Dumbbell")
-    		{
-    		  if(localStorage["level"] == 1)
+			}
+		  else if(type =="Dumbbell")
+			{
+			  if(localStorage["level"] == 1)
 		    	  {
 		    		  if(localStorage["phase"] == "1")
 		    		  {
@@ -1385,10 +1307,10 @@ function generateWorkout(cacheVar)
 		  		    			  </li>');
 	
 		    	  
-    		}
-    	  else if(type == "Body")
+			}
+		  else if(type == "Body")
 	  		{
-    		  if(localStorage["level"] == 1)
+			  if(localStorage["level"] == 1)
 		    	  {
 		    		  if(localStorage["phase"] == "1")
 		    		  {
@@ -1405,9 +1327,9 @@ function generateWorkout(cacheVar)
 	
 		    	  
 	  		}
-    	  else if(type == "Machine")
+		  else if(type == "Machine")
 	  		{
-    		  if(localStorage["level"] == 1)
+			  if(localStorage["level"] == 1)
 	    	  {
 	    		  if(localStorage["phase"] == "1")
 	    		  {
@@ -1424,10 +1346,10 @@ function generateWorkout(cacheVar)
 	
 	  		}    
 	  		workoutCount++;
-
-  		}
-  		else if(bodyZone == "lower")
-  		{
+	
+		}
+		else if(bodyZone == "lower")
+		{
 	    	  nameList[workoutCount] = name;
 	    	  bodyZoneArray[workoutCount] = bodyZone;
 	    	  typeArray[workoutCount] = type;
@@ -1443,63 +1365,63 @@ function generateWorkout(cacheVar)
 		      tip3[workoutCount] = tip3Temp;
 	    	  if(type=="Compound")
 	    		{
-  		    	  nameList[workoutCount] = nameList[compoundCount];
-  		    	  nameList[compoundCount] = name;		    	 		
-  		    	  
-  		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
-  		    	  bodyZoneArray[compoundCount] = bodyZone;
-  		    	  
-  		    	  typeArray[workoutCount] = typeArray[compoundCount];
-  		    	  typeArray[compoundCount] = type;
-  		    	  
-  		    	  difficulty[workoutCount] =  difficulty[compoundCount];
-  		    	  difficulty[compoundCount] = difficultyTemp;
-
-  		    	  
-  		    	  primary[workoutCount] = primary[compoundCount];
-  		    	  primary[compoundCount] = primaryTemp;
-
-  		    	  
-  			      description1[workoutCount] = description1[compoundCount];
-  			      description1[compoundCount] = description1Temp;
-
-  			      
-  			      description2[workoutCount] = description2[compoundCount];
-  			      description2[compoundCount] = description2Temp;
-
-  			      
-  			      description3[workoutCount] = description3[compoundCount];
-  			      description3[compoundCount] = description3Temp;
-
-  			      
-  			      description4[workoutCount] = description4[compoundCount];
-  			      description4[compoundCount] = description4Temp;
-
-  			      
-  			      description5[workoutCount] = description5[compoundCount];
-  			      description5[compoundCount] = description5Temp;
-
-  			      
-  			      tip1[workoutCount] = tip1[compoundCount];
-  			      tip1[compoundCount] = tip1Temp;
-
-  			      
-  			      tip2[workoutCount] = tip2[compoundCount];
-  			      tip2[compoundCount] = tip2Temp;
-
-  			      
-  			      tip3[workoutCount] = tip3[compoundCount];
-  			      tip3[compoundCount] = tip3Temp;
-  		    	  
-  		    	  if(localStorage["level"] == 1)
-  		    	  {
-  		    		  if(localStorage["phase"] == "1")
-  		    		  {
-  		    			rcmndedWeight[workoutCount] = "Just the Bar";
-  		    		  }
-  		    	  }
+		    	  nameList[workoutCount] = nameList[compoundCount];
+		    	  nameList[compoundCount] = name;		    	 		
+		    	  
+		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+		    	  bodyZoneArray[compoundCount] = bodyZone;
+		    	  
+		    	  typeArray[workoutCount] = typeArray[compoundCount];
+		    	  typeArray[compoundCount] = type;
+		    	  
+		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+		    	  difficulty[compoundCount] = difficultyTemp;
+	
+		    	  
+		    	  primary[workoutCount] = primary[compoundCount];
+		    	  primary[compoundCount] = primaryTemp;
+	
+		    	  
+			      description1[workoutCount] = description1[compoundCount];
+			      description1[compoundCount] = description1Temp;
+	
+			      
+			      description2[workoutCount] = description2[compoundCount];
+			      description2[compoundCount] = description2Temp;
+	
+			      
+			      description3[workoutCount] = description3[compoundCount];
+			      description3[compoundCount] = description3Temp;
+	
+			      
+			      description4[workoutCount] = description4[compoundCount];
+			      description4[compoundCount] = description4Temp;
+	
+			      
+			      description5[workoutCount] = description5[compoundCount];
+			      description5[compoundCount] = description5Temp;
+	
+			      
+			      tip1[workoutCount] = tip1[compoundCount];
+			      tip1[compoundCount] = tip1Temp;
+	
+			      
+			      tip2[workoutCount] = tip2[compoundCount];
+			      tip2[compoundCount] = tip2Temp;
+	
+			      
+			      tip3[workoutCount] = tip3[compoundCount];
+			      tip3[compoundCount] = tip3Temp;
+		    	  
+		    	  if(localStorage["level"] == 1)
+		    	  {
+		    		  if(localStorage["phase"] == "1")
+		    		  {
+		    			rcmndedWeight[workoutCount] = "Just the Bar";
+		    		  }
+		    	  }
 	  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
-  		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+		    	  rcmndedWeight[compoundCount] = "Just the Bar";
 		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
 		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
 		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
@@ -1508,17 +1430,17 @@ function generateWorkout(cacheVar)
 		  		    			  </div>\
 		  		    			  </li>');
 	
-  		    	  compoundCount++;
+		    	  compoundCount++;
 	    		}
 	    	  else if(type =="Dumbbell")
 	    		{
 	    		  if(localStorage["level"] == 1)
-  		    	  {
-  		    		  if(localStorage["phase"] == "1")
-  		    		  {
-  		    			rcmndedWeight[workoutCount] = 25;
-  		    		  }
-  		    	  }
+		    	  {
+		    		  if(localStorage["phase"] == "1")
+		    		  {
+		    			rcmndedWeight[workoutCount] = 25;
+		    		  }
+		    	  }
 		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
 		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
 		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
@@ -1527,17 +1449,17 @@ function generateWorkout(cacheVar)
 		  		    			  </div>\
 		  		    			  </li>');
 	
-
+	
 	    		}
 	    	  else if(type == "Body")
 		  		{
 	    		  if(localStorage["level"] == 1)
-  		    	  {
-  		    		  if(localStorage["phase"] == "1")
-  		    		  {
-  		    			rcmndedWeight[workoutCount] = "Body Weight";
-  		    		  }
-  		    	  }
+		    	  {
+		    		  if(localStorage["phase"] == "1")
+		    		  {
+		    			rcmndedWeight[workoutCount] = "Body Weight";
+		    		  }
+		    	  }
 		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
 		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
 		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
@@ -1546,7 +1468,7 @@ function generateWorkout(cacheVar)
 		  		    			  </div>\
 		  		    			  </li>');
 	
-
+	
 		  		}
 	    	  else if(type == "Machine")
 		  		{
@@ -1565,12 +1487,12 @@ function generateWorkout(cacheVar)
 		  		    			  </div>\
 		  		    			  </li>');
 	
-
+	
 		  		}    
 		  		workoutCount++;
-  		}
-  		else
-  		{
+		}
+		else
+		{
 	  	   coreList.push({name: name, bodyZone: bodyZone, difficulty:difficultyTemp, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp,tip1:tip1Temp,tip2:tip2Temp,tip3:tip3Temp});
 	  	    	  
 			  if(type == "Body")
@@ -1578,7 +1500,7 @@ function generateWorkout(cacheVar)
 				  //coreList[coreCount].rmdWeight = "Body Weight";
 				  rcmndedWeight[workoutCount] = "Body Weight";
 			  }
-
+	
 			$("#coreList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
 										<div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
 										<label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
@@ -1586,26 +1508,36 @@ function generateWorkout(cacheVar)
 				  		    			<label class="recNum" id="exDifficulty'+i+'">'+difficulty[compoundCount]+'</label>\
 										</div>\
 									</li>');
-			coreCount++;
+				coreCount++;
+	
+	  		}
+	    }
+	    
+	    for(var i=0; i<=(workoutCount-coreCount); i++)
+	    {
+	
+		      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
+	    
+	    }
+	    
+	
+	    for(var index=0; index<coreCount; index++)
+	    {
+		    workoutObj.push({name: coreList[index].name, bodyZone: coreList[index].bodyZone, difficulty:coreList[index].difficulty, primary:coreList[index].primary, description1:coreList[index].description1, description2:coreList[index].description2, description3:coreList[index].description3, description4:coreList[index].description4, description5:coreList[index].description5,tip1:coreList[index].tip1,tip2:coreList[index].tip2,tip3:coreList[index].tip3});
+	
+	    }
+	    
+	
+	BicepObj = filterForProgram(cacheVar,"Bicep");
+	TricepObj = filterForProgram(cacheVar,"Tricep");
+	UpperBackObj = filterForProgram(cacheVar,"UpperBack");
+	LowerBackObj = filterForProgram(cacheVar,"Lower Back");
+	HamstringsObj = filterForProgram(cacheVar,"Hamstrings");
+	QuadsObj = filterForProgram(cacheVar,"Quads");
+	ChestObj = filterForProgram(cacheVar,"Chest");
+	ShoulderObj = filterForProgram(cacheVar,"Shoulder");
+	CalfsObj = filterForProgram(cacheVar,"Calfs");   
 
-  		}
-    }
-    
-    for(var i=0; i<=(workoutCount-coreCount); i++)
-    {
-
-	      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
-    
-    }
-    
-
-    for(var index=0; index<coreCount; index++)
-    {
-	    workoutObj.push({name: coreList[index].name, bodyZone: coreList[index].bodyZone, difficulty:coreList[index].difficulty, primary:coreList[index].primary, description1:coreList[index].description1, description2:coreList[index].description2, description3:coreList[index].description3, description4:coreList[index].description4, description5:coreList[index].description5,tip1:coreList[index].tip1,tip2:coreList[index].tip2,tip3:coreList[index].tip3});
-
-    }
-   
-  
 }
 
 
