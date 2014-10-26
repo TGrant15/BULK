@@ -1569,11 +1569,12 @@ function filterForProgram(cacheVar,bodyPartChoice)
 			      {
 			    	  if($("#item" + i).attr("name") ==  nameList[counter])
 			    	  {
-			    		  removeFromArray = (counter + 1);
-			    		  nameList[counter] == nameList[removedFromArray];
-			    		  for(var index = removedFromArray; index< (cacheVar.length - removeFromArray); index++)
+			    		  removedFromArray++;
+			    		  nameList[counter] = nameList[removedFromArray];
+			    		  for(var index = 0; index < (cacheVar.length - removedFromArray); index++)
 			    		  {
-			    			  nameList[index] = nameList[index + 1];
+			    			  nameList[removedFromArray] = nameList[removedFromArray + 1];
+			    			  removedFromArray++;
 			    		  }
 			    		  nameList.pop();
 			    		  
