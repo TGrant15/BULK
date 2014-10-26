@@ -1,63 +1,11 @@
 $(document).ready(function() {
-Parse.initialize("AXss0hVCmQ3tmDsGCV0KD3Xn9yUL39BPJcGQGV7P", "IddscOVmXbWcUGqZCJWXj1bM8SXp2iJS2sA7Lz9b");
 	
 var currentUser = Parse.User.current();
 if(currentUser){
 	window.location = "workout.html"; 
 }
 else	
-{
-
-//--------------------------------------------------------//
-//-- This function is ran on loading the app.            //
-//-- All pages are hidden aside from the login page    //
-//--------------------------------------------------------//
-
-	$("#registerPage").hide();
-	$("#detailsPage").hide();
-	$("#activityLevelPage").hide();
-	$("#goalsPage").hide();
-	$("#liftingLevelPage").hide();
-	$("#healthPage").hide();
-	$("#welcomePage").hide();
-	//$("#loginPage").hide();
-	
-
-
-//-------------------------------------------------------//
-//-- ONCLICK(loginButton)                            //
-//-----------------------------------------------------//
-		
-		$("#loginButton").click(function(){
-			login($("#logUsername").val(),$("#logPassword").val());
-		});
-//-------------------------------------------------------//
-//-- ONCLICK(RegisterButton)                            //
-//-----------------------------------------------------//
-	
-	$("#registerButton").click(function(){
-		$("#registerDiv").css('margin-top', '1000px');
-		navigate("loginPage", "registerPage");
-		$("#registerDiv").animate({'margin-top': '50px'}, 500, 'swing');
-		
-	});
-	
-//--------------------------------------------------------//
-//-- ONCLICK(SubmitRegister)                             //
-//-----------------------------------------------------//	
-	$("#registerSubmit").click(function(){
-		if($("#txtEmail").val() != $("#txtEmailConfirm").val())
-			{
-				alert("emails do not match");
-			}
-		else
-			{
-				checkEmail($("#txtEmail").val());
-			}
-		
-					
-		
-	});
+{	
 	
 //----------------------------------------------------------//
 	//---------------details page------------------------//
@@ -676,130 +624,6 @@ function getLevel(email) {
 	    });*/
 	}
 
-//---------------Check if email is unique----------------///
-
-
-function checkEmail(email) {
-	
-
-	var EmailQuery = Parse.Object.extend("User");
-	var query = new Parse.Query(EmailQuery);
-	query.equalTo("email", email);
-	query.find({
-	  success: function(results) {
-		  alert(results.length);
-		  if(results.length > 0)
-			  {
-			  	$("#taken").animate({"opacity":"1"});
-			  }
-		  else
-			  {
-				  if($("#txtPassword").val()==$("#confirmPassword").val())
-					{
-						
-						if($("#termCheck").prop("checked"))
-							{
-								
-								navigate("registerPage","detailsPage");
-							}
-						else
-							{
-								alert("Please Accept the terms and conditions to continue");
-							}
-						
-					}
-					else
-					{
-						alert("Passwords do not match");
-					}
-			  }
-	    
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
-	});
-	
-	/*$.ajax({
-	    type: 'Post',
-	    datatype: "json",
-	    url: "http://www.tremainegrant.com/iBulk/bulk.php",
-	    data: {action: 'checkEmail', $email: email},
-	    crossDomain: true,
-	    success: function (response,status) {
-	    	if(response.toString().indexOf("taken") >= 0){
-					$("#taken").animate({"opacity":"1"});
-				}
-				else
-				{
-					
-					if($("#txtPassword").val()==$("#confirmPassword").val())
-					{
-						
-						if($("#termCheck").prop("checked"))
-							{
-								
-								navigate("registerPage","detailsPage");
-							}
-						else
-							{
-								alert("Please Accept the terms and conditions to continue");
-							}
-						
-					}
-					else
-					{
-						alert("Passwords do not match");
-					}
-				}
-	    
-	    	
-	    },
-	    error: function (xhr) {
-	        alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
-	    }
-    });*/
-}
-
-
-//--------------------Login ---------------------///
-function login(email,password) {
-	
-
-	Parse.User.logIn(email, password, {
-		  success: function(user) {
-			  localStorage["loggedUser"] = $('#logUsername').val();
-	    		window.location = "workout.html"; 
-		  },
-		  error: function(user, error) {
-		    // The login failed. Check error to see why.
-		  }
-		});
-/*	
-	$.ajax({
-	    type: "Post",
-	    url: "http://www.tremainegrant.com/iBulk/bulk.php",
-	    data: {action: 'login', $email: email, $password: password },
-	    crossDomain: true,
-	    success: function (response,status) {
-	    	if (response.toString().indexOf("match") >= 0) {
-	    		localStorage["loggedUser"] = $('#logUsername').val();
-	    		window.location = "workout.html"; 
-	    		
-	    	}
-	    	else {
-	    		alert("not found")
-	    	}
-	    	
-	    },
-	    error: function (response) {
-	         alert("Error establishing a connection.");
-	         
-	    }
-    });
-	*/
-}
-
 //------------Navigate to another Page------------///
 function navigate(currentPage, pageDest)
 {
@@ -871,30 +695,6 @@ function register(password,email,age,weight,height,idlWeight,focusArea,level,car
 	    alert("Error: " + error.code + " " + error.message);
 	  }
 	});
-
-	
-/*		$.ajax({
-		    type: "Post",
-		    url: "http://www.tremainegrant.com/iBulk/bulk.php",
-		    data: {action: 'register', $password: password, 
-		    	   $email: email,
-		    	   $age: age,
-		    	   $weight: weight,
-		    	   $height: height,
-		    	   $idlWeight: idlWeight,
-		    	   $focusArea: focusArea,
-		    	   $level: level,
-		    	   $cardio: cardio
-		    	   },
-		    crossDomain: true,
-		    success: function (response,status) {
-		    	navigateColor("liftingLevelPage", "welcomePage");	
-		    },
-		    error: function (response) {
-		         alert("There was an issue registering you.");
-		    }
-	    });
-	*/
 }
 
 }
