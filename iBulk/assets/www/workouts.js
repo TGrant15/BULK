@@ -990,7 +990,8 @@ $("#startButton").click(function(){
 
 					$("#weightAdjForm").css("display","block"); // display the weight adjustment form
 					$(".overlay").css("display", "block"); //show a black overlay over the app so put focus on the form
-					$("#weightAdjSbmt").click(function(){ // on clicking the submit button on the form														
+					$("#weightAdjSbmt").click(function(){ // on clicking the submit button on the form		
+						$("#weightAdjSbmt").unbind("click");
 						var increase = weightPerformed+5; // increase on the weight performed by 5 pounds(to be changed.)
 						var decrease = weightPerformed-5; // decrease on the weight performed by 5 pounds(to be changed.)
 				  
@@ -1033,6 +1034,7 @@ $("#startButton").click(function(){
 					$("#rcmendWeight").text(rcmndedWeight[nameCount]); // change the recommended weight
 					$("#set").text("Set ");  // display set...
 					$("#setNum").text(setCount + " of 3"); // ..number of the current set
+					
 					
 				}// closes if statement for if this is set 3
 				else // if it is not the last set
