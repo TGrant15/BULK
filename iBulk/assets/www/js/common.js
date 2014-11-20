@@ -20,7 +20,33 @@ Common = {
     		newPage.load(dir + id + '.html');
     	}
     	newPage.show(200);
-    }
+    },
+	dialogBox: function(title,message,confirm){
+		$("body").prepend('<div class="dialogBox">'+
+				'<label id="dialogHeading"></label>'+
+				'<label id="dialogBody"></label>' +
+				'<div id="dialogButtonGroup">'+
+				'<label id="cancelButton">Cancel</label>'+
+				'<label id="confirmButton">Confirm</label></div></div>');
+		
+		$(".dialogBox").css("display","block");
+		$(".dialogBox").animate({"margin-top":"-125px"});
+		$(".overlay").css("display","block");
+		$("#dialogHeading").text(title);
+		$("#dialogBody").text(message);
+		$("#confirmButton").click(function(){
+			$("#confirmButton").off("click");
+			confirm();
+			
+		});
+		$("#cancelButton").click(function(){
+			$(".dialogBox").css("display","none");
+			$(".dialogBox").animate({"margin-top":"-725px"});
+			$(".overlay").css("display","none");
+			$(".dialogBox").remove();
+		});
+		
+	}
 }
 
 

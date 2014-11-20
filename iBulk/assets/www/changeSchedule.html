@@ -1,0 +1,1624 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Edit Profile</title>
+<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css" />
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<lable>How Many Days can you workout per week?</label>
+  <select id="daysPerWeek">
+  </select>
+  <div id="daySelectorGroup">
+  		<div id="sundayFlag" class="daySelector" value="0">
+		<label>Su</label>
+		</div>
+		<div id="mondayFlag" class="daySelector" value="0">
+		<label>M</label>
+		</div>
+		<div id="tuesdayFlag" class="daySelector" value="0">
+		<label>T</label>
+		</div>
+		<div id="wednesdayFlag" class="daySelector" value="0">
+		<label>W</label>
+		</div>
+		<div id="thursdayFlag" class="daySelector" value="0">
+		<label>Thr</label>
+		</div>
+		<div id="fridayFlag" class="daySelector" value="0">
+		<label>F</label>
+		</div>
+		<div id="saturdayFlag" class="daySelector" valu="0">
+		<label>Sa</label>
+		</div>
+</div>
+<div id='clearScheduleButton' class='button raised red'>
+<div class='center' fit>Clear</div>
+<paper-ripple fit></paper-ripple>
+</div>
+
+<div id='saveScheduleButton' class='button raised green'>
+<div class='center' fit>Done</div>
+<paper-ripple fit></paper-ripple>
+</div>
+
+<script>
+$(document).ready(function() {
+	$("#daysPerWeek").val(localStorage["daysPerWeek"]);
+	preSelectDays();
+	$("#daysPerWeek").on("change", function(){
+		localStorage["daysPerWeek"] = $("#daysPerWeek").val();
+		clearDays();
+		
+		if(localStorage["daysPerWeek"] == 7)
+		{
+			fillDays();
+		}
+	});
+	
+	switch(localStorage["level"])
+	{
+		case "1":
+			$("#daysPerWeek").append(
+					"<option value='2'>2</option>"+
+				    "<option value='3'>3</option>");
+			break;
+		case "2":
+			$("#daysPerWeek").append(
+					"<option value='2'>2</option>"+
+				    "<option value='3'>3</option>"+
+				    "<option value='4'>4</option>");
+			break;
+		case "3":
+			$("#daysPerWeek").append(
+					"<option value='2'>2</option>"+
+				    "<option value='3'>3</option>"+
+				    "<option value='4'>4</option>"+
+				    "<option value='5'>5</option>");
+			break;
+		case "4":
+			$("#daysPerWeek").append(
+					"<option value='2'>2</option>"+
+				    "<option value='3'>3</option>"+
+				    "<option value='4'>4</option>"+
+				    "<option value='5'>5</option>"+
+				    "<option value='6'>6</option>"+
+				    "<option value='7'>7</option>");
+			break;
+		case "5":
+			$("#daysPerWeek").append(
+					"<option value='2'>2</option>"+
+				    "<option value='3'>3</option>"+
+				    "<option value='4'>4</option>"+
+				    "<option value='5'>5</option>"+
+				    "<option value='6'>6</option>"+
+				    "<option value='7'>7</option>");
+			break;
+		case "6":
+			$("#daysPerWeek").append(
+					"<option value='2'>2</option>"+
+				    "<option value='3'>3</option>"+
+				    "<option value='4'>4</option>"+
+				    "<option value='5'>5</option>"+
+				    "<option value='6'>6</option>"+
+				    "<option value='7'>7</option>");
+			break;
+	}
+	
+	$(".daySelector").on("click",  function()
+	{
+		var boxId = this.id;
+//******************************************/
+//**** Two days a week chosen**************/
+//******************************************/
+		if(localStorage["daysPerWeek"] == '2')
+		{
+			switch(boxId){
+				case 'mondayFlag':
+					selectDays(boxId);
+					$("#saturdayFlag").css("background-color","white");
+					$("#saturdayFlag").val(0);
+					$("#tuesdayFlag").css("background-color","white");
+					$("#tuesdayFlag").val(0);
+					$("#wednesdayFlag").css("background-color","white");
+					$("#wednesdayFlag").val(0);
+					$("#thursdayFlag").css("background-color","#0f9d58");
+					
+					
+				break;	
+				case 'tuesdayFlag':
+					selectDays(boxId);
+					$("#mondayFlag").css("background-color","white");
+					$("#mondayFlag").val(0);
+					$("#sundayFlag").css("background-color","white");
+					$("#sundayFlag").val(0);
+					$("#wednesdayFlag").css("background-color","white");
+					$("#wednesdayFlag").val(0);
+					$("#thursdayFlag").css("background-color","white");
+					$("#thursdayFlag").val(0);
+					$("#fridayFlag").css("background-color","#0f9d58");
+
+				break;	
+				case 'wednesdayFlag':
+					selectDays(boxId);
+					$("#tuesdayFlag").css("background-color","white");
+					$("#tuesdayFlag").val(0);
+					$("#mondayFlag").css("background-color","white");
+					$("#mondayFlag").val(0);
+					$("#thursdayFlag").css("background-color","white");
+					$("#thursdayFlag").val(0);
+					$("#fridayFlag").css("background-color","white");
+					$("#fridayFlag").val(0);
+					$("#saturdayFlag").css("background-color","#0f9d58");
+
+				break;	
+				case 'thursdayFlag':
+					selectDays(boxId);
+					$("#wednesdayFlag").css("background-color","white");
+					$("#wednesdayFlag").val(0);
+					$("#tuesdayFlag").css("background-color","white");
+					$("#tuesdayFlag").val(0);
+					$("#fridayFlag").css("background-color","white");
+					$("#fridayFlag").val(0);
+					$("#saturdayFlag").css("background-color","white");
+					$("#saturdayFlag").val(0);
+					$("#sundayFlag").css("background-color","#0f9d58");
+
+				break;	
+				case 'fridayFlag':
+					selectDays(boxId);
+					$("#thursdayFlag").css("background-color","white");
+					$("#thursdayFlag").val(0);
+					$("#wednesdayFlag").css("background-color","white");
+					$("#wednesdayFlag").val(0);
+					$("#saturdayFlag").css("background-color","white");
+					$("#saturdayFlag").val(0);
+					$("#sundayFlag").css("background-color","white");
+					$("#sundayFlag").val(0);
+					$("#mondayFlag").css("background-color","#0f9d58");
+
+				break;	
+				case 'saturdayFlag':
+					selectDays(boxId);
+					$("#fridayFlag").css("background-color","white");
+					$("#fridayFlag").val(0);
+					$("#thursdayFlag").css("background-color","white");
+					$("#thursdayFlag").val(0);
+					$("#sundayFlag").css("background-color","white");
+					$("#sundayFlag").val(0);
+					$("#mondayFlag").css("background-color","white");
+					$("#mondayFlag").val(0);
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+
+				break;	
+				case 'sundayFlag':
+					selectDays(boxId);
+					$("#saturdayFlag").css("background-color","white");
+					$("#saturdayFlag").val(0);
+					$("#fridayFlag").css("background-color","white");
+					$("#fridayFlag").val(0);
+					$("#mondayFlag").css("background-color","white");
+					$("#mondayFlag").val(0);
+					$("#tuesdayFlag").css("background-color","white");
+					$("#tuesdayFlag").val(0);
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+
+				break;	
+			}
+			
+				
+		}
+//******************************************/
+//**** Three days a week chosen**************/
+//******************************************/
+		else if(localStorage["daysPerWeek"] == '3')
+		{
+				switch(boxId){
+				case 'mondayFlag':
+					selectDays(boxId);
+					$("#sundayFlag").css("background-color","white");
+					$("#sundayFlag").val(0);
+					$("#tuesdayFlag").css("background-color","white");
+					$("#tuesdayFlag").val(0);
+					
+					if($("#wednesdayFlag").val()==1)
+					{
+						$("#wednesdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#wednesdayFlag").css("background-color","#0f9d58");
+					}
+					
+					if($("#fridayFlag").val()==1)
+					{
+						$("#fridayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#fridayFlag").css("background-color","#0f9d58");
+					}
+					
+					
+				break;	
+				case 'tuesdayFlag':
+					selectDays(boxId);
+					$("#mondayFlag").css("background-color","white");
+					$("#mondayFlag").val(0);
+					$("#wednesdayFlag").css("background-color","white");
+					$("#wednesdayFlag").val(0);
+	
+					//if the recommended day is already selected, leave it grey
+					if($("#thursdayFlag").val()==1)
+					{
+						$("#thursdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#thursdayFlag").css("background-color","#0f9d58");
+					}
+					
+					//if the recommended day is already selected, leave it grey
+					if($("#saturdayFlag").val()==1)
+					{
+						$("#saturdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#saturdayFlag").css("background-color","#0f9d58");
+					}
+
+	
+				break;	
+				case 'wednesdayFlag':
+					selectDays(boxId);
+					$("#tuesdayFlag").css("background-color","white");
+					$("#tuesdayFlag").val(0);
+	
+					$("#thursdayFlag").css("background-color","white");
+					$("#thursdayFlag").val(0);
+	
+					//if the recommended day is already selected, leave it grey
+					if($("#mondayFlag").val()==1)
+					{
+						$("#mondayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#mondayFlag").css("background-color","#0f9d58");
+					}
+					
+					//if the recommended day is already selected, leave it grey
+					if($("#fridayFlag").val()==1)
+					{
+						$("#fridayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#fridayFlag").css("background-color","#0f9d58");
+					}
+
+	
+				break;	
+				case 'thursdayFlag':
+					selectDays(boxId);
+					$("#wednesdayFlag").css("background-color","white");
+					$("#wednesdayFlag").val(0);
+	
+					$("#fridayFlag").css("background-color","white");
+					$("#fridayFlag").val(0);
+	
+					/*if the recommended day is already selected, leave it grey*/
+					if($("#saturdayFlag").val()==1)
+					{
+						$("#saturdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#saturdayFlag").css("background-color","#0f9d58");
+					}
+					
+					//if the recommended day is already selected, leave it grey*/
+					if($("#tuesdayFlag").val()==1)
+					{
+						$("#tuesdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#tuesdayFlag").css("background-color","#0f9d58");
+					}
+					
+
+	
+				break;	
+				case 'fridayFlag':
+					selectDays(boxId);
+					$("#thursdayFlag").css("background-color","white");
+					$("#thursdayFlag").val(0);
+
+					$("#saturdayFlag").css("background-color","white");
+					$("#saturdayFlag").val(0);
+
+					//if the recommended day is already selected, leave it grey*/
+					if($("#sundayFlag").val()==1)
+					{
+						$("#sundayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#sundayFlag").css("background-color","#0f9d58");
+					}
+					
+					//if the recommended day is already selected, leave it grey*/
+					if($("#wednesdayFlag").val()==1)
+					{
+						$("#wednesdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#wednesdayFlag").css("background-color","#0f9d58");
+					}
+
+	
+				break;	
+				case 'saturdayFlag':
+					selectDays(boxId);
+					$("#fridayFlag").css("background-color","white");
+					$("#fridayFlag").val(0);
+
+					$("#sundayFlag").css("background-color","white");
+					$("#sundayFlag").val(0);
+
+					//if the recommended day is already selected, leave it grey*/
+					if($("#mondayFlag").val()==1)
+					{
+						$("#mondayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#mondayFlag").css("background-color","#0f9d58");
+					}
+					
+					//if the recommended day is already selected, leave it grey*/
+					if($("#wednesdayFlag").val()==1)
+					{
+						$("#wednesdayFlag").css("background-color","grey");
+					}
+					else
+					{
+						$("#wednesdayFlag").css("background-color","#0f9d58");
+					}
+
+	
+				break;	
+				case 'sundayFlag':
+					selectDays(boxId);
+					$("#saturdayFlag").css("background-color","white");
+					$("#saturdayFlag").val(0);
+
+					$("#mondayFlag").css("background-color","white");
+					$("#mondayFlag").val(0);
+
+					//if the recommended day is already selected, leave it grey*/
+					if($("#tuesdayFlag").val()==1)
+					{
+						$("#tuesdayFlag").css("background-color","#0f9d58");
+					}
+					else
+					{
+						$("#tuesdayFlag").css("background-color","#0f9d58");
+					}
+					
+					//if the recommended day is already selected, leave it grey*/
+					if($("#thursdayFlag").val()==1)
+					{
+						$("#thursdayFlag").css("background-color","#0f9d58");
+					}
+					else
+					{
+						$("#thursdayFlag").css("background-color","#0f9d58");
+					}
+
+	
+				break;	
+			}
+		}
+//******************************************/
+//**** Four days a week chosen**************/
+//******************************************/
+		else if(localStorage["daysPerWeek"] == '4')
+		{
+			switch(boxId){
+			case 'mondayFlag':
+				selectDays(boxId);
+				$("#wednesdayFlag").css("background-color","white");
+				$("#wednesdayFlag").val(0);
+
+				$("#saturdayFlag").css("background-color","white");
+				$("#saturdayFlag").val(0);
+				
+				$("#sundayFlag").css("background-color","white");
+				$("#sundayFlag").val(0);
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'tuesdayFlag':
+				selectDays(boxId);
+				$("#wednesdayFlag").css("background-color","white");
+				$("#wednesdayFlag").val(0);
+
+				$("#saturdayFlag").css("background-color","white");
+				$("#saturdayFlag").val(0);
+				
+				$("#sundayFlag").css("background-color","white");
+				$("#sundayFlag").val(0);
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'wednesdayFlag':
+				selectDays(boxId);
+				$("#tuesdayFlag").css("background-color","white");
+				$("#tuesdayFlag").val(0);
+
+				$("#thursdayFlag").css("background-color","white");
+				$("#thursdayFlag").val(0);
+				
+				$("#sundayFlag").css("background-color","white");
+				$("#sundayFlag").val(0);
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+			break;	
+			case 'thursdayFlag':
+				selectDays(boxId);
+				$("#wednesdayFlag").css("background-color","white");
+				$("#wednesdayFlag").val(0);
+
+				$("#saturdayFlag").css("background-color","white");
+				$("#saturdayFlag").val(0);
+				
+				$("#sundayFlag").css("background-color","white");
+				$("#sundayFlag").val(0);
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+				
+			break;
+			case 'fridayFlag':
+				selectDays(boxId);
+				$("#wednesdayFlag").css("background-color","white");
+				$("#wednesdayFlag").val(0);
+
+				$("#saturdayFlag").css("background-color","white");
+				$("#saturdayFlag").val(0);
+				
+				$("#sundayFlag").css("background-color","white");
+				$("#sundayFlag").val(0);
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+				
+			break;
+			case 'saturdayFlag':
+				selectDays(boxId);
+				$("#wednesdayFlag").css("background-color","white");
+				$("#wednesdayFlag").val(0);
+
+				$("#tuesdayFlag").css("background-color","white");
+				$("#tuesdayFlag").val(0);
+				
+				$("#sundayFlag").css("background-color","white");
+				$("#sundayFlag").val(0);
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+			break;	
+			case 'sundayFlag':
+				selectDays(boxId);
+				$("#tuesdayFlag").css("background-color","white");
+				$("#tuesdayFlag").val(0);
+
+				$("#thursdayFlag").css("background-color","white");
+				$("#thursdayFlag").val(0);
+				
+				$("#saturdayFlag").css("background-color","white");
+				$("#saturdayFlag").val(0);
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+			break;	
+			}
+			
+		}
+//******************************************/
+//**** Five days a week chosen**************/
+//******************************************/
+		else if(localStorage["daysPerWeek"] == '5')
+		{
+			switch(boxId){
+			case 'mondayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'tuesdayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;
+			case 'wednesdayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;
+			case 'thursdayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;
+			case 'fridayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;
+			case 'saturdayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+
+
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;
+			case 'sundayFlag':
+				if(checkDays() != 5)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+
+
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;
+			}
+		}
+//******************************************/
+//**** 6ix days a week chosen**************/
+//******************************************/
+		else if(localStorage["daysPerWeek"] == '6')
+		{
+			switch(boxId){
+			case 'mondayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'tuesdayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'wednesdayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'thursdayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'fridayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'saturdayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#mondayFlag").val()==1)
+				{
+					$("#mondayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#mondayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			case 'sundayFlag':
+				if(checkDays() != 6)
+				{
+					selectDays(boxId);
+				}
+				
+				if($("#saturdayFlag").val()==1)
+				{
+					$("#saturdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#saturdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#tuesdayFlag").val()==1)
+				{
+					$("#tuesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#tuesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#wednesdayFlag").val()==1)
+				{
+					$("#wednesdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#wednesdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#thursdayFlag").val()==1)
+				{
+					$("#thursdayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#thursdayFlag").css("background-color","#0f9d58");
+				}
+				
+				if($("#fridayFlag").val()==1)
+				{
+					$("#fridayFlag").css("background-color","grey");
+				}
+				else
+				{
+					$("#fridayFlag").css("background-color","#0f9d58");
+				}
+				
+				
+			break;	
+			}
+		}
+		else
+		{
+			selectDays(boxId);
+
+		}
+		localStorage["mondayFlag"] = $("#mondayFlag").val();
+		localStorage["tuesdayFlag"] = $("#tuesdayFlag").val();
+		localStorage["wednesdayFlag"] = $("#wednesdayFlag").val();
+		localStorage["thursdayFlag"] = $("#thursdayFlag").val();
+		localStorage["fridayFlag"] = $("#fridayFlag").val();
+		localStorage["saturdayFlag"] = $("#saturdayFlag").val();
+		localStorage["sundayFlag"] = $("#sundayFlag").val();
+		
+		if(checkDays() == localStorage["daysPerWeek"])
+		{
+			if($("#sundayFlag").val() == 0)
+			{
+				$("#sundayFlag").css("background-color","white");
+			}
+			if($("#mondayFlag").val() == 0)
+			{
+				$("#mondayFlag").css("background-color","white");
+			}
+			if($("#tuesdayFlag").val() == 0)
+			{
+				$("#tuesdayFlag").css("background-color","white");
+			}
+			if($("#wednesdayFlag").val() == 0)
+			{
+				$("#wednesdayFlag").css("background-color","white");
+			}
+			if($("#thursdayFlag").val() == 0)
+			{
+				$("#thursdayFlag").css("background-color","white");
+			}
+			if($("#fridayFlag").val() == 0)
+			{
+				$("#fridayFlag").css("background-color","white");
+			}
+			if($("#saturdayFlag").val() == 0)
+			{
+				$("#saturdayFlag").css("background-color","white");
+			}
+		}
+
+		
+	});
+	
+	$("#saveScheduleButton").click(function()
+	{
+		window.location = "editProfile.html";
+	});
+	$("#clearScheduleButton").click(function()
+	{
+		clearDays();
+	});
+	
+	
+});
+function preSelectDays()
+{
+	if(localStorage["mondayFlag"] == 1)
+	{
+		$("#mondayFlag").css("background-color","grey");
+		$("#mondayFlag").val(1);
+
+	}
+	if(localStorage["tuesdayFlag"] == 1)
+	{
+		$("#tuesdayFlag").css("background-color","grey");
+		$("#tuesdayFlag").val(1);
+
+	}
+	if(localStorage["wednesdayFlag"] == 1)
+	{
+		$("#wednesdayFlag").css("background-color","grey");
+		$("#wednesdayFlag").val(1);
+
+	}
+	if(localStorage["thursdayFlag"] == 1)
+	{
+		$("#thursdayFlag").css("background-color","grey");
+		$("#thursdayFlag").val(1);
+
+	}
+	if(localStorage["fridayFlag"] == 1)
+	{
+		$("#fridayFlag").css("background-color","grey");
+		$("#fridayFlag").val(1);
+
+	}
+	if(localStorage["saturdayFlag"] == 1)
+	{
+		$("#saturdayFlag").css("background-color","grey");
+		$("#saturdayFlag").val(1);
+
+	}
+	if(localStorage["sundayFlag"] == 1)
+	{
+		$("#sundayFlag").css("background-color","grey");
+		$("#sundayFlag").val(1);
+
+	}
+	
+}
+
+function selectDays(boxId)
+{
+	if($("#"+boxId).val() == 0)
+	{
+		$("#"+boxId).css("background-color","grey");
+		$("#"+boxId).val(1);
+		localStorage[boxId] = 1;
+	}
+	else
+	{
+		$("#"+boxId).css("background-color","white");
+		$("#"+boxId).val(0);
+		localStorage[boxId] = 0;
+
+	}
+}
+
+function clearDays()
+{
+	$("#sundayFlag").css("background-color","white");
+	$("#sundayFlag").val(0);
+	$("#mondayFlag").css("background-color","white");
+	$("#mondayFlag").val(0);
+	$("#tuesdayFlag").css("background-color","white");
+	$("#tuesdayFlag").val(0);
+	$("#wednesdayFlag").css("background-color","white");
+	$("#wednesdayFlag").val(0);
+	$("#thursdayFlag").css("background-color","white");
+	$("#thursdayFlag").val(0);
+	$("#fridayFlag").css("background-color","white");
+	$("#fridayFlag").val(0);
+	$("#saturdayFlag").css("background-color","white");
+	$("#saturdayFlag").val(0);
+}
+
+function fillDays()
+{
+	$("#sundayFlag").css("background-color","grey");
+	$("#sundayFlag").val(1);
+	$("#mondayFlag").css("background-color","grey");
+	$("#mondayFlag").val(1);
+	$("#tuesdayFlag").css("background-color","grey");
+	$("#tuesdayFlag").val(1);
+	$("#wednesdayFlag").css("background-color","grey");
+	$("#wednesdayFlag").val(1);
+	$("#thursdayFlag").css("background-color","grey");
+	$("#thursdayFlag").val(1);
+	$("#fridayFlag").css("background-color","grey");
+	$("#fridayFlag").val(1);
+	$("#saturdayFlag").css("background-color","grey");
+	$("#saturdayFlag").val(1);
+}
+
+
+function checkDays()
+{
+	var selectDayCounter = 0;
+
+	if($("#sundayFlag").val() == 1)
+	{
+		selectDayCounter++;
+	}
+	if($("#mondayFlag").val() == 1)
+	{
+		selectDayCounter++;
+	}
+	if($("#tuesdayFlag").val() == 1)
+	{
+		selectDayCounter++;
+	}
+	
+	if($("#wednesdayFlag").val() == 1)
+	{
+		selectDayCounter++;
+	}
+	
+	if($("#thursdayFlag").val() == 1)
+	{
+		selectDayCounter++;
+	}
+	
+	if($("#fridayFlag").val() == 1)
+	{
+		selectDayCounter++;				
+	}
+	
+	if($("#saturdayFlag").val() == 1)
+	{
+		selectDayCounter++;
+	}
+	
+	return selectDayCounter;
+
+}
+</script>
+</body>
+</html>

@@ -1,8 +1,62 @@
 @import url('http://roboto-webfont.googlecode.com/svn/trunk/roboto.all.css');
+/******Common components ***/
+.dialogBox
+{
+	height: 250px;
+	width: 265px;
+	position: absolute;
+	background-color: white;
+	top: 50%;
+	left: 50%;
+	margin: -725px -133.5px;
+	z-index: 1054;
+	box-shadow: 9px 11px 11px -11px;
+	border-radius: 3px;
+	display:none;
+}
+#dialogHeading
+{
+	display: block;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	margin-left: 20px;
+	font-weight:600;
+	font-size:18px;
+}
+#dialogBody
+{
+	margin-left: 20px;
+	width: 230px;
+	display: block;
+	color: grey;
+	font-weight: 200;
+	line-height: 24px;
+}
 
+#confirmButton
+{
+	margin-right:10px;
+	color:#0091EA;
+	font-weight:400;
+}
+
+#cancelButton
+{
+	margin-right:25px;
+	color:#0091EA;
+	font-weight:400;
+}
+
+#dialogButtonGroup
+{
+	bottom: 15px;
+	right:10px;
+	position: absolute;
+}
+/***************************/
 html {
 	
-    background-color:#0091ea;   
+    background-color:#dd5145;   
     color: #000;
 }
 .settingsMenu
@@ -92,17 +146,47 @@ html {
 	font-weight: 200;
 	font-family: sans-serif;
 }
+#upper
+{
+	display:block;
+}
+#lower
+{
+	display:none;
+}
+#core
+{
+	display:none;
+}
 .workoutToast
 {
-	width: 0px;
-	height: 100px;
+	width: 100%;
+	height: 0px;
 	position: absolute;
 	z-index: 1050;
-	background-color: red;
-	top: 50%;
-	left: 50%;
-	margin-top: -50px;
-	margin-left: -150px;
+	background-color: grey;
+	bottom: 0px;
+	left: 0px;
+	z-index: 1580;
+	color: #c1d965;
+}
+#workoutDayFilter
+{
+	-webkit-appearance: none;
+	border-radius: 0%;
+	width: 155px;
+	height: 30px;
+	box-shadow: 0px 0px 0px 0;
+	border: 0px;
+	font-family: "Roboto";
+	font-weight: 200;
+	margin-top: 13px;
+	text-indent: 1.65em;
+	font-size: 1.3em;
+	background-color: #dd5145;
+	color: white;
+	margin-left: -136px;
+	outline:none;
 }
 #workoutBody
 {
@@ -113,7 +197,20 @@ html {
 	margin: -50px 0px;
 	overflow-x: hidden;
 }
-
+.restDayDiv
+{
+	margin-left: 55px;
+}
+.restMessage
+{
+	width: 286px;
+	position: absolute;
+}
+#extraWorkoutsButton
+{
+	margin-top: 200px;
+	margin-left: 83px;
+}
 ui-select, span {
     display:none;
 }
@@ -236,7 +333,7 @@ ui-loader
 {
 	width: 100%;
 	height: 64px;
-	background-color: #0091ea;
+	background-color: #dd5145;
 	position: fixed;
 	margin-top: -156px;
 	z-index: 1000;
@@ -283,14 +380,16 @@ ui-loader
 }
 
 
-#menuScreen {
+#panelScreen {
 	z-index: 1041;
-	top: 695px;
-	width: 500px;
+	top: 15.5%;
+	width: 100%;
 	height: 637px;
 	background-color: white;
 	position: absolute;
-	box-shadow: 0px 5px 15px 0px;
+	box-shadow: 0px 4px 6px 0px;
+	left: -101%;
+	z-index: 1054;
 }
 .detailPage
 {
@@ -407,8 +506,8 @@ ui-loader
 	top: 50%;
 	position: absolute;
 	margin-top: -241px;
-	width: 313px;
-	left: 50%;
+	width: 100px;
+	left: 90%;
 	margin-left: -210px;
 }
 
@@ -419,7 +518,7 @@ ui-loader
 	width: 60px;
 	z-index: 1100;
 	float: left;
-	margin: 20px;
+	margin: 120px;
 	border-radius: 100%;
 	text-align: center;
 	line-height: 59px;
@@ -461,7 +560,7 @@ ui-loader
 {
 	width: 100%;
 	height: 56px;
-	background-color: #0f9d58;
+	background-color: #dd5145;
 	line-height: 30px;
 	list-style: none;
 	top: 70%;
@@ -481,32 +580,29 @@ ui-loader
  }
 
 .tab {
-  font-family:arial;
-  position:relative;
-  display:inline-block;
-  width:25%;
-  font-size:16px;
-  text-align:center;
-  padding-bottom:17px;
-  padding-top:14px;
-  z-index:5;
-  color:rgba(255,255,255,.74);
-  float:left;
-  text-decoration:none;
-  color:white;
+	font-family: roboto;
+	position: relative;
+	display: inline-block;
+	width: 33%;
+	font-size: 16px;
+	padding-bottom: 17px;
+	padding-top: 14px;
+	z-index: 5;
+	color: rgba(255,255,255,.74);
+	float: left;
+	text-decoration: none;
+	color: white;
+	font-weight: 200;
 }
 
 #ubar {
 	display: block;
-	height: 4px;
+	height: 2px;
 	position: absolute;
-	left: 12%;
-	right: 75%;
-	top: 114px;
+	top: 115px;
 	background: #ffea00;
 	z-index: 10;
-	width: 90px;
-	/* margin-left: 40px; */
+	width: 33%;
 }
 #mealsUbar
 {
@@ -543,6 +639,26 @@ ui-loader
     background: rgba(255,255,255,1);
     z-index: 1;
     transition: background 0.3s 0.1s;
+    margin-top:-40px;
+}
+.listItemImg
+{
+	width: 120px;
+	height: 90px;
+	background-color: grey;
+	z-index: 1085;
+	position: relative;
+	display: inline-block;
+	margin-left: 5px;
+	vertical-align: top;
+	margin-top: 15px;	
+}
+.listItemText
+{
+	width: 60%;
+	display: inline-block;
+	margin-top: 15px;
+	margin-left: 5px;
 }
 .detail-view
 {
@@ -556,6 +672,7 @@ ui-loader
 	height: 485px;
 	margin-left: -24px;
 	overflow-x: hidden;
+	height:calc(100% - 219px);
 }
     
 #sub1
@@ -599,7 +716,7 @@ ui-loader
 
 .exName
 {
-	
+	font-weight: 300;
 }
 #exLbl5
 {
@@ -761,7 +878,14 @@ ui-loader
       background-color: #4285f4;
       color: #fff;
 }
-    
+.button.red {
+      background-color: #dd5145;
+      color: #fff;
+}
+.button.yellow {
+     background-color: #eeff41;
+     color: #fff;
+}
 
  .button.raised {
       transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1040,6 +1164,12 @@ color:#000;
 
 }
 
+#yellow:before{
+	background: #eeff41;
+	color:#000;
+}
+
+
 #blue2:before{
 background:#0091ea;
 color:#000;
@@ -1280,7 +1410,7 @@ input.switch:empty ~ label:after
 	width: 100%;
 	height: 100%;
 	background-color: black;
-	opacity: 0.6;
+	opacity: 0.4;
 	z-index: 1048;
 	position: absolute;
 	display:none;
@@ -1312,9 +1442,9 @@ input.switch:empty ~ label:after
 }
 #profileTabsContainer
 {
-	background-color: #0091ea;
-    width: 100%;
-    height: 41px;
+	background-color: white;
+	width: 100%;
+	margin-top: 200px;
 }
 
 .tabList
@@ -1325,12 +1455,12 @@ input.switch:empty ~ label:after
 }
 .profileTab
 {
-	float: left;
 	height: 41px;
-	width: 120px;
+	width: 110px;
 	text-align: center;
 	line-height: 42px;
-
+	display: inline-block;
+	vertical-align: top;
 }
 
 #profileTabSelect
@@ -1340,4 +1470,32 @@ input.switch:empty ~ label:after
 #progressTabSelect
 {
 	background-color: #0091ea;	
+}
+#profileInfo
+{
+	
+}
+#progressInfo
+{
+	display:none;
+}
+#favoriteInfo
+{
+	display:none;
+}
+
+/********* Change Day HTML css ***********/
+
+.daySelector
+{
+	background-color:white;
+	width:50px;
+	height:50px;
+	display: inline-block;
+	margin-bottom: 5px;
+	box-shadow: 1px 1px 4px -2px;
+}
+#saveScheduleButton
+{
+	margin-top:300px;
 }

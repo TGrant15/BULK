@@ -15,6 +15,18 @@ Login = {
   		  success: function(user) {
   			  localStorage["loggedUser"] = $('#logUsername').val();
   	    		window.location = "workout.html"; 
+  	    			localStorage["currentID"] = user.id;
+					localStorage["daysPerWeek"] = user.get("daysPerWeek");
+					localStorage["level"] = user.get("level");
+					localStorage["phase"] = user.get("phase");
+					localStorage["mondayFlag"] = user.get("Monday");
+					localStorage["tuesdayFlag"] = user.get("Tuesday");
+					localStorage["wednesdayFlag"] = user.get("Wednesday");
+					localStorage["thursdayFlag"] = user.get("Thursday");
+					localStorage["fridayFlag"] = user.get("Friday");
+					localStorage["saturdayFlag"] = user.get("Saturday");
+					localStorage["sundayFlag"] = user.get("Saturday");
+					localStorage["userInfoFlag"] = "yes";
   		  },
   		  error: function(user, error) {
   		    // The login failed. Check error to see why.

@@ -19,7 +19,13 @@
 
 package org.apache.cordova.example;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.ViewConfiguration;
+import android.widget.Toast;
+
 import org.apache.cordova.*;
 
 public class example extends DroidGap
@@ -31,6 +37,16 @@ public class example extends DroidGap
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html")
+        
+		boolean hasMenuKey = ViewConfiguration.get(getBaseContext()).hasPermanentMenuKey();
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+
+        if(!hasMenuKey && !hasBackKey) {
+        	Toast.makeText(getApplicationContext(), "Example Toast", 5000).show();
+        }
     }
+    
+
+    
 }
 

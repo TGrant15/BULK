@@ -83,11 +83,21 @@
   							</ul>
   						</div>
 				      </div>
-	    			<div class="headerTextContainer"><h3 id="workoutOverviewTitle">Today's Workout</h3></div>
+	    			<div class="headerTextContainer">
+	    			<select class="dayFilterDropdown" id="workoutDayFilter">
+				    	<option value="Monday">Monday</option>
+				    	<option value="Tuesday">Tuesday</option>
+				    	<option value="Wednesday">Wednesday</option>
+				    	<option value="Thursday">Thursday</option>
+				    	<option value="Friday">Friday</option>
+				    	<option value="Saturday">Saturday</option>
+				    	<option value="Sunday">Sunday</option>
+				    </select>
+	    			<h3 id="workoutOverviewTitle">Today's Workout</h3></div>
 	    			<ul id="workoutTabs">
 		    		 <li id="firstTab" class="workoutNav"><a href="#first" class="tab">Upper</a></li>
 		      		 <li id="secondTab" class="workoutNav"><a href="#second" class="tab">Lower</a></li>
-		      		 <li id="thirdTab" class="workoutNav"><a href="#third" class="tab">Abs</a></li>
+		      		 <li id="thirdTab" class="workoutNav"><a href="#third" class="tab">Core</a></li>
 		    		</ul>
 		    		<div id="ubar"></div>
 	    		</div>
@@ -114,10 +124,10 @@
 	    		</div>  	
 	    		
 	    		<div id="buttonGroup">
-	    		 	<div id="blue" class="paper-button btn-next" style="margin:25em 19.56em" ></div>
+	    		 	<div id="yellow" class="paper-button btn-next" style="margin:25em 19.56em" ></div>
 	    		 </div>
 	    		 		
-	    		<div id="menuScreen">
+	    		<div id="panelScreen">
 	    		<div id="iconContainer">
 	    		<div class="proMenu" id="myMeals"> My Meals</div>
 	    		<div class="proMenu" id="myWorkouts"> My Workouts</div>
@@ -151,6 +161,8 @@
 	    		</div>
 		</section>		
     		
+    <script src="js/common.js"></script>
     <script src="workouts.js"></script>
+    
     </body>
 </html>
