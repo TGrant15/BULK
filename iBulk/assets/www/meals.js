@@ -11,7 +11,10 @@ getLevel(current);
 
 $(document).ready(function() {
 getMeals();
-
+$("#yellowMeal").click(function()
+{
+	window.location = "addMeal.html";
+});
 $(".settingMenuDots").click(function()
 		{
 			$("#settingMenu").animate({"width":"100px"},200);

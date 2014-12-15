@@ -1173,11 +1173,15 @@ color:#000;
 
 }
 
-#yellow:before{
+#yellowWorkout:before{
 	background: #eeff41;
 	color:#000;
 }
 
+#yellowMeal:before{
+	background: #eeff41;
+	color:#000;
+}
 
 #blue2:before{
 background:#0091ea;
