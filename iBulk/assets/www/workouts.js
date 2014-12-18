@@ -592,7 +592,9 @@ $("#startButton").click(function(){
 		
 
 $("#workoutDayFilter").on("change", function(){
+	showAll();
 	identifyRestDays();
+	filterByDays();
 });
 //----End of Document Ready---//
 });
@@ -1727,6 +1729,115 @@ function getUserInfo()
 	    // error is a Parse.Error with an error code and message.
 	  }
 	});
+}
+function filterByDays()
+{
+	if(localStorage["daysPerWeek"] == 3)
+	{
+		if($("#workoutDayFilter").val()=="Monday" && localStorage["mondayFlag"]==1) 
+		{
+			showUpper();
+		}
+		else if($("#workoutDayFilter").val()=="Tuesday" && localStorage["tuesdayFlag"]==1)
+		{
+			if(localStorage["mondayFlag"]==1)
+			{
+				showLower();
+			}
+			else
+			{
+				showUpper();
+			}
+		}
+		else if($("#workoutDayFilter").val()=="Wednesday" && localStorage["wednesdayFlag"]==1)
+		{
+			if(localStorage["mondayFlag"]==1 && localStorage["tuesdayFlag"]==0)
+			{
+				showLower();
+			}
+			else if(localStorage["sundayFlag"]==0 && localStorage["mondayFlag"]==1)
+			{
+				showLower();
+			}
+			else
+			{
+				showUpper();
+			}
+		}
+		else if($("#workoutDayFilter").val()=="Thursday" && localStorage["thursdayFlag"]==1)
+		{
+			showLower();
+		}
+		else if($("#workoutDayFilter").val()=="Friday" && localStorage["fridayFlag"]==1)
+		{
+			if(localStorage["wednesdayFlag"]==1 && localStorage["mondayFlag"]==1)
+			{
+				showCore();
+			}
+			else if(localStorage["wednesdayFlag"]==1 && localStorage["mondayFlag"]==0)
+			{
+				showLower();
+			}
+		}
+		else if($("#workoutDayFilter").val()=="Saturday" && localStorage["saturdayFlag"]==1)
+		{
+			showCore();
+		}
+	}
+}
+function showUpper()
+{
+	$("#upperList").css("display","block");
+	$("#lowerList").css("display","none");
+	$("#coreList").css("display","none");
+	$("#lower").append('<div class="noWorkout">\
+	<h1>No Workout</h1>\
+	<label class="restMessage"> You do not have any lower body workouts today</label>\
+	</div>');
+	$("#core").append('<div class="noWorkout">\
+	<h1>No Workout</h1>\
+	<label class="restMessage"> You do not have any core workouts today</label>\
+	</div>');
+	$('#firstTab').click();
+
+}
+function showLower()
+{
+	$("#upperList").css("display","none");
+	$("#lowerList").css("display","block");
+	$("#coreList").css("display","none");
+	$("#upper").append('<div class="noWorkout">\
+			<h1>No Workout</h1>\
+			<label class="restMessage"> You do not have any upper body workouts today</label>\
+			</div>');
+	$("#core").append('<div class="noWorkout">\
+			<h1>No Workout</h1>\
+			<label class="restMessage"> You do not have any core workouts today</label>\
+			</div>');
+	$('#secondTab').click();
+}
+function showCore()
+{
+	$("#upperList").css("display","none");
+	$("#lowerList").css("display","none");
+	$("#coreList").css("display","block");
+	$("#lower").append('<div class="noWorkout">\
+			<h1>No Workout</h1>\
+			<label class="restMessage"> You do not have any lower body workouts today</label>\
+			</div>');
+	$("#upper").append('<div class="noWorkout">\
+			<h1>No Workout</h1>\
+			<label class="restMessage"> You do not have any upper body workouts today</label>\
+			</div>');
+	$('#thirdTab').click();
+}
+function showAll()
+{
+	$("#upperList").css("display","block");
+	$("#lowerList").css("display","block");
+	$("#coreList").css("display","block");
+	$(".noWorkout").remove();
+	$('#firstTab').click();
 }
 
 function identifyRestDays()
