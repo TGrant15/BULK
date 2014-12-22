@@ -1571,3 +1571,19 @@ input.switch:empty ~ label:after
 {
 	margin-top:300px;
 }
+
+#addMealPage
+{
+    top: 106px;
+    position: absolute;
+    z-index: 1010;
+    background-color: white;
+    left: 362px;
+    width: 100%;
+
+}
+
+.nutritionLbl
+{
+    display:none;
+}

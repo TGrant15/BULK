@@ -319,7 +319,7 @@ $(".detailPage").scroll(function(){
 //----------------------------------------------------------//	
 	
 //*******This is the blue action button*****//	
-$("#yellow").click(function(){
+$("#yellowWorkout").click(function(){
 		timerSwitch = "on"; //This indicates wether the timer has been started
 		$("#timeLabel").text("Seconds"); //Set the time label to seconds
 		$("#timeAnimation").text("90"); //set the time animation to 90

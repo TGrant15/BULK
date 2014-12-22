@@ -2,7 +2,7 @@ Parse.initialize("AXss0hVCmQ3tmDsGCV0KD3Xn9yUL39BPJcGQGV7P", "IddscOVmXbWcUGqZCJ
 
 /*********Global Variables*********/
 var current = Parse.User.current();
-
+var mealPageFlag;
 
 /************************/
 getPhase(current);
@@ -13,8 +13,36 @@ $(document).ready(function() {
 getMeals();
 $("#yellowMeal").click(function()
 {
-	window.location = "addMeal.html";
+	$("#addMealPage").animate({ left: 0 });
+	$("#workoutOverviewTitle").text("Add a Meal");
+	$("#menuIcon").animate({"height":"0px"},200);
+    $("#arrowIcon").animate({"height":"25px"},200);
+    mealPageFlag = "add";
+
 });
+
+//**This is the arrow icon used to take you back//**/
+$(".arrowIcon").click(function()
+{
+    	//***If the user has hit the action button and started a workout.**//
+    	if(mealPageFlag == "add")
+    	{
+    		$("#addMealPage").animate({ left: "392px" });
+    		$("#menuIcon").animate({"height":"25px"},200);
+            $("#arrowIcon").animate({"height":"0px"},200);
+            mealPageFlag = "stop";
+    	}
+    	else //**Hide the menu screen**//
+    	{
+    		$(".overlay").css("display","none");
+    		$("#workoutOverviewTitle").text("Today's Workout");
+    		$("#panelScreen").animate({"left":"-101%"},400);
+    		$("#menuIcon").animate({"height":"25px"},200);
+    		$("#arrowIcon").animate({"height":"0px"},200);
+    		$(".workoutHead").css("z-index","1000");
+    	}
+});
+
 $(".settingMenuDots").click(function()
 		{
 			$("#settingMenu").animate({"width":"100px"},200);
@@ -22,40 +50,16 @@ $(".settingMenuDots").click(function()
 			
 		});
 $(".menu").click(function()
-		{
-			$(".overlay").css("display","block");
-			$("#panelScreen").animate({"left":"-17%"},400);
-			$("#menuIcon").animate({"height":"0px"},200);
-			$("#arrowIcon").animate({"height":"25px"},200);
-			$(".workoutHead").css("z-index","1054");
+{
+    $(".overlay").css("display","block");
+    $("#panelScreen").animate({"left":"-17%"},400);
+    $("#menuIcon").animate({"height":"0px"},200);
+    $("#arrowIcon").animate({"height":"25px"},200);
+    $(".workoutHead").css("z-index","1054");
 
-		});
+});
 
-		//**This is the arrow icon used to take you back//**/
-		$(".arrowIcon").click(function()
-		{
-			 
-			//***If the user has hit the action button and started a workout.**//
-			if(started == "yes" || started == "ready")
-			{
-				Common.dialogBox("Exit Workout?","Are you sure you want to quit this workout? Exiting the workout will" +
-						" close out this session and start you back at the beginning.",function(){
-					started="no";
-					window.location = "workout.html";
-				});
-			}
-			else //**Hide the menu screen**//
-			{
-				$(".overlay").css("display","none");
-				$("#workoutOverviewTitle").text("Today's Workout");
-				$("#panelScreen").animate({"left":"-101%"},400);
-				$("#menuIcon").animate({"height":"25px"},200);
-				$("#arrowIcon").animate({"height":"0px"},200);
-				$(".workoutHead").css("z-index","1000");
-			}
 
-					
-		});
 $("#lower").css("opacity","0");
 $("#core").css("opacity","0");
 
