@@ -55,8 +55,8 @@
 }
 /***************************/
 html {
-	
-    background-color:#dd5145;   
+
+    background-color:#dd5145;
     color: #000;
 }
 .settingsMenu
@@ -69,21 +69,21 @@ html {
     top: 9px;
     z-index: 10;
     box-shadow: 0px 2px 2px 0px;
-	
+
 }
 .settingMenuList
 {
  	list-style: none;
     margin-top: 2px;
     margin-left: -40px;
-    display:none;	
+    display:none;
 }
 .settingMenuListItem
 {
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: grey;
-	text-align: center;	
+	text-align: center;
 	opacity:0.8;
 }
 .settingMenuDots
@@ -188,6 +188,24 @@ html {
 	margin-left: -136px;
 	outline:none;
 }
+#mealDayFilter
+{
+  -webkit-appearance: none;
+  border-radius: 0%;
+  width: 155px;
+  height: 30px;
+  box-shadow: 0px 0px 0px 0;
+  border: 0px;
+  font-family: "Roboto";
+  font-weight: 200;
+  margin-top: 13px;
+  text-indent: 1.65em;
+  font-size: 1.3em;
+  background-color: #dd5145;
+  color: white;
+  margin-left: 27px;
+  outline: none;
+}
 #workoutBody
 {
 	position: fixed;
@@ -219,7 +237,7 @@ ui-loader
 	display:none;
 }
 
-.ui-page 
+.ui-page
 {
 	outline-width: 0;
 }
@@ -267,7 +285,7 @@ ui-loader
 
 #loginTextGroup
 {
-	
+
 	margin: 0px -12px;
 }
 
@@ -312,12 +330,12 @@ ui-loader
 
 #ageDrop
 {
-	margin:6px 0px;	
+	margin:6px 0px;
 }
 
 #weightTxt
 {
-	width:160px;	
+	width:160px;
 }
 
 #height
@@ -338,19 +356,19 @@ ui-loader
 	margin-top: -156px;
 	z-index: 1000;
 
-	
+
 }
 #menuIcon{
 	height: 20px;
-	
-	
+
+
 }
 #arrowIcon
 {
 	height:0px;
 }
 .menu{
-	
+
 	z-index: 1024;
 	top: 27%;
 	left: 4%;
@@ -371,7 +389,7 @@ ui-loader
 	left: 4%;
 	position: fixed;
 	display:none;
-	
+
 }
 
 #detailBackArrow
@@ -383,14 +401,72 @@ ui-loader
 #panelScreen {
 	z-index: 1041;
 	top: 15.5%;
-	width: 100%;
+	width:84%;
 	height: 637px;
 	background-color: white;
 	position: absolute;
 	box-shadow: 0px 4px 6px 0px;
 	left: -101%;
-	z-index: 1054;
+	z-index:1201;
 }
+
+.profilePanelImage
+{
+  width: 100%;
+  height: 170px;
+  background-color: #5d4037;
+}
+
+.userImg
+{
+  width: 75px;
+  height: 75px;
+  background: white;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  margin-left: 16px;
+  margin-top: 16px;
+  position: absolute;
+  background-image: url("../img/tre.jpg");
+  background-size: 100px;
+  box-shadow: 0px 3px 4px 0px;
+}
+
+.usernamePanel
+{
+  color: white;
+  font-family: roboto;
+  font-weight: 300;
+  display: block;
+  /* margin-top: 200px; */
+  position: absolute;
+  top: 120px;
+  left: 20px;
+  font-size: 24px;
+}
+
+#iconContainer {
+  position: relative;
+  width: 100%;
+  height: 500px;
+}
+
+.proMenu
+{
+  height: 60px;
+  width: 100%;
+  text-align: left;
+  line-height: 59px;
+  margin-top: 0px;
+  font-size: 10px;
+  border-width: 1px;
+  border-color: grey;
+  border-style: solid;
+  position: relative;
+  border-top-style: none;
+}
+
 .detailPage
 {
 	z-index: 100;
@@ -484,7 +560,7 @@ ui-loader
 	height: 83%;
 	background-color: white;
 	position: absolute;
-	top:109px; 
+	top:109px;
 
 }
 .startDetailList
@@ -494,7 +570,7 @@ ui-loader
 .routineSetImg
 {
 	height: 200px;
-	width: 361px;	
+	width: 361px;
 }
 #startButton
 {
@@ -502,29 +578,7 @@ ui-loader
 	bottom: 3px;
 }
 
-#iconContainer {
-	top: 50%;
-	position: absolute;
-	margin-top: -241px;
-	width: 100px;
-	left: 90%;
-	margin-left: -210px;
-}
 
-.proMenu
-{
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-	height: 60px;
-	width: 60px;
-	z-index: 1100;
-	float: left;
-	margin: 120px;
-	border-radius: 100%;
-	text-align: center;
-	line-height: 59px;
-	margin-top: -66px;
-	font-size: 10px;
-}
 
 #workoutOverviewTitle
 {
@@ -555,7 +609,7 @@ ui-loader
 	position: fixed;
 	margin-top: 160px;
 	overflow-x: hidden;
-	
+
 }#workoutTabs
 {
 	width: 100%;
@@ -565,7 +619,7 @@ ui-loader
 	list-style: none;
 	top: 70%;
 	position: absolute;
-	
+
 }
  #mealTabs
  {
@@ -617,8 +671,19 @@ ui-loader
 	width: 90px;
 	/* margin-left: 40px; */
 }
+#profileUbar
+{
+  display: block;
+  height: 2px;
+  position: relative;
+  background: #ffea00;
+  z-index: 10;
+  width: 33%;
+  margin-top: -13px;
+  margin-left: 0px;
+}
 #upper{
-	
+
 	opacity:1;
 }
 #lower
@@ -660,7 +725,7 @@ ui-loader
 	display: inline-block;
 	margin-left: 5px;
 	vertical-align: top;
-	margin-top: 15px;	
+	margin-top: 15px;
 }
 .listItemText
 {
@@ -671,7 +736,7 @@ ui-loader
 }
 .detail-view
 {
-	
+
 }
 .workoutList
 {
@@ -683,37 +748,53 @@ ui-loader
 	overflow-x: hidden;
 	height:calc(100% - 219px);
 }
-    
+
 #sub1
 {
 	margin-top: 0px;
 	position: absolute;
 	z-index: 0;
-	
+
 }
 .workoutCards
 {
 	height: 120px;
 	width: 100%;
-    left: 0;
-    right: 0;
-    border-bottom-width: 1px;
-    border-top-width:0px;
-    border-right-width:0px;
-    border-left-width:0px;
-    border-style: solid;
-    border-color: #ddd;
-    transition: transform 0.3s, opacity 0.3s 0.3s, border-color 0.3s 0.3s;
-    margin-left: -14px;
-    background-color: #fff;
-	
+  left: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-top-width:0px;
+  border-right-width:0px;
+  border-left-width:0px;
+  border-style: solid;
+  border-color: #ddd;
+  transition: transform 0.3s, opacity 0.3s 0.3s, border-color 0.3s 0.3s;
+  margin-left: -14px;
+  background-color: #fff;
 
+
+}
+.mealCards
+{
+	height: 120px;
+	width: 100%;
+  left: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-top-width:0px;
+  border-right-width:0px;
+  border-left-width:0px;
+  border-style: solid;
+  border-color: #ddd;
+  transition: transform 0.3s, opacity 0.3s 0.3s, border-color 0.3s 0.3s;
+  margin-left: -14px;
+  background-color: #fff;
 }
 .workoutCardContainer
 {
 	width:360px;
 	height:100%;
-	
+
 }
 .exitDetail
 {
@@ -729,7 +810,7 @@ ui-loader
 }
 #exLbl5
 {
-	
+
 }
 
 .hiddenTxt
@@ -829,7 +910,7 @@ ui-loader
 #arrowLeft
 {
 	margin-left: 18px;
-	
+
 }
 
 
@@ -849,7 +930,7 @@ ui-loader
 	border-style: solid;
 	border-color: whitesmoke;
 	padding-top: 5px;
-	
+
 }
 
 .button {
@@ -882,7 +963,7 @@ ui-loader
 .button.grey {
       background-color: #eee;
 }
-    
+
 .button.blue {
       background-color: #4285f4;
       color: #fff;
@@ -901,13 +982,13 @@ ui-loader
       transition-delay: 0.2s;
       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
-    
+
 .button.raised:active {
       box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
       transition-delay: 0s;
 }
-    
-    
+
+
 h3
 {
 	font-family: 'Roboto', sans-serif;
@@ -999,10 +1080,10 @@ border-color:#0f9d58;
 	border-radius: 50%;
 	padding: 1px;
 
-  
-  
+
+
 }
-	
+
 .radio:checked:before {
 	/* -webkit-transform: rotate(-45deg); */
 	-moz-transform: rotate(-45deg);
@@ -1074,7 +1155,7 @@ label
 {
 	font-family:"Roboto";
 	font-weight: 200;
-	
+
 }
 
 .paper-button:before,.paper-button:after {
@@ -1183,6 +1264,11 @@ color:#000;
 	color:#000;
 }
 
+#yellowProfile:before{
+	background: #eeff41;
+	color:#000;
+}
+
 #blue2:before{
 background:#0091ea;
 color:#000;
@@ -1240,7 +1326,7 @@ text-align: center;
 line-height: 2.9em;
 
 }
-#buttonGroup
+.buttonGroup
 {
 	position:fixed;
 	margin-left: -10px;
@@ -1257,7 +1343,7 @@ line-height: 2.9em;
 
 #addMealsBack
 {
-	height: 25px !important;	
+	height: 25px !important;
 }
 .settingRow
 {
@@ -1269,7 +1355,53 @@ line-height: 2.9em;
 	margin-left: -16px;
 }
 
+#checkmark {
+    display:inline-block;
+    width: 22px;
+    height:22px;
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+    transform: rotate(45deg);
+    margin-left: 90px;
+}
 
+#stem {
+  position: absolute;
+  width: 3px;
+  height: 18px;
+  background-color: white;
+  left: 17px;
+  top: -5px;
+}
+
+#kick {
+  position: absolute;
+  width: 12px;
+  height: 3px;
+  background-color: white;
+  left: 8px;
+  top: 12px;
+}
+
+#groceryListContainer
+{
+  top: 705px;
+  position: absolute;
+  height: 587px;
+  width: 100%;
+  z-index: 1010;
+  background-color: white;
+}
+
+#groceryCheckList
+{
+  list-style:none;
+}
+
+.groceryListCheckBox
+{
+  display:inline-block;
+}
 //---Meals ------//
 
 #breakfast
@@ -1277,13 +1409,13 @@ line-height: 2.9em;
 	opacity:1;
 }
 #lunch{
-	opacity:0;	
+	opacity:0;
 }
 #dinner{
-	opacity:0;	
+	opacity:0;
 }
 #snack{
-	opacity:0;	
+	opacity:0;
 }
 #submitWorkoutForm
 {
@@ -1314,6 +1446,17 @@ line-height: 2.9em;
 	margin-left: -2px;
 }
 
+.calorieDisplay
+{
+  color:grey;
+  font-size:13px;
+}
+.calorieFrontLbl
+{
+  color:grey;
+  font-size:13px;
+}
+
 //--switches--//
 .paper-toggle{
   clear: both;
@@ -1339,7 +1482,7 @@ line-height: 2.9em;
   user-select: none;
 }
 
-.paper-toggle input:empty ~ label:before, 
+.paper-toggle input:empty ~ label:before,
 .paper-toggle input:empty ~ label:after
 {
   position: absolute;
@@ -1416,7 +1559,7 @@ input.switch:empty ~ label:after
 	box-shadow: 0 0 2px 0px;
 	display:none;
 	z-index: 1054;
-	
+
 }
 .overlay
 {
@@ -1429,12 +1572,89 @@ input.switch:empty ~ label:after
 	display:none;
 }
 
+/**********************************************/
+/**** Material Design Icon Base*****************/
+/************************************************/
+.material-icon {
+	width: 70px;
+	height: 70px;
+	margin: 55px;
+	position: relative;
+}
+
+.material-icon span,
+.material-icon {
+	transition: all 500ms ease;
+}
+
+.material-icon span {
+	background-color: #fff;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
 /**********************************/
 /**** Profile Css *****************/
 /**********************************/
 #proBody
 {
     overflow: hidden;
+    height: 100%;
+    display: block;
+    margin-left: 0px;
+}
+.profileHead
+{
+  width: 100%;
+  height: 64px;
+  background-color: #dd5145;
+  position: fixed;
+  margin-top: -20px;
+  z-index: 1200;
+  margin-left: -7px;
+}
+
+.hamburger span {
+	height: 10px;
+	-webkit-transform: translateY(29px);
+}
+
+.hamburger .second {
+	-webkit-transform: translateY(0);
+}
+
+.hamburger .third{
+	-webkit-transform: translateY(60px);
+}
+
+.profileImg
+{
+  background-image: url("../img/tre.jpg");
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 338px;
+  width: 100%;
+  background-size: 361px 350px;
+  z-index: 0;
+  display: block;
+}
+#profileButtonGroup
+{
+  z-index:1200;
+}
+
+#userContentBody
+{
+  width: 360px;
+  height: 500px;
+  background-color: white;
+  margin-top: 200px;
+  margin-left: -8px;
+  position: relative;
 }
 #profileImageContainer
 {
@@ -1455,9 +1675,53 @@ input.switch:empty ~ label:after
 }
 #profileTabsContainer
 {
-	background-color: white;
-	width: 100%;
-	margin-top: 200px;
+  background-color: #fafafa;
+  margin-top: 251px;
+  height: 463px;
+  z-index: 1132;
+  display: block;
+  position: absolute;
+}
+.gradient-bottom {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  height: 100px;
+  width: 100%;
+  opacity: 0.2;
+  margin-top: 0px;
+}
+.gradient-top {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  height:100px;
+  width:100%;
+  opacity: 0.2;
+  margin-top: 0px;
+}
+
+
+.userNameTitle
+{
+  color: white;
+  font-size: 24px;
+  font-family: roboto;
+  font-weight: 500;
+  position: absolute;
+  bottom: 90px;
+  z-index: 1200;
+  width: 100%;
+  text-align: center;
+}
+
+.updateFoodForm
+{
+  display:none;
+}
+
+.updateLblClass
+{
+  width:100%;
+  display:none;
+  color:green;
+  text-align:center;
 }
 
 .tabList
@@ -1468,33 +1732,130 @@ input.switch:empty ~ label:after
 }
 .profileTab
 {
-	height: 41px;
-	width: 110px;
-	text-align: center;
-	line-height: 42px;
-	display: inline-block;
-	vertical-align: top;
+  height: 41px;
+  width: 123px;
+  text-align: center;
+  line-height: 42px;
+  display: inline-block;
+  vertical-align: top;
+  background-color: #dd5145;
+  color: white;
+  margin: -3px;
+  font-family: roboto;
+  font-size: 16px;
+  font-weight: 200;
 }
 
-#profileTabSelect
+.profileInfoCard
 {
-	background-color: white;
+  height: 150px;
+  width: 95%;
+  background-color: white;
+  margin: 10px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 }
-#progressTabSelect
+.profileProgressCard
 {
-	background-color: #0091ea;	
+  height: 200px;
+  width: 95%;
+  background-color: white;
+  margin: 10px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 }
+.profileInfoCardTitle
+{
+  color: #dd5145;
+  font-weight: 300;
+  display: block;
+  position: relative;
+  top: 6px;
+  left: 10px;
+}
+.profileInfoCardMiniTitle
+{
+  color:#a5a5a5;
+  font-size:12px;
+  margin-right: 43px;
+}
+#generalSubTitles
+{
+  margin: 10px;
+}
+#generalInfoDataContainer
+{
+  margin:10px;
+}
+#generalSubTitlesBottom
+{
+  margin:10px;
+}
+#generalInfoDataContainerBottom
+{
+  margin:10px;
+}
+.miniTitle
+{
+  color: #dd5145;
+  font-size: 10px;
+  font-weight: 400;
+}
+#miniTitleContainer
+{
+  margin-top: -4px;
+  margin-left: 211px;
+  display: block;
+  position: absolute;
+}
+.progressBar
+{
+  height: 3px;
+  width: 201px;
+  background-color: #ffea00;
+  display: inline-block;
+  margin-left: -26px;
+}
+.profileInfoData
+{
+  font-weight: 300;
+  margin-right: 43px;
+}
+
+#prevButton
+{
+  display:none;
+}
+
+
 #profileInfo
 {
-	
+  display:block;
 }
 #progressInfo
 {
 	display:none;
 }
-#favoriteInfo
+#activityInfo
 {
 	display:none;
+}
+#activityList
+{
+  margin-left:50px;
+}
+
+#activityTodayTitle
+{
+  margin:10px;
+  margin-top:10px;
+  display:block;
+}
+.activityListInfo
+{
+  border-bottom-color: grey;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  list-style:none;
+  height: 75px;
 }
 /******************************************/
 /******Add Meal Page**********************/
@@ -1507,14 +1868,30 @@ input.switch:empty ~ label:after
 	height: 35px;
 }
 #searchBox:focus {
-   outline: none; 
+   outline: none;
 }
 #searchBox
 {
-	width: 75%;
+	width: 100%;
 	height: 29px;
 	outline: none;
 	vertical-align: top;
+}
+.clearX
+{
+    position: absolute;
+    right: 100px;
+    top: 6px;
+}
+#clearFoodSearch
+{
+  display:none;
+}
+
+#searchFrame
+{
+  display:inline-block;
+  width:75%;
 }
 #searchButton
 {
@@ -1538,10 +1915,10 @@ input.switch:empty ~ label:after
 #searchResults
 {
 	width: 100%;
-	min-height: 304px;
+	height: 500px;
 	display: block;
 	background-color: white;
-
+	overflow-y: scroll;
 }
 #resultsList
 {
@@ -1550,7 +1927,7 @@ input.switch:empty ~ label:after
 }
 .resultItem
 {
-	height:60px;
+	height:85px;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: grey;
@@ -1581,6 +1958,51 @@ input.switch:empty ~ label:after
     left: 362px;
     width: 100%;
 
+}
+
+.foodPrefSelect
+{
+    -webkit-appearance: none;
+    border-radius: 0%;
+    width: 360px;
+    height: 500px;
+    text-align: left;
+    box-shadow: 0px 1px 1px 0;
+    border: 0px;
+    font-family: "Roboto";
+    font-weight: 200;
+    font-size: 1.0em;
+    margin: 0 !important;
+    text-indent: 0;
+}
+
+#searchBoxContainer
+{
+  display:none;
+}
+
+.selectFoodButton
+{
+  font-family: "Segoe UI Light","Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif;
+	display: none;
+	font-size: 16px;
+	text-transform: none;
+	font-weight: 500;
+	letter-spacing: 0.07em;
+	border: 1px;
+	border-style: solid;
+	color: white;
+	background-color: grey;
+	z-index: 100;
+	width: 21%;
+	height: 33px;
+	vertical-align: top;
+	text-align: center;
+	line-height: 31px;
+}
+#ingredientForm
+{
+  display:none;
 }
 
 .nutritionLbl

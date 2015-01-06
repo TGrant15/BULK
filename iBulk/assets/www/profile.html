@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Meals</title>
+<title>My Profile</title>
 <meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -12,137 +12,132 @@
 <link rel="stylesheet" href="css/app.css" />
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
 </head>
-<body id="proBody">
 
-    			<!-- <div class="detailPageImg">IMG</div> -->
+<body id="proBody">
+          <div class="overlay" style="z-index:1199; top: 0px; "></div>
+          <div class="profileHead" style="background-color:rgba(221, 81, 69, .0) !important">
+	    			<div class="toggle" id="toggle">
+				      <div class="arrowIcon">
+				        <img src="http://i.imgur.com/Ysz9bH0.png" id="arrowIcon">
+				        </div>
+				      </div>
+				      <div class="menu">
+				        <img src="http://i.imgur.com/OTJhUyq.png" id="menuIcon">
+				      </div>
+				  </div>
+    			<div class="profileImg">
+    			  <label class="userNameTitle">Tremaine G</label>
+    			  <div class="gradient-top" style="margin-top: 0px;"></div>
+    			  <div class="gradient-bottom" style="margin-top: 53px;"></div>
+    			</div>
+
+
     			<div class="profileHeader"><h2 class="profileName"></h2></div>
     			<div class="profileContent">
     				<div id="profileTabsContainer">
 						<ul class="tabList">
 							<li class="profileTab" id="profileTabSelect">Profile</li>
+							<li class="profileTab" id="activityTabSelect">Activity</li>
 							<li class="profileTab" id="progressTabSelect">Progress</li>
-							<li class="profileTab" id="favoriteTabSelect">Favorites</li>
 						</ul>
+						<div id="profileUbar"></div>
 						<div id="profileInfo">
-							<div id='editProfileButton' class='button raised blue'>
-							<div class='center' fit>editProfile</div>
-							<paper-ripple fit></paper-ripple>
-							</div>
-						    <ul>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-   						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-   						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-   						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-   						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-   						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-   						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
-						      <li>test</li>
+						      <div class="profileInfoCard">
+  						        <label class="profileInfoCardTitle">General</label>
+  						        <div id="generalSubTitles">
+    						        <label class="profileInfoCardMiniTitle" >Age</label>
+      	                <label class="profileInfoCardMiniTitle" >Weight</label>
+      	                <label class="profileInfoCardMiniTitle" >Height</label>
+      	                <label class="profileInfoCardMiniTitle" >Body Fat</label>
+  						        </div>
+  						        <div id="generalInfoDataContainer">
+  						          <label class="profileInfoData" id="profileAge">N/A</label>
+      	                <label class="profileInfoData" style="margin-right:55px" id="profileWght">N/A</label>
+      	                <label class="profileInfoData" style="margin-right:55px" id="profileHgt">N/A</label>
+      	                <label class="profileInfoData" id="profileBF">N/A</label>
+  						        </div>
+  						        <div id="generalSubTitlesBottom">
+    						        <label class="profileInfoCardMiniTitle" style="margin-right:55px">Level</label>
+      	                <label class="profileInfoCardMiniTitle">Progress</label>
+  						        </div>
+                      <div id="miniTitleContainer"><label class="miniTitle">Next:Intermediate</label></div>  						        <div id="generalInfoDataContainerBottom">
+  						          <label class="profileInfoData">Beginner</label>
+  						          <div class="progressBar"></div>
+  						        </div>
+						      </div>
+						      <div class="profileInfoCard">
+  						        <label class="profileInfoCardTitle">Goals</label>
+  						        <div id="generalSubTitles">
+      						        <label class="profileInfoCardMiniTitle" >Target Weight</label>
+    						      </div>
+                      <div id="miniTitleContainer"><label class="miniTitle">Next:Intermediate</label></div>  						        <div id="generalInfoDataContainerBottom">
+    						        <label class="profileInfoData" id="profileIdlWght">N/A</label>
+    						        <div class="progressBar"></div>
+    						      </div>
+    						        <div id="generalSubTitles">
+    						        <label class="profileInfoCardMiniTitle" >Focus Area</label>
+      	                <label class="profileInfoCardMiniTitle" >Calorie Requirement</label>
+  						        </div>
+  						        <div id="generalInfoDataContainer">
+  						          <label class="profileInfoData" id="profileFocusArea">N/A</label>
+      	                <label class="profileInfoData" style="margin-right:55px" id="profileCalorieReq">N/A</label>
+  						        </div>
+						      </div>
+						      <div class="profileInfoCard">
+						        <label class="profileInfoCardTitle">Badges</label>
+						      </div>
+						</div>
+						<div id="activityInfo">
+						  <label class="profileInfoCardMiniTitle" id="activityTodayTitle">Today</label>
+						    <ul id="activityList">
+						      <li class="activityListInfo">progress</li>
+						      <li class="activityListInfo">progress</li>
+						      <li class="activityListInfo">progress</li>
+						      <li class="activityListInfo">progress</li>
+
 						    </ul>
 						</div>
 						<div id="progressInfo">
-						    <ul>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-   						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-   						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-   						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-   						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-   						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-   						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						      <li>progress</li>
-						    </ul>
+						  <div class="profileProgressCard">
+				        <label class="profileInfoCardTitle">Weight Progress</label>
+				      </div>
+				      <div class="profileProgressCard">
+				        <label class="profileInfoCardTitle">Strength</label>
+				      </div>
+				       <div class="profileProgressCard">
+				        <label class="profileInfoCardTitle">BMI</label>
+				      </div>
+				       <div class="profileProgressCard">
+				        <label class="profileInfoCardTitle">Body Fat</label>
+				      </div>
+				       <div class="profileProgressCard">
+				        <label class="profileInfoCardTitle">Body Measurements</label>
+				      </div>
 						</div>
-									<div id="favoriteInfo">
-						    <ul>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-   						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-   						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-   						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-   						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-   						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-						      <li>favorite</li>
-   						      <li>favorite</li>
-						      <li>favorite</li>
-						    </ul>
-						</div>
-						
+
 					</div>
+
+				<div id="panelScreen">
+	    		<div class="profilePanelImage">
+	    		  <div class="userImg"></div>
+	    		  <label class="usernamePanel">TremaineG</label>
+	    		  </div>
+	    		<div id="iconContainer">
+	    		  <div class="proMenu" id="myMeals"> My Meals</div>
+	    		  <div class="proMenu" id="myWorkouts"> My Workouts</div>
+	    		  <div class="proMenu" id="myProfile">My Profile</div>
+	    		  <div class="proMenu" id="settingMenuListItem">Settings</div>
+	    		  <div class="proMenu" id="logoutMenu">Log Out</div>
+
+	    		</div>
+		    </div>
+
+					<div class="buttonGroup" id="profileButtonGroup">
+	    		 	<div id="yellowProfile" class="paper-button btn-next yellow" style="margin:350px 300px" ></div>
+	    		</div>
+
     			</div>
 
-<script type="text/javascript" src="profile.js"></script> 
+<script type="text/javascript" src="profile.js"></script>
 </body>
 </html>

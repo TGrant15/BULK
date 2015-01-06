@@ -27,7 +27,7 @@
 				padding: 5px;
 				padding-left: 20px;
 			}
-        </style>
+    </style>
     </head>
     <body id="workoutBody">
 	    <div id="workoutPage">
@@ -40,7 +40,7 @@
 				      <div class="menu">
 				        <img src="http://i.imgur.com/OTJhUyq.png" id="menuIcon">
 				      </div>
-					  <div class="settingMenuDots" style="left:325px !important">
+				     <div class="settingMenuDots" style="left:325px !important">
 				      	<img src="settingsIcon.png" class="settingsIcon">
   						<div class="settingsMenu">
   							<ul class="settingMenuList">
@@ -49,7 +49,19 @@
   							</ul>
   						</div>
 				      </div>
-	    			<h2 id="workoutOverviewTitle">Todays Meals</h2>
+	    			<select class="dayFilterDropdown" id="mealDayFilter">
+				    	<option value="Monday">Monday</option>
+				    	<option value="Tuesday">Tuesday</option>
+				    	<option value="Wednesday">Wednesday</option>
+				    	<option value="Thursday">Thursday</option>
+				    	<option value="Friday">Friday</option>
+				    	<option value="Saturday">Saturday</option>
+				    	<option value="Sunday">Sunday</option>
+				    </select>
+				    <span id="checkmark">
+                <div id="stem"></div>
+                <div id="kick"></div>
+            </span>
 	    			<ul id="mealTabs">
 		    		 <li id="breakfastTab" class="workoutNav"><a class="tab">Breakfast</a></li>
 		      		 <li id="lunchTab" class="workoutNav"><a class="tab">Lunch</a></li>
@@ -58,69 +70,94 @@
 		    		</ul>
 		    		<div id="mealsUbar"></div>
 	    		</div>
-	    		
+
 	    		<div id="breakfast">
-	    		   <div class="list-view">		
+	    		   <div class="list-view">
 				    <ul class="workoutList" id="breakfastList">
 				    </ul>
 				    </div>
-	    		</div>  
-	    			
+	    		</div>
+
 	    		<div class="workoutList" id="lunch">
-	    		   <div class="list-view">		
+	    		   <div class="list-view">
 				    <ul class="workoutList" id="lunchList">
 				    </ul>
 				    </div>
-	    		</div>  		
-	    		
+	    		</div>
+
 	    		<div class="workoutList" id="dinner">
-	    		   <div class="list-view">		
+	    		   <div class="list-view">
 				    <ul class="workoutList" id="dinnerList">
 				    </ul>
 				    </div>
-	    		</div>  
-	    		
+	    		</div>
+
 	    		<div class="workoutList" id="snack">
-	    		   <div class="list-view">		
+	    		   <div class="list-view">
 				    <ul class="workoutList" id="snackList">
 				    </ul>
 				    </div>
-	    		</div>  
-	    		
-	    		<div id="buttonGroup">
-	    		 	<div id="yellowMeal" class="paper-button btn-next yellow" style="margin:25em 19.56em" ></div>
+	    		</div>
+
+	    		<div class="buttonGroup">
+	    		 	<div id="yellowMeal" class="paper-button btn-next yellow" style="margin:350px 300px" ></div>
 	    		</div>
 	    		 <div class="exitDetail">
 	    		 	<label>exit</label>
 	    		 </div>
-	    		 	
-	    		<div id="panelScreen">
+
+	        <div id="panelScreen">
+	    		<div class="profilePanelImage">
+	    		  <div class="userImg"></div>
+	    		  <label class="usernamePanel">TremaineG</label>
+	    		  </div>
 	    		<div id="iconContainer">
-	    		<div class="proMenu" id="myMeals"> My Meals</div>
-	    		<div class="proMenu" id="myWorkouts"> My Workouts</div>
-	    		<div class="proMenu" id="myProfile">My Profile</div>
-	    		<!-- <div class="proMenu" id="logout"> Logout</div>	 -->
-	    		</div>	
-	    		</div>    		
-	    		
-		</div>		
-		
+	    		  <div class="proMenu" id="myMeals"> My Meals</div>
+	    		  <div class="proMenu" id="myWorkouts"> My Workouts</div>
+	    		  <div class="proMenu" id="myProfile">My Profile</div>
+	    		  <div class="proMenu" id="settingMenuListItem">Settings</div>
+	    		  <div class="proMenu" id="logoutMenu">Log Out</div>
+
+	    		</div>
+		    </div>
+
 		 <div id="addMealPage">
-	    	<div id="searchBoxContainer">
-	    	<input type="text" id="searchBox">
+		   <div id="searchBoxContainer">
+        <div id="searchFrame"><input type="text" id="searchBox"><label id="clearFoodSearch" class="clearX">X</label></div>
 	    	<div id="searchButton">Search</div>
 	    	</div>
-	    		<select>
-  					<option value="BF">Breakfast</option>
-  					<option value="LN">Lunch</option>
-  					<option value="DN">Dinner</option>
-  					<option value="SN">Snack</option>
-				</select>
+	    	<select id="mealOfDayFilter">
+  					<option value="breakfast">Breakfast</option>
+  					<option value="lunch">Lunch</option>
+  					<option value="dinner">Dinner</option>
+  					<option value="snack">Snack</option>
+			 </select>
+  			<div id="addFoodForm">
+  			  <input type="radio" class="mealTypeRadio" id="addMealRadio"name="foodType" value="Meal">Add Food by Meal
+          <input type="radio" class="mealTypeRadio" id="addIngdtRadio" name="foodType" value="Ingredient">Add Food by Ingredient</br>
+  			  <div id="ingredientForm">
+    			  <label>Ingredient</label><input type="text" id="foodNameTxtBx"><br>
+    			  <label>Protein</label><input type="text" id="proteinTxtBx"><br>
+    			  <label>Carohydrates</label><input type="text" id="carboTxtBx"><br>
+    			  <label>Calories</label><input type="text" id="caloriesTxtBx"><br>
+    			  <label>Fat</label><input type="text" id="fatTxtBx"><br>
+    			  <div id='addCustomMealButton' class='button raised blue'>
+							<div class='center' fit>Add</div>
+							<paper-ripple fit></paper-ripple>
+						</div>
+
+  			  </div>
+  			</div>
 			<div id="searchResults">
 				<ul id="resultsList"></ul>
 			</div>
 	    </div>
-    		
+
+	    <div id="groceryListContainer">
+	      <ul id="groceryCheckList">
+	      </ul>
+	    </div>
+
     <script src="meals.js"></script>
     <script src="addMeals.js"></script>
     </body>

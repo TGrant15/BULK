@@ -1,20 +1,20 @@
-/**  
+/**
   * @desc login.js encompasses all login and registration functions
   * @author Caleb Diaz caleb.diaz@gmail.com, Tremaine Grant tremaine.grant@gmail.com
   * @required login.html, register.html
   * @namespace Login
-*/ 
+*/
 Login = {
-	/** 
+	/**
 	 * @desc check the user credentials and login if necessary
 	 * @param string email - email provided by user, string password - password provided by user
 	 * @return none
-	*/ 
+	*/
     login: function(email, password) {
     	Parse.User.logIn(email, password, {
   		  success: function(user) {
   			  localStorage["loggedUser"] = $('#logUsername').val();
-  	    		window.location = "workout.html"; 
+  	    		window.location = "workout.html";
   	    			localStorage["currentID"] = user.id;
 					localStorage["daysPerWeek"] = user.get("daysPerWeek");
 					localStorage["level"] = user.get("level");
@@ -27,18 +27,25 @@ Login = {
 					localStorage["saturdayFlag"] = user.get("Saturday");
 					localStorage["sundayFlag"] = user.get("Saturday");
 					localStorage["userInfoFlag"] = "yes";
+					localStorage["weight"] = user.get("weight");
+					localStorage["height"] = user.get("height");
+					localStorage["idlWeight"] = user.get("idlWeight");
+					localStorage["weight"] = user.get("weight");
+					localStorage["focusArea"] = user.get("focusArea");
+					localStorage["age"] = user.get("age");
+					localStorage["calorieReq"] = user.get("calorieReq");
   		  },
   		  error: function(user, error) {
   		    // The login failed. Check error to see why.
   		  }
   		});
     },
-    
-    /** 
+
+    /**
 	 * @desc validate the new registered user information
 	 * @param string email - email provided by user, string password - password provided by user
 	 * @return none
-	*/ 
+	*/
     validate: function(email, confEmail, password, confPassword) {
     	if(email != confEmail){
     		// show error for mismatched emails
@@ -66,7 +73,7 @@ Login = {
     		  },
     		  error: function(error) {
     		    // log this error
-    			  
+
     		  }
     		});
     	}
@@ -74,11 +81,11 @@ Login = {
 }
 
 
-/** 
+/**
  * @desc function is ran at the beginning of the project on load
  * @param document
  * @return none
-*/ 
+*/
 $(document).ready(function() {
-	
+
 }); // end of document ready function

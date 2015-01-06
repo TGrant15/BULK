@@ -38,12 +38,12 @@ public class example extends DroidGap
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html")
         
-		boolean hasMenuKey = ViewConfiguration.get(getBaseContext()).hasPermanentMenuKey();
-        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+		/*boolean hasMenuKey = ViewConfiguration.get(getBaseContext()).hasPermanentMenuKey();
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);*/
 
-        if(!hasMenuKey && !hasBackKey) {
+        /*if(!hasMenuKey && !hasBackKey) {
         	Toast.makeText(getApplicationContext(), "Example Toast", 5000).show();
-        }
+        }*/
     }
     
 

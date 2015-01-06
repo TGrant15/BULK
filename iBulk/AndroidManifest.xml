@@ -59,7 +59,6 @@
             </intent-filter>
         </activity>
     </application>
-    
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="17"/>
 </manifest> 
