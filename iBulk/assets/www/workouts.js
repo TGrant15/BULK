@@ -295,7 +295,7 @@ $(".detailPage").scroll(function(){
 
 	var scrollDistance = $(".detailPage").scrollTop();
 	var subtractString = 0.01 * scrollDistance;
-	var subtractMargin = 200 - scrollDistance
+	var subtractMargin = 0 - scrollDistance
 
 
 	//var headerReposition = -76 + scrollDistance;
@@ -305,7 +305,7 @@ $(".detailPage").scroll(function(){
 
 	if(scrollDistance >= 100)
 	{
-		$(".detailContent").margin({top:150});
+		$(".detailContent").margin({top:-96});
 	}
 	else
 	{
@@ -314,7 +314,7 @@ $(".detailPage").scroll(function(){
 	}
 	//$(".workoutHead").margin({top:headerReposition});
 
-	if(scrollDistance >= 200)
+	if(scrollDistance >= 50)
 	{
 		$(".workoutHead").css("opacity","1");
 
@@ -714,6 +714,7 @@ function generateWorkout(cacheVar)
 
 
 
+
 	// go through each workout that was pulled and all the properties and save them into individual variables.
 	for (var i = 0; i < cachedWorkouts.length; i++) {
 		var name = cachedWorkouts[i].name;
@@ -731,350 +732,372 @@ function generateWorkout(cacheVar)
 	    var tip2Temp = cachedWorkouts[i].tip2;
 	    var tip3Temp = cachedWorkouts[i].tip3;
 
-	  if(bodyZone == "upper")
-		{
-		  //Based on the number of workout populate the property arrays with the respective properties
-		  nameList[workoutCount] = name;
-		  bodyZoneArray[workoutCount] = bodyZone;
-		  typeArray[workoutCount] = type;
-		  difficulty[workoutCount] = difficultyTemp;
-		  primary[workoutCount] = primaryTemp;
-	      description1[workoutCount] = description1Temp;
-	      description2[workoutCount] = description2Temp;
-	      description3[workoutCount] = description3Temp;
-	      description4[workoutCount] = description4Temp;
-	      description5[workoutCount] = description5Temp;
-	      tip1[workoutCount] = tip1Temp;
-	      tip2[workoutCount] = tip2Temp;
-	      tip3[workoutCount] = tip3Temp;
-
-		  if(type=="Compound") // If the type of workout is a compund workout go through replacement algorithm so compound workouts will be completed first.
-			{
-		    	  nameList[workoutCount] = nameList[compoundCount];// Which ever place
-		    	  nameList[compoundCount] = name;
-
-		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
-		    	  bodyZoneArray[compoundCount] = bodyZone;
-
-		    	  typeArray[workoutCount] = typeArray[compoundCount];
-		    	  typeArray[compoundCount] = type;
-
-		    	  difficulty[workoutCount] =  difficulty[compoundCount];
-		    	  difficulty[compoundCount] = difficultyTemp;
-
-
-		    	  primary[workoutCount] = primary[compoundCount];
-		    	  primary[compoundCount] = primaryTemp;
-
-
-			      description1[workoutCount] = description1[compoundCount];
-			      description1[compoundCount] = description1Temp;
-
-
-			      description2[workoutCount] = description2[compoundCount];
-			      description2[compoundCount] = description2Temp;
-
-
-			      description3[workoutCount] = description3[compoundCount];
-			      description3[compoundCount] = description3Temp;
-
-
-			      description4[workoutCount] = description4[compoundCount];
-			      description4[compoundCount] = description4Temp;
-
-
-			      description5[workoutCount] = description5[compoundCount];
-			      description5[compoundCount] = description5Temp;
-
-
-			      tip1[workoutCount] = tip1[compoundCount];
-			      tip1[compoundCount] = tip1Temp;
-
-
-			      tip2[workoutCount] = tip2[compoundCount];
-			      tip2[compoundCount] = tip2Temp;
-
-
-			      tip3[workoutCount] = tip3[compoundCount];
-			      tip3[compoundCount] = tip3Temp;
-
-
-
-
-		    	  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			rcmndedWeight[workoutCount] = "Just the Bar";
-		    		  }
-		    	  }
-		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
-		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-		    	  compoundCount++;
-			}
-		  else if(type =="Dumbbell")
-			{
-			  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			rcmndedWeight[workoutCount] = 25;
-		    		  }
-		    	  }
-		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-
-			}
-		  else if(type == "Body")
-	  		{
-			  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			rcmndedWeight[workoutCount] = "Body Weight";
-		    		  }
-		    	  }
-		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-
-	  		}
-		  else if(type == "Machine")
-	  		{
-			  if(localStorage["level"] == 1)
-	    	  {
-	    		  if(localStorage["phase"] == "1")
-	    		  {
-	    			  rcmndedWeight[workoutCount] = 50;
-	    		  }
-	    	  }
-		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-	  		}
-	  		workoutCount++;
-
-		}
-		else if(bodyZone == "lower")
-		{
-	    	  nameList[workoutCount] = name;
-	    	  bodyZoneArray[workoutCount] = bodyZone;
-	    	  typeArray[workoutCount] = type;
-	    	  difficulty[workoutCount] = difficultyTemp;
-	    	  primary[workoutCount] = primaryTemp;
-		      description1[workoutCount] = description1Temp;
-		      description2[workoutCount] = description2Temp;
-		      description3[workoutCount] = description3Temp;
-		      description4[workoutCount] = description4Temp;
-		      description5[workoutCount] = description5Temp;
-		      tip1[workoutCount] = tip1Temp;
-		      tip2[workoutCount] = tip2Temp;
-		      tip3[workoutCount] = tip3Temp;
-	    	  if(type=="Compound")
-	    		{
-		    	  nameList[workoutCount] = nameList[compoundCount];
-		    	  nameList[compoundCount] = name;
-
-		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
-		    	  bodyZoneArray[compoundCount] = bodyZone;
-
-		    	  typeArray[workoutCount] = typeArray[compoundCount];
-		    	  typeArray[compoundCount] = type;
-
-		    	  difficulty[workoutCount] =  difficulty[compoundCount];
-		    	  difficulty[compoundCount] = difficultyTemp;
-
-
-		    	  primary[workoutCount] = primary[compoundCount];
-		    	  primary[compoundCount] = primaryTemp;
-
-
-			      description1[workoutCount] = description1[compoundCount];
-			      description1[compoundCount] = description1Temp;
-
-
-			      description2[workoutCount] = description2[compoundCount];
-			      description2[compoundCount] = description2Temp;
-
-
-			      description3[workoutCount] = description3[compoundCount];
-			      description3[compoundCount] = description3Temp;
-
-
-			      description4[workoutCount] = description4[compoundCount];
-			      description4[compoundCount] = description4Temp;
-
-
-			      description5[workoutCount] = description5[compoundCount];
-			      description5[compoundCount] = description5Temp;
-
-
-			      tip1[workoutCount] = tip1[compoundCount];
-			      tip1[compoundCount] = tip1Temp;
-
-
-			      tip2[workoutCount] = tip2[compoundCount];
-			      tip2[compoundCount] = tip2Temp;
-
-
-			      tip3[workoutCount] = tip3[compoundCount];
-			      tip3[compoundCount] = tip3Temp;
-
-		    	  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			rcmndedWeight[workoutCount] = "Just the Bar";
-		    		  }
-		    	  }
-	  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
-		    	  rcmndedWeight[compoundCount] = "Just the Bar";
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-		    	  compoundCount++;
-	    		}
-	    	  else if(type =="Dumbbell")
-	    		{
-	    		  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			rcmndedWeight[workoutCount] = 25;
-		    		  }
-		    	  }
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-
-	    		}
-	    	  else if(type == "Body")
-		  		{
-	    		  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			rcmndedWeight[workoutCount] = "Body Weight";
-		    		  }
-		    	  }
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-
-		  		}
-	    	  else if(type == "Machine")
-		  		{
-	    		  if(localStorage["level"] == 1)
-		    	  {
-		    		  if(localStorage["phase"] == "1")
-		    		  {
-		    			  rcmndedWeight[workoutCount] = 50;
-		    		  }
-		    	  }
-		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		  		    			  <div class="listItemText">\
-		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		  		    			  </div>\
-		  		    			  <div class="listItemImg"></div>\
-		  		    			  </div>\
-		  		    			  </li>');
-
-
-		  		}
-		  		workoutCount++;
-		}
-		else
-		{
-	  	   coreList.push({name: name, bodyZone: bodyZone, difficulty:difficultyTemp, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp,tip1:tip1Temp,tip2:tip2Temp,tip3:tip3Temp});
-
-			  if(type == "Body")
-			  {
-				  //coreList[coreCount].rmdWeight = "Body Weight";
-				  rcmndedWeight[workoutCount] = "Body Weight";
-			  }
-
-			$("#coreList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
-	    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
-		    			  <div class="listItemText">\
-		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
-		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
-		    			  </div>\
-		    			  <div class="listItemImg"></div>\
-		    			  </div>\
-		    			  </li>');
-				coreCount++;
-
-	  		}
-	    }
-
-	    for(var i=0; i<=(workoutCount-coreCount); i++)
+	    if(type == 'Dumbbell')
 	    {
-
-		      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
-
+	      var iconSrc = 'img/Dumbell_Icon.png'
 	    }
-
-
-	    for(var index=0; index<coreCount; index++)
+	    else if(type == 'Compound')
 	    {
-		    workoutObj.push({name: coreList[index].name, bodyZone: coreList[index].bodyZone, difficulty:coreList[index].difficulty, primary:coreList[index].primary, description1:coreList[index].description1, description2:coreList[index].description2, description3:coreList[index].description3, description4:coreList[index].description4, description5:coreList[index].description5,tip1:coreList[index].tip1,tip2:coreList[index].tip2,tip3:coreList[index].tip3});
-
+	      var iconSrc = 'img/Compound_Icon.png'
 	    }
+	    else if(type == 'Machine')
+	    {
+	      var iconSrc = 'img/Compound_Icon.png'
+	    }
+	    else if(type == 'Body')
+	    {
+	      var iconSrc = 'img/Compound_Icon.png'
+	    }
+
+  if(localStorage["level"] == "1")
+  {
+
+    //Figure out the first conditions for the first program structure
+    if(bodyZone == "upper")
+    {
+      		  //Based on the number of workout populate the property arrays with the respective properties
+      		  nameList[workoutCount] = name;
+      		  bodyZoneArray[workoutCount] = bodyZone;
+      		  typeArray[workoutCount] = type;
+      		  difficulty[workoutCount] = difficultyTemp;
+      		  primary[workoutCount] = primaryTemp;
+      	      description1[workoutCount] = description1Temp;
+      	      description2[workoutCount] = description2Temp;
+      	      description3[workoutCount] = description3Temp;
+      	      description4[workoutCount] = description4Temp;
+      	      description5[workoutCount] = description5Temp;
+      	      tip1[workoutCount] = tip1Temp;
+      	      tip2[workoutCount] = tip2Temp;
+      	      tip3[workoutCount] = tip3Temp;
+
+      		  if(type=="Compound") // If the type of workout is a compund workout go through replacement algorithm so compound workouts will be completed first.
+      			{
+      		    	  nameList[workoutCount] = nameList[compoundCount];// Which ever place
+      		    	  nameList[compoundCount] = name;
+
+      		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+      		    	  bodyZoneArray[compoundCount] = bodyZone;
+
+      		    	  typeArray[workoutCount] = typeArray[compoundCount];
+      		    	  typeArray[compoundCount] = type;
+
+      		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+      		    	  difficulty[compoundCount] = difficultyTemp;
+
+
+      		    	  primary[workoutCount] = primary[compoundCount];
+      		    	  primary[compoundCount] = primaryTemp;
+
+
+      			      description1[workoutCount] = description1[compoundCount];
+      			      description1[compoundCount] = description1Temp;
+
+
+      			      description2[workoutCount] = description2[compoundCount];
+      			      description2[compoundCount] = description2Temp;
+
+
+      			      description3[workoutCount] = description3[compoundCount];
+      			      description3[compoundCount] = description3Temp;
+
+
+      			      description4[workoutCount] = description4[compoundCount];
+      			      description4[compoundCount] = description4Temp;
+
+
+      			      description5[workoutCount] = description5[compoundCount];
+      			      description5[compoundCount] = description5Temp;
+
+
+      			      tip1[workoutCount] = tip1[compoundCount];
+      			      tip1[compoundCount] = tip1Temp;
+
+
+      			      tip2[workoutCount] = tip2[compoundCount];
+      			      tip2[compoundCount] = tip2Temp;
+
+
+      			      tip3[workoutCount] = tip3[compoundCount];
+      			      tip3[compoundCount] = tip3Temp;
+
+
+
+
+      		    	  if(localStorage["level"] == 1)
+      		    	  {
+      		    		  if(localStorage["phase"] == "1")
+      		    		  {
+      		    			rcmndedWeight[workoutCount] = "Just the Bar";
+      		    		  }
+      		    	  }
+      		    	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
+      		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+      		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+      		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+      		  		    			  <div class="listItemText">\
+      		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+      		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+      		  		    			  </div>\
+      		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+      		  		    			  </div>\
+      		  		    			  </li>');
+
+      		    	  compoundCount++;
+      			}
+      		  else if(type =="Dumbbell")
+      			{
+      			  if(localStorage["level"] == 1)
+      		    	  {
+      		    		  if(localStorage["phase"] == "1")
+      		    		  {
+      		    			rcmndedWeight[workoutCount] = 25;
+      		    		  }
+      		    	  }
+      		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+      		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+      		  		    			  <div class="listItemText">\
+      		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+      		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+      		  		    			  </div>\
+      		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+      		  		    			  </div>\
+      		  		    			  </li>');
+
+
+      			}
+      		  else if(type == "Body")
+      	  		{
+      			  if(localStorage["level"] == 1)
+      		    	  {
+      		    		  if(localStorage["phase"] == "1")
+      		    		  {
+      		    			rcmndedWeight[workoutCount] = "Body Weight";
+      		    		  }
+      		    	  }
+      		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+      		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+      		  		    			  <div class="listItemText">\
+      		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+      		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+      		  		    			  </div>\
+      		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+      		  		    			  </div>\
+      		  		    			  </li>');
+
+
+      	  		}
+      		  else if(type == "Machine")
+      	  		{
+      			  if(localStorage["level"] == 1)
+      	    	  {
+      	    		  if(localStorage["phase"] == "1")
+      	    		  {
+      	    			  rcmndedWeight[workoutCount] = 50;
+      	    		  }
+      	    	  }
+      		  		    	  $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+      		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+      		  		    			  <div class="listItemText">\
+      		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+      		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+      		  		    			  </div>\
+      		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+      		  		    			  </div>\
+      		  		    			  </li>');
+
+      	  		}
+      	  		workoutCount++;
+
+    		}
+    else if(bodyZone == "lower")
+    {
+    	    	  nameList[workoutCount] = name;
+    	    	  bodyZoneArray[workoutCount] = bodyZone;
+    	    	  typeArray[workoutCount] = type;
+    	    	  difficulty[workoutCount] = difficultyTemp;
+    	    	  primary[workoutCount] = primaryTemp;
+    		      description1[workoutCount] = description1Temp;
+    		      description2[workoutCount] = description2Temp;
+    		      description3[workoutCount] = description3Temp;
+    		      description4[workoutCount] = description4Temp;
+    		      description5[workoutCount] = description5Temp;
+    		      tip1[workoutCount] = tip1Temp;
+    		      tip2[workoutCount] = tip2Temp;
+    		      tip3[workoutCount] = tip3Temp;
+    	    	  if(type=="Compound")
+    	    		{
+    		    	  nameList[workoutCount] = nameList[compoundCount];
+    		    	  nameList[compoundCount] = name;
+
+    		    	  bodyZoneArray[workoutCount] = bodyZoneArray[compoundCount];
+    		    	  bodyZoneArray[compoundCount] = bodyZone;
+
+    		    	  typeArray[workoutCount] = typeArray[compoundCount];
+    		    	  typeArray[compoundCount] = type;
+
+    		    	  difficulty[workoutCount] =  difficulty[compoundCount];
+    		    	  difficulty[compoundCount] = difficultyTemp;
+
+
+    		    	  primary[workoutCount] = primary[compoundCount];
+    		    	  primary[compoundCount] = primaryTemp;
+
+
+    			      description1[workoutCount] = description1[compoundCount];
+    			      description1[compoundCount] = description1Temp;
+
+
+    			      description2[workoutCount] = description2[compoundCount];
+    			      description2[compoundCount] = description2Temp;
+
+
+    			      description3[workoutCount] = description3[compoundCount];
+    			      description3[compoundCount] = description3Temp;
+
+
+    			      description4[workoutCount] = description4[compoundCount];
+    			      description4[compoundCount] = description4Temp;
+
+
+    			      description5[workoutCount] = description5[compoundCount];
+    			      description5[compoundCount] = description5Temp;
+
+
+    			      tip1[workoutCount] = tip1[compoundCount];
+    			      tip1[compoundCount] = tip1Temp;
+
+
+    			      tip2[workoutCount] = tip2[compoundCount];
+    			      tip2[compoundCount] = tip2Temp;
+
+
+    			      tip3[workoutCount] = tip3[compoundCount];
+    			      tip3[compoundCount] = tip3Temp;
+
+    		    	  if(localStorage["level"] == 1)
+    		    	  {
+    		    		  if(localStorage["phase"] == "1")
+    		    		  {
+    		    			rcmndedWeight[workoutCount] = "Just the Bar";
+    		    		  }
+    		    	  }
+    	  		   	  rcmndedWeight[workoutCount] = rcmndedWeight[compoundCount];
+    		    	  rcmndedWeight[compoundCount] = "Just the Bar";
+    		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+    		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+    		  		    			  <div class="listItemText">\
+    		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+    		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+    		  		    			  </div>\
+    		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+    		  		    			  </div>\
+    		  		    			  </li>');
+
+    		    	  compoundCount++;
+    	    		}
+    	    	  else if(type =="Dumbbell")
+    	    		{
+    	    		  if(localStorage["level"] == 1)
+    		    	  {
+    		    		  if(localStorage["phase"] == "1")
+    		    		  {
+    		    			rcmndedWeight[workoutCount] = 25;
+    		    		  }
+    		    	  }
+    		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+    		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+    		  		    			  <div class="listItemText">\
+    		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+    		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+    		  		    			  </div>\
+    		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+    		  		    			  </div>\
+    		  		    			  </li>');
+
+
+    	    		}
+    	    	  else if(type == "Body")
+    		  		{
+    	    		  if(localStorage["level"] == 1)
+    		    	  {
+    		    		  if(localStorage["phase"] == "1")
+    		    		  {
+    		    			rcmndedWeight[workoutCount] = "Body Weight";
+    		    		  }
+    		    	  }
+    		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+    		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+    		  		    			  <div class="listItemText">\
+    		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+    		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+    		  		    			  </div>\
+    		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+    		  		    			  </div>\
+    		  		    			  </li>');
+
+
+    		  		}
+    	    	  else if(type == "Machine")
+    		  		{
+    	    		  if(localStorage["level"] == 1)
+    		    	  {
+    		    		  if(localStorage["phase"] == "1")
+    		    		  {
+    		    			  rcmndedWeight[workoutCount] = 50;
+    		    		  }
+    		    	  }
+    		  		    	  $("#lowerList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+    		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+    		  		    			  <div class="listItemText">\
+    		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+    		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+    		  		    			  </div>\
+    		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+    		  		    			  </div>\
+    		  		    			  </li>');
+
+
+    		  		}
+    		  		workoutCount++;
+    		}
+    else
+    {
+    	  	   coreList.push({name: name, bodyZone: bodyZone, difficulty:difficultyTemp, primary:primaryTemp, description1:description1Temp, description2:description2Temp, description3:description3Temp, description4:description4Temp, description5:description5Temp,tip1:tip1Temp,tip2:tip2Temp,tip3:tip3Temp});
+
+    			  if(type == "Body")
+    			  {
+    				  //coreList[coreCount].rmdWeight = "Body Weight";
+    				  rcmndedWeight[workoutCount] = "Body Weight";
+    			  }
+
+    			$("#coreList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+    	    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+    		    			  <div class="listItemText">\
+    		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+    		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+    		    			  </div>\
+    		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+    		    			  </div>\
+    		    			  </li>');
+    				coreCount++;
+
+    	  		}
+  }
+  }
+
+  for(var i=0; i<=(workoutCount-coreCount); i++)
+  {
+
+      workoutObj.push({name: nameList[i], bodyZone: bodyZoneArray[i], difficulty:difficulty[i], type:typeArray[i], primary:primary[i], description1:description1[i], description2:description2[i], description3:description3[i], description4:description4[i], description5:description5[i],tip1:tip1[i],tip2:tip2[i],tip3:tip3[i]});
+
+  }
+
+
+  for(var index=0; index<coreCount; index++)
+  {
+    workoutObj.push({name: coreList[index].name, bodyZone: coreList[index].bodyZone, difficulty:coreList[index].difficulty, primary:coreList[index].primary, description1:coreList[index].description1, description2:coreList[index].description2, description3:coreList[index].description3, description4:coreList[index].description4, description5:coreList[index].description5,tip1:coreList[index].tip1,tip2:coreList[index].tip2,tip3:coreList[index].tip3});
+
+  }
 
 
 	BicepObj = filterForProgram(cacheVar,"Bicep");
@@ -1099,6 +1122,15 @@ function generateWorkout(cacheVar)
 		}
 
 		$("#workoutDayFilter").css("display","none");
+		if(cachedWorkouts[detailIndex].type == "Compound")
+		{
+		  $(".workoutTypeIcon").attr("src","img/compoundIcon.png");
+		}
+		else
+		{
+		  $(".workoutTypeIcon").attr("src","img/isolationIcon.png");
+		}
+		$(".detailTitle").css("color","white");
 		$(".listItemText").css("display","none");
 		$(".listItemImg").css("display","none");
 		$(".detailPage").css("display","block");
@@ -1118,9 +1150,9 @@ function generateWorkout(cacheVar)
 		$("#menuIcon").animate({"height":"0px"},700);
 		$("#settingMenuDots").animate({"height":"0px"},700);
 
-		$("#workoutOverviewTitle").css("color","black");
 		$("#workoutOverviewTitle").text(cachedWorkouts[detailIndex].name);
 		$(".detailTitle").append(cachedWorkouts[detailIndex].name)
+		$("#primaryFocusDetailData").text(cachedWorkouts[detailIndex].primary);
 		$("#detailDifficulty").append(cachedWorkouts[detailIndex].difficulty);
 		$("#detailSets").append("3");
 		$("#detailReps").append("12");
@@ -1136,7 +1168,8 @@ function generateWorkout(cacheVar)
 
 
 		var listLength = $(".longDetailsList").height();
-		var calc = listLength + 1400;
+		//var calc = listLength + 1400;
+		var calc = 750;
 		$(".detailContent").css("height", calc + "px");
 
 
@@ -1147,6 +1180,7 @@ function generateWorkout(cacheVar)
 		$("#detailDifficulty").empty();
 		$("#detailSets").empty();
 		$("#detailReps").empty();
+		$("#primaryFocusDetailData").empty();
 		$("#detailDescription1").empty();
 		$("#detailDescription2").empty();
 		$("#detailDescription3").empty();

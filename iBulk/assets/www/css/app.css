@@ -1,5 +1,11 @@
 @import url('http://roboto-webfont.googlecode.com/svn/trunk/roboto.all.css');
 /******Common components ***/
+html {
+
+    background-color:#fafafa;
+    color: #000;
+    overflow:hidden;
+}
 .dialogBox
 {
 	height: 250px;
@@ -54,10 +60,63 @@
 	position: absolute;
 }
 /***************************/
-html {
+.tutorial-body
+{
+  background-color:#00bbd3;
+  width:100%;
+  height:100%;
+}
+.tutorialSlides
+{
+  display:none;
+}
+.assessmentDialog
+{
+  color:#272626;
+  margin-top: -30%;
+  margin-left: 21px;
+  position:absolute;
+  margin-right: 10px;
+}
+.assessmentForm
+{
+  display:none;
+  position:absolute;
+  top:50%;
+  left:50%;
 
-    background-color:#dd5145;
-    color: #000;
+
+}
+#proceedButton
+{
+  opacity:0;
+}
+#form1
+{
+  display:none;
+  opacity:0px;
+  margin-top: -43px;
+  margin-left: -56px;
+}
+.assessmentButton
+{
+  margin-top: 62%;
+  position: absolute;
+  margin-left: 34%;
+  background-color: green;
+  border-radius: 3px;
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  font-family: roboto;
+}
+#formButton
+{
+ margin-top: 145%;
+ display:none;
+
 }
 .settingsMenu
 {
@@ -478,39 +537,98 @@ ui-loader
 	display:none;
 	opacity:0;
 	overflow-x:hidden;
-	background-color:grey;
-	background-image:url(../img/pushUp.jpg);
+	background-color:#dd5145;
+
+	  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, 0% 30%, 0% 50%, from(#dd5145), to(#ffffff));
+
+  /* Safari 5.1, Chrome 10+ */
+  /*background: -webkit-linear-gradient(top, #dd5145, #ffffff);*/
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(top, #dd5145, #ffffff);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(top, #dd5145, #ffffff);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(top, #dd5145, #ffffff);
+}
+
 }
 .detailTitle
 {
-	color:black;
+  color: white;
+  font-size: 20px;
+  line-height: 10px;
+  margin-left: 10px;
+  height: 25px;
+  vertical-align: top;
+}
+.detailMiniTitle
+{
+  color: #dd5145;
+  font-weight: 300;
+  display: block;
+  position: relative;
+}
+#detailTitle
+{
+  margin: 20px;
+  margin-bottom: 10px;
+  margin-left: 32px;
+}
+.workoutTypeIcon
+{
+  height:40px;
+}
+.detailMiniSub
+{
+  color:#a5a5a5;
+  font-size:15px;
+  margin-bottom: 20px;
+
+}
+.infoDataLabel
+{
+  font-size: 12px;
+  font-weight: 400;
+}
+
+#primaryFocusDetailTitle
+{
+  margin-left: 32px;
+}
+
+.divider
+{
+  background-color: #a5a5a5;
+  width: 90%;
+  height: 1px;
+  margin-left: 20px;
 }
 .detailContent
 {
-	margin-top:200px;
 	background-color:white;
 	height:100%;
 }
 .detailPageImg
 {
-	z-index: 1000;
-	position: relative;
-	width: 100%;
-	height: 200px;
-	background-color: grey;
-	color: black;
-	top: 0px;
-	left: 0px;
+  z-index: 1038;
+  position: relative;
+  width: 360px;
+  height: 308px;
+  background: url(../img/Bench.gif);
+  background-size: 100% 100%;
 }
+
 .detailTitleContainer
 {
-	position: absolute;
-	left: 50%;
-	margin-left: -119px;
-	z-index: 1000;
-	width: 245px;
-	margin-top: -5px;
-	text-align: center;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  margin-top: 97px;
+  text-align: center;
 }
 #detailDifficulty
 {
@@ -541,11 +659,13 @@ ui-loader
 }
 .exerciseAttributeList
 {
-	z-index: 1000;
-	list-style: none;
-	position: relative;
-	display: inline-flex;
-	width: 100%;
+  z-index: 1000;
+  list-style: none;
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  margin-top: 0px;
+  margin-left: -8px;
 }
 .exerciseAttribute
 {
@@ -717,15 +837,25 @@ ui-loader
 }
 .listItemImg
 {
-	width: 120px;
-	height: 90px;
-	background-color: grey;
-	z-index: 1085;
-	position: relative;
-	display: inline-block;
-	margin-left: 5px;
-	vertical-align: top;
-	margin-top: 15px;
+  width: 127px;
+  height: 90px;
+  /* background-color: #dd5145; */
+  z-index: 1085;
+  position: relative;
+  display: inline-block;
+  margin-left: -5px;
+  vertical-align: top;
+  margin-top: 5px;
+}
+.listItemIcon
+{
+  margin-top: 9px;
+  /* position: absolute; */
+  vertical-align: top;
+  width: 100%;
+  height: 90%;
+  align-content: center;
+  margin-left: 5%;
 }
 .listItemText
 {
@@ -1085,7 +1215,7 @@ border-color:#0f9d58;
 }
 
 .radio:checked:before {
-	/* -webkit-transform: rotate(-45deg); */
+	-webkit-transform: rotate(-45deg);
 	-moz-transform: rotate(-45deg);
 	-ms-transform: rotate(-45deg);
 	-o-transform: rotate(-45deg);
@@ -1095,9 +1225,9 @@ border-color:#0f9d58;
 	/* border-top-style: none; */
 	/* border-right-style: none; */
 	content: "\2022";
-	font-size: 29px;
+	font-size: 2.5em;
 	text-align: center;
-	line-height: 11px;
+	line-height: .4em;
 }
 .radio:after {
 	content: "";
@@ -1601,10 +1731,11 @@ input.switch:empty ~ label:after
 /**********************************/
 #proBody
 {
-    overflow: hidden;
-    height: 100%;
-    display: block;
-    margin-left: 0px;
+overflow: hidden;
+height: 101%;
+display: block;
+margin-left: 0px;
+width: 101%;
 }
 .profileHead
 {
@@ -1798,6 +1929,7 @@ input.switch:empty ~ label:after
   color: #dd5145;
   font-size: 10px;
   font-weight: 400;
+  margin-left: 39px;
 }
 #miniTitleContainer
 {
@@ -1806,13 +1938,27 @@ input.switch:empty ~ label:after
   display: block;
   position: absolute;
 }
+.progressBarBackDrop
+{
+  height: 3px;
+  width: 201px;
+  background-color:#ffff8d;
+  display: inline-block;
+  margin-left: -34px;
+  position: absolute;
+  margin-top: 13px;
+  left:140px;
+}
 .progressBar
 {
   height: 3px;
   width: 201px;
   background-color: #ffea00;
   display: inline-block;
-  margin-left: -26px;
+  margin-left: -34px;
+  position: absolute;
+  margin-top: 13px;
+  left:140px;
 }
 .profileInfoData
 {

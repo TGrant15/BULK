@@ -3,11 +3,7 @@ Parse.initialize("AXss0hVCmQ3tmDsGCV0KD3Xn9yUL39BPJcGQGV7P", "IddscOVmXbWcUGqZCJ
 
 var profilePageFlag;
 var bodyHeight = $("#proBody").height();
-/*					localStorage["idlWeight"] = user.get("idlWeight");
-					localStorage["focusArea"] = user.get("focusArea");
 
-					localStorage["calorieReq"] = user.get("calorieReq");
-*/
 $("#profileAge").text(localStorage["age"]);
 $("#profileWght").text(localStorage["weight"]);
 $("#profileHgt").text(localStorage["height"]);
@@ -96,6 +92,10 @@ $("#myWorkouts").click(function(){
 
 $("#myProfile").click(function(){
 	window.location = "profile.html";
+});
+
+$("#mySettings").click(function(){
+  window.location="editProfile.html";
 });
 
 	$("#yellowProfile").click(function(){

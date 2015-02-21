@@ -47,14 +47,30 @@ Login = {
 	 * @return none
 	*/
     validate: function(email, confEmail, password, confPassword) {
+      var emailYes = 1;
+      var passwordYes = 1;
+
     	if(email != confEmail){
+
     		// show error for mismatched emails
+    		alert("email does not match");
+
+    	}
+    	else if(emailYes != 1)
+    	{
+        alert("email is not valid");
+    	}
+    	else if(passwordYes != 1)
+    	{
+        alert("password is not valid");
     	}
     	else if (password != confPassword){
     		// show error for mismatched passwords
+    		alert("password does not match");
     	}
     	else if (!$("#termCheck").prop("checked")){
     		// show error for terms of conditions
+    		alert("term is not checked");
     	}
     	else {
     		var EmailQuery = Parse.Object.extend("User");
@@ -65,10 +81,19 @@ Login = {
     			  if(results.length > 0)
     				  {
     				  	// show error for taken email
+    				  	alert("email is taken");
     				  }
     			  else
     				  {
-    				  	Common.loadPage('detailsPage', 'none');
+    				    /*alert("try");
+    				    var user = new Parse.User();
+    				    user.set("username", email);
+              	user.set("password", password);
+              	user.set("email", email);
+              	user.save().then(function(){*/
+              	   //Common.loadPage('tutorial', 'none');
+              	   window.location ="tutorial.html";
+              	//});
     				  }
     		  },
     		  error: function(error) {

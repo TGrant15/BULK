@@ -12,7 +12,7 @@ var breakfastReq= [];
 var lunchReq = [];
 var dinnerReq = [];
 var snackReq = [];
-var breakfastCalReq;
+var breakfastCalReq = 0;
 var lunchCalReq;
 var dinnerCalReq;
 var snackCalReq;
@@ -24,6 +24,7 @@ getLevel(current);
 
 
 $(document).ready(function() {
+
 var cachedMealCheck = [];
 var prefFood = [];
 var storedPrefs = [];
@@ -43,7 +44,6 @@ else
 	//*Store the length of the obj in this variable.
 	//cacheObjLength = cachedWorkoutCheck.length;
 	prefFood = filterFood(cachedMealCheck, storedPrefs);
-	alert(prefFood);
 	generateMealPlan(prefFood);
 
 
@@ -105,9 +105,7 @@ $(".menu").click(function()
 $("#lower").css("opacity","0");
 $("#core").css("opacity","0");
 
-$("#settingsIcon").click(function(){
-	window.location = "settings.html";
-});
+
 //----------------------------------------------------------//
 //----------------------- workout page  ----------------//
 //----------------------------------------------------------//
@@ -233,8 +231,6 @@ function getMeals() {
 
 
 	      mealObj.push({ID:ID, name:name, category:category, type:type, desc:description, calorie:calorie, ingredients:groceryListItems, dairyBool:dairy, fruitBool:fruit, vegBool:veg, grainBool:grain, proteinBool:protein});
-	       alert(mealObj[i].name);
-          alert (mealObj[i].dairyBool);
 
 	    }
 
@@ -276,80 +272,108 @@ function generateMealPlan(cachedMealObject)
 	      var type = cachedMealObject[random].type;
 	      mealID[random] = ID;
 
+	    if(type == 'main')
+	    {
+	      var iconSrc = 'img/mainmeal.png'
+	    }
+	    else if(type == 'sup')
+	    {
+	      var iconSrc = 'img/snack.png'
+	    }
+	    else if(type == 'shake')
+	    {
+	      var iconSrc = 'img/shake.png'
+	    }
 
-	       /* breakfastReq.push({});
-          lunchReq.push({});
-          dinnerReq.push({});
-          snackReq.push({}); */
 
         var breakfastListCount = 0;
         var addAnotherMeal = [];
-	      if(category == "breakfast")
-	  		{
-	  		  if(breakfastFlag == 1)
-	  		  {
-  	  		  if(breakfastReq.length == 0)
-  	  		  {
-  	  		    if(type == 'main')
-  	  		    {
-  	  		      breakfastReq.push(dairy);
-  	  		      breakfastReq.push(fruit);
-  	  		      breakfastReq.push(veg);
-  	  		      breakfastReq.push(grain);
-  	  		      breakfastReq.push(protein);
-  	  		      breakfastCalReq += calories;
-  	  		      generateMealItem("breakfastList",i,name,description,calories);
-  	  		    }
-  	  		  }
-  	  		  else
-  	  		  {
-  	  		    if( type == 'shake' || type == 'sup')
-  	  		    for(var z = 0; z < breakfastReq.length; z++)
-  	  		    {
-  	  		      if(breakfastReq[z] == 0)
-  	  		      {
-    	  		        switch(z)
-    	  		        {
-    	  		          case 0: //In this case we are dealing with the dairy req
-    	  		           addAnotherMeal = fulFillVoidReq("dairy", cachedMealObject, "breakfast");
-    	  		            breakfastListCount++;
-    	  		            generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.description,addAnotherMeal.calories);
-    	  		          case 1: //In this case we are dealing with the fruit req
-    	  		            addAnotherMeal =fulFillVoidReq("fruit", cachedMealObject, "breakfast");
-    	  		            breakfastListCount++;
-    	  		            generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.description,addAnotherMeal.calories);
+        if(category == "breakfast")
+        {
 
-    	  		          case 2: //In this case we are dealing with the veg req
-    	  		            addAnotherMeal = fulFillVoidReq("veg", cachedMealObject, "breakfast");
-    	  		            breakfastListCount++;
-    	  		            generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.description,addAnotherMeal.calories);
+          if(breakfastFlag == 1)
+          {
+            if(breakfastReq.length == 0)
+            {
+              if(type == 'main')
+              {
+                breakfastReq.push(dairy);
+                breakfastReq.push(fruit);
+                breakfastReq.push(veg);
+                breakfastReq.push(grain);
+                breakfastReq.push(protein);
+                breakfastCalReq += calories;
+                generateMealItem("breakfastList",i,name,description,calories,iconSrc);
 
-    	  		          case 3: //In this case we are dealing with the grain req
-    	  		            addAnotherMeal =fulFillVoidReq("grain", cachedMealObject, "breakfast");
-    	  		            breakfastListCount++;
-    	  		            generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.description,addAnotherMeal.calories);
+                breakfastFlag = checkReq(breakfastReq);
+              }
+            }
+            else
+            {
+                for(var z = 0; z < breakfastReq.length; z++)
+                {
+                  if(breakfastFlag == 1)
+                  {
 
-    	  		          case 4: //In this case we are dealing with the protein req
-    	  		            addAnotherMeal =fulFillVoidReq("protein", cachedMealObject, "breakfast");
-    	  		            breakfastListCount++;
-    	  		            generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.description,addAnotherMeal.calories);
-    	  		        }
-  	  		        }
-  	  		      }
-  	  		    }
-  	  		  }
+                    if(breakfastReq[z] == 0)
+                    {
+                      if(z==0)//In this case we are dealing with the dairy req
+                      {
+                          addAnotherMeal = fillVoidReq("dairy", cachedMealObject, "breakfast");
+                          breakfastListCount++;
+                          breakfastReq = addReq(addAnotherMeal, breakfastReq);
+                          generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.desc,addAnotherMeal.calorie,iconSrc);
+                          breakfastFlag = checkReq(breakfastReq);
+                      }
+                      else if(z==1)
+                      {
+                          addAnotherMeal =fillVoidReq("fruit", cachedMealObject, "breakfast");
+                          breakfastListCount++;
+                          generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.desc,addAnotherMeal.calorie,iconSrc);
+                          breakfastReq = addReq(addAnotherMeal, breakfastReq);
+                          breakfastFlag = checkReq(breakfastReq);
+                      }
+                      else if(z==2)
+                      {
+                          addAnotherMeal = fillVoidReq("veg", cachedMealObject, "breakfast");
+                          breakfastListCount++;
+                          generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.desc,addAnotherMeal.calorie,iconSrc);
+                          breakfastReq = addReq(addAnotherMeal, breakfastReq);
+                          breakfastFlag = checkReq(breakfastReq);
+                      }
+                      else if(z==3)
+                      {
+                          addAnotherMeal =fillVoidReq("grain", cachedMealObject, "breakfast");
+                          breakfastListCount++;
+                          generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.desc,addAnotherMeal.calorie,iconSrc);
+                          breakfastReq = addReq(addAnotherMeal, breakfastReq);
+                          breakfastFlag = checkReq(breakfastReq);
+                      }
+                      else if(z==4)
+                      {
+                          addAnotherMeal =fillVoidReq("protein", cachedMealObject, "breakfast");
+                          breakfastListCount++;
+                          generateMealItem("breakfastList",breakfastListCount,addAnotherMeal.name,addAnotherMeal.desc,addAnotherMeal.calorie,iconSrc);
+                          breakfastReq = addReq(addAnotherMeal, breakfastReq);
+                          breakfastFlag = checkReq(breakfastReq);
+                      }
+                    }
+                }
+              }
+            }
+          }
         }
 	  		else if(category == "lunch")
 	  		{
-	    		generateMealItem("lunchList",i,name,description,calories);
+	    		generateMealItem("lunchList",i,name,description,calories,iconSrc);
 	  		}
 	  		else if(category == "dinner")
 	  		{
-	    		generateMealItem("dinnerList",i,name,description,calories);
+	    		generateMealItem("dinnerList",i,name,description,calories,iconSrc);
 	  		}
 	  		else
 	  		{
-          generateMealItem("snackList",i,name,description,calories);
+          generateMealItem("snackList",i,name,description,calories,iconSrc);
 	  		}
 
 	  		for(var index = 0; index < groceryListItems.length; index++)
@@ -459,6 +483,11 @@ $("#myProfile").click(function(){
 	window.location = "profile.html";
 });
 
+$("#mySettings").click(function(){
+  alert("hello");
+  window.location = "editProfile.html";
+});
+
 $("#checkmark").click(function(){
 
   if(checkFlag == false)
@@ -486,7 +515,7 @@ $("#checkmark").click(function(){
 //----------- Functions----------------------------------------//
 //------------------------------------------------------------//
 
-function generateMealItem(listName,index,name,descript,cals)
+function generateMealItem(listName,index,name,descript,cals,icon)
 {
   $("#" + listName).append('<li class="mealCards" id="meal'+index+'">\
 	    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+index+'">\
@@ -495,7 +524,7 @@ function generateMealItem(listName,index,name,descript,cals)
 		    			  <label id="mealDesc"'+index+'>'+descript+'</label></br>\
 		    			  <label class="calorieDisplay">'+cals+' </label><label class="calorieFrontLbl">Calories</label>\
 		    			  </div>\
-		    			  <div class="listItemImg"></div>\
+		    			  <div class="listItemImg"><img class="listItemIcon" src="'+icon+'"></div>\
 		    			  </div>\
 		    			  </li>');
 }
@@ -557,48 +586,146 @@ function filterFood(cachedMeals, foodPrefArray)
   return prefPullArray;
 }
 
-function fulFillVoidReq(missingReq, cachedMeals, mealCategory)
+function fillVoidReq(missingReq, cachedMeals, mealCategory)
 {
   for(var i = 0; i < cachedMeals.length; i++)
   {
-    if(cachedMeals[i].category == mealCategory)
+    if( cachedMeals[i].type == 'shake' || cachedMeals[i].type == 'sup')
     {
-      if(missingReq == "dairy")
+      if(cachedMeals[i].category == mealCategory)
       {
-         if(cachedMeals[i].dairyBool == 1 )
-         {
-            return cachedMeals[i];
-         }
-      }
-      else if(missingReq == "fruit")
-      {
-         if(cachedMeals[i].fruitBool == 1 )
-         {
-            return cachedMeals[i];
-         }
-      }
-      else if(missingReq == "veg")
-      {
-         if(cachedMeals[i].vegBool == 1 )
-         {
-            return cachedMeals[i];
-         }
-      }
-      else if(missingReq == "grain")
-      {
-         if(cachedMeals[i].grainBool == 1 )
-         {
-            return cachedMeals[i];
-         }
-      }
-      else if(missingReq == "protein")
-      {
-         if(cachedMeals[i].proteinBool == 1 )
-         {
-            return cachedMeals[i];
-         }
+        if(missingReq == "dairy")
+        {
+           if(cachedMeals[i].dairyBool == 1 )
+           {
+              alert(cachedMeals[i].name);
+              return cachedMeals[i];
+           }
+        }
+        else if(missingReq == "fruit")
+        {
+           if(cachedMeals[i].fruitBool == 1 )
+           {
+                         alert(cachedMeals[i].name);
+
+              return cachedMeals[i];
+           }
+        }
+        else if(missingReq == "veg")
+        {
+           if(cachedMeals[i].vegBool == 1 )
+           {
+                         alert(cachedMeals[i].name);
+
+              return cachedMeals[i];
+           }
+        }
+        else if(missingReq == "grain")
+        {
+           if(cachedMeals[i].grainBool == 1 )
+           {
+                         alert(cachedMeals[i].name);
+
+              return cachedMeals[i];
+           }
+        }
+        else if(missingReq == "protein")
+        {
+           if(cachedMeals[i].proteinBool == 1 )
+           {
+                         alert(cachedMeals[i].name);
+
+              return cachedMeals[i];
+           }
+        }
       }
     }
   }
+}
+function addReq(addedMeal, reqFlag)
+{
+  if(addedMeal.dairyBool == 1 || reqFlag[0] == 1)
+  {
+    reqFlag[0] = 1;
+  }
+  else if(addedMeal.dairyBool == 1 && reqFlag[0] == 1)
+  {
+    reqFlag[0] = 1;
+  }
+  else
+  {
+    reqFlag[0] = 0;
+  }
+
+
+  if(addedMeal.fruitBool == 1 || reqFlag[1] == 1)
+  {
+    reqFlag[1] = 1;
+  }
+  else if(addedMeal.fruitBool == 1 && reqFlag[1] == 1)
+  {
+    reqFlag[1] = 1;
+  }
+  else
+  {
+    reqFlag[1] = 0;
+  }
+
+
+  if(addedMeal.vegBool == 1 || reqFlag[2] == 1)
+  {
+    reqFlag[2] = 1;
+  }
+  else if(addedMeal.vegBool == 1 && reqFlag[2] == 1)
+  {
+    reqFlag[2] = 1;
+  }
+  else
+  {
+    reqFlag[2] = 0;
+  }
+
+
+  if(addedMeal.grainBool == 1 || reqFlag[3] == 1)
+  {
+    reqFlag[3] = 1;
+  }
+  else if(addedMeal.grainBool == 1 && reqFlag[3] == 1)
+  {
+    reqFlag[3] = 1;
+  }
+  else
+  {
+    reqFlag[3] = 0;
+  }
+
+
+  if(addedMeal.proteinBool == 1 || reqFlag[4] == 1)
+  {
+    reqFlag[4] = 1;
+  }
+  else if(addedMeal.proteinBool == 1 && reqFlag[4] == 1)
+  {
+    reqFlag[4] = 1;
+  }
+  else
+  {
+    reqFlag[4] = 0;
+  }
+
+  return reqFlag;
+
+}
+function checkReq(flagCheckArray)
+{
+  for(var i = 0; i < flagCheckArray.length; i++)
+  {
+    if(flagCheckArray[i] == 0)
+    {
+      return 1;
+    }
+  }
+
+  return 0;
 }
 
