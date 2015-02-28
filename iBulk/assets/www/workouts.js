@@ -287,6 +287,9 @@ window.location = "workout.html";
 $("#myProfile").click(function(){
 window.location = "profile.html";
 });
+$("#settingMenuListItem").click(function(){
+window.location = "editProfile.html";
+});
 
 
 $(".detailPage").scroll(function(){
@@ -334,6 +337,7 @@ $(".detailPage").scroll(function(){
 
 //*******This is the blue action button*****//
 $("#yellowWorkout").click(function(){
+    $("#start").css("display","block");
 		timerSwitch = "on"; //This indicates wether the timer has been started
 		$("#timeLabel").text("Seconds"); //Set the time label to seconds
 		$("#timeAnimation").text("90"); //set the time animation to 90
@@ -663,7 +667,7 @@ function getExercise(level,phase) {
 	// Find all workouts that are available for the user that is currently in this level and phase.
 	var query = new Parse.Query(Exercise);
 	query.equalTo("ex_level", level );
-	query.equalTo("ex_phase", phase );
+	//query.equalTo("ex_phase", phase );
 	query.find().then(function(results){
 
 		  var workoutObj = [];
@@ -749,7 +753,29 @@ function generateWorkout(cacheVar)
 	      var iconSrc = 'img/Compound_Icon.png'
 	    }
 
-  if(localStorage["level"] == "1")
+	if(localStorage["level"] == "1")
+	{
+	  if(bodyZone == "upper")
+	  {
+	    if(name == 'Neutral Grip Bench Press')
+	    {
+	      alert("hi");
+	      $("#upperList").append('<li class="workoutCards" id="item'+i+'" name="'+name+'" bodypart="'+primaryTemp+'">\
+      		  		    			  <div class="workoutCardContainer" id="workoutCardContainerItem'+i+'">\
+      		  		    			  <div class="listItemText">\
+      		  		    			  <label id="exLbl'+i+'" class="exName">'+name.toUpperCase()+'</label><br>\
+      		  		    			  <label class="primaryFocusLabel">The primary focus of this exercise is the '+primary[workoutCount]+' muscle</label>\
+      		  		    			  </div>\
+      		  		    			  <div class="listItemImg"><img class="listItemIcon" src="'+iconSrc+'"></div>\
+      		  		    			  </div>\
+      		  		    			  </li>');
+
+      		    	  compoundCount++;
+	    }
+	  }
+	}
+
+  if(localStorage["level"] == "2")
   {
 
     //Figure out the first conditions for the first program structure
@@ -823,7 +849,7 @@ function generateWorkout(cacheVar)
 
 
 
-      		    	  if(localStorage["level"] == 1)
+      		    	  if(localStorage["level"] == 1)//Dont need this!!
       		    	  {
       		    		  if(localStorage["phase"] == "1")
       		    		  {
@@ -1106,7 +1132,7 @@ function generateWorkout(cacheVar)
 	LowerBackObj = filterForProgram(cacheVar,"Lower Back");
 	HamstringsObj = filterForProgram(cacheVar,"Hamstrings");
 	QuadsObj = filterForProgram(cacheVar,"Quads");
-	ChestObj = filterForProgram(cacheVar,"Chest");
+	ChestObj = filterForProgram(cacheVar,"Chest","Neutral Grip Bench Press");
 	ShoulderObj = filterForProgram(cacheVar,"Shoulder");
 	CalfsObj = filterForProgram(cacheVar,"Calfs");
 
@@ -1628,22 +1654,34 @@ function removeExercise(itemId)
 	alert(exerciseItemID);
 }
 
-function filterForProgram(cacheVar,bodyPartChoice)
+function filterForProgram(cacheVar,bodyPartChoice, firstUp)
 {
 	var removedFromArray = 0;
-	var bodyPartArray = [];
+	var bodyPartArray = [];// This array stores all the alternative exercises for the body part.
 	var bodyPartIndex = 0;
 //***********For Level 1 Phase 1 people ************//
+
+//****First add all of the workouts that need to go first into the array*****//
 	for(var i = 0; i<cacheVar.length; i++)
+	{
+	  if(cacheVar[i].name == firstUp)
+	  {
+	    bodyPartArray.push({name: cacheVar[i].name, bodyZone: cacheVar[i].bodyZone, difficulty:cacheVar[i].difficulty, type:cacheVar[i].type, priority:cacheVar[i].priority, primary:cacheVar[i].primary, description1:cacheVar[i].description1, description2:cacheVar[i].description2, description3:cacheVar[i].description3, description4:cacheVar[i].description4, description5:cacheVar[i].description5, tip1:cacheVar[i].tip1, tip2:cacheVar[i].tip2, tip3:cacheVar[i].tip3});
+	  }
+	}
+
+	for(var i = 1; i<cacheVar.length; i++)
 	{
 		if(cacheVar[i].primary == bodyPartChoice)
 		{
-		      if(bodyPartArray.length > 0)
-		      {
+
 		    	  bodyPartArray.push({name: cacheVar[i].name, bodyZone: cacheVar[i].bodyZone, difficulty:cacheVar[i].difficulty, type:cacheVar[i].type, priority:cacheVar[i].priority, primary:cacheVar[i].primary, description1:cacheVar[i].description1, description2:cacheVar[i].description2, description3:cacheVar[i].description3, description4:cacheVar[i].description4, description5:cacheVar[i].description5, tip1:cacheVar[i].tip1, tip2:cacheVar[i].tip2, tip3:cacheVar[i].tip3});
 		    	  bodyPartIndex++;
 
-			      $("#item" + i).css("display","none");
+            if($("#item" + i).attr("name") != firstUp)
+            {
+              $("#item" + i).css("display","none");
+            }
 			      for(var counter = 0; counter < nameList.length; counter++)
 			      {
 
@@ -1674,11 +1712,7 @@ function filterForProgram(cacheVar,bodyPartChoice)
 			    	  }
 
 			      }
-		      }
-		      else
-		      {
-		    	  bodyPartArray.push({name: cacheVar[i].name, bodyZone: cacheVar[i].bodyZone, difficulty:cacheVar[i].difficulty, type:cacheVar[i].type, priority:cacheVar[i].priority, primary:cacheVar[i].primary, description1:cacheVar[i].description1, description2:cacheVar[i].description2, description3:cacheVar[i].description3, description4:cacheVar[i].description4, description5:cacheVar[i].description5, tip1:cacheVar[i].tip1, tip2:cacheVar[i].tip2, tip3:cacheVar[i].tip3});
-		      }
+
 		}
 
 	}

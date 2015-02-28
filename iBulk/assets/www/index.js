@@ -622,8 +622,8 @@ function getLevel(email) {
 		    error: function (response) {
 		         alert("Error establishing a connection.");
 		    }
-	    });*/
-	}
+	    });
+	}*/
 
 //------------Navigate to another Page------------///
 function navigate(currentPage, pageDest)

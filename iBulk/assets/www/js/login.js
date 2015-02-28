@@ -15,7 +15,7 @@ Login = {
   		  success: function(user) {
   			  localStorage["loggedUser"] = $('#logUsername').val();
   	    		window.location = "workout.html";
-  	    			localStorage["currentID"] = user.id;
+  	    	localStorage["currentID"] = user.id;
 					localStorage["daysPerWeek"] = user.get("daysPerWeek");
 					localStorage["level"] = user.get("level");
 					localStorage["phase"] = user.get("phase");
@@ -85,15 +85,32 @@ Login = {
     				  }
     			  else
     				  {
-    				    /*alert("try");
     				    var user = new Parse.User();
     				    user.set("username", email);
               	user.set("password", password);
               	user.set("email", email);
-              	user.save().then(function(){*/
-              	   //Common.loadPage('tutorial', 'none');
-              	   window.location ="tutorial.html";
-              	//});
+              	user.save().then(function(){
+              	  Parse.User.logIn(email, password, {
+              	  //Common.loadPage('tutorial', 'none');
+              	  success: function(user) {
+                      window.location = "tutorial.html";
+                      localStorage["currentID"] = user.id;
+              	      localStorage["level"] = 1;
+              	   	  //localStorage["weight"] = user.get("weight");
+          					  //localStorage["height"] = user.get("height");
+          					  //localStorage["idlWeight"] = user.get("idlWeight");
+          					  //localStorage["weight"] = user.get("weight");
+          					  //localStorage["focusArea"] = user.get("focusArea");
+          					  //localStorage["age"] = user.get("age");
+                    },
+                    error: function(user, error) {
+                      // The login failed. Check error to see why.
+                    }
+                  });
+
+
+
+              	});
     				  }
     		  },
     		  error: function(error) {

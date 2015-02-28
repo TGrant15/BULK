@@ -55,6 +55,7 @@ else
 
 $("#yellowMeal").click(function()
 {
+  $("#addMealPage").css("display","block")
 	$("#addMealPage").animate({ left: 0 });
 	$("#workoutOverviewTitle").text("Add a Meal");
 	$("#menuIcon").animate({"height":"0px"},200);
@@ -73,6 +74,11 @@ $(".arrowIcon").click(function()
     		$("#menuIcon").animate({"height":"25px"},200);
             $("#arrowIcon").animate({"height":"0px"},200);
             mealPageFlag = "stop";
+        setTimeout(function(){
+           $("#addMealPage").css("display","none");
+        },300);
+
+
     	}
     	else //**Hide the menu screen**//
     	{
@@ -120,21 +126,7 @@ $("#core").css("opacity","0");
 
 
 	});
-	$("#eatMenu").click(function(){
-		alert("custom meal");
-	});
 
-
-	$("#blue").click(function(){
-		alert("hi");
-		//$("blue2").animate({"margin":"25em 19.56em"});
-		//$("blue3").animate({"margin":"25em 19.56em"});
-	});
-	$("#blue2").click(function(){
-		alert("yo");
-	//	$("blue2").animate({"margin":"25em 19.56em"});
-		//$("blue3").animate({"margin":"25em 19.56em"});
-	});
 
 
 	$("#breakfastTab").click(function(){
@@ -492,6 +484,7 @@ $("#checkmark").click(function(){
 
   if(checkFlag == false)
   {
+    $("#groceryListContainer").css("display","block");
     $("#groceryListContainer").animate({"top":"105px"});
     $("#kick").animate({"top": "3px"},100);
     $("#kick").animate({"width": "22px"},100);
@@ -506,6 +499,9 @@ $("#checkmark").click(function(){
     $("#kick").animate({"width": "12px"},100);
     $("#stem").animate({"height": "18px"},100);
     $("#stem").animate({"top": "-5px"},100);
+    setTimeout(function(){
+      $("#groceryListContainer").css("display","none");
+    },200);
     checkFlag = false;
   }
 
